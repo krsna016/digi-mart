@@ -27,6 +27,7 @@
 :root {
   --background: #FCFBF8;
   --foreground: #111111;
+  color-scheme: light; /* Forces Safari/Chrome to treat native inputs as light mode */
 }
 
 body {
@@ -35,4 +36,9 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Force all form controls to use deep contrasting text */
+input, textarea, select {
+  color: #111111 !important;
 }

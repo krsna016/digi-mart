@@ -1,6 +1,17 @@
+"use client";
+
 import Link from 'next/link';
+import { useCart } from '@/context/CartContext';
+import { useState, useEffect } from 'react';
 
 export default function Navbar() {
+  const { cartCount } = useCart();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-stone-200/50 bg-[#FCFBF8]/80 backdrop-blur-md transition-all animate-fade-in">
       <div className="mx-auto flex h-20 max-w-[1400px] items-center justify-between px-6 lg:px-12">
@@ -23,10 +34,12 @@ export default function Navbar() {
         
         <div className="flex flex-1 items-center justify-end gap-8 text-[11px] font-medium uppercase tracking-[0.2em] text-stone-900/70">
           <Link href="#" className="hidden sm:block hover:text-stone-900 transition-colors duration-300">Account</Link>
-          <button className="flex items-center gap-2 hover:text-stone-900 transition-colors duration-300 group">
+          <Link href="/cart" className="flex items-center gap-2 hover:text-stone-900 transition-colors duration-300 group">
             <span>Cart</span>
-            <span className="flex h-4 w-4 items-center justify-center rounded-sm bg-stone-900/5 text-[9px] text-stone-900 group-hover:bg-stone-900 group-hover:text-white transition-colors duration-300">0</span>
-          </button>
+            <span className="flex h-4 w-4 items-center justify-center rounded-sm bg-stone-900/5 text-[9px] text-stone-900 group-hover:bg-stone-900 group-hover:text-white transition-colors duration-300">
+              {mounted ? cartCount : 0}
+            </span>
+          </Link>
         </div>
       </div>
     </header>

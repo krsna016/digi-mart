@@ -154,7 +154,7 @@ export default function AdminProductsPage() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-10">
         <div>
           <h1 className="text-3xl font-serif tracking-tight text-stone-900 mb-2">Products</h1>
-          <p className="text-sm text-stone-500 font-light">Manage your inventory, prices, and product details.</p>
+          <p className="text-sm text-stone-500 font-normal">Manage your inventory, prices, and product details.</p>
         </div>
         <Link 
           href="/admin/add-product" 
@@ -183,7 +183,7 @@ export default function AdminProductsPage() {
                 placeholder="Search products by name..." 
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 bg-white border border-stone-200/80 rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-light placeholder:text-stone-400 shadow-sm"
+                className="w-full pl-10 pr-4 py-2.5 bg-white border border-stone-200/80 rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-normal placeholder:text-stone-400 shadow-sm"
               />
             </div>
             
@@ -192,7 +192,7 @@ export default function AdminProductsPage() {
               <select
                 value={categoryFilter}
                 onChange={(e) => setCategoryFilter(e.target.value)}
-                className={`appearance-none w-full px-4 py-2.5 bg-white border border-stone-200/80 rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-light shadow-sm ${categoryFilter ? 'text-stone-900' : 'text-stone-400'}`}
+                className={`appearance-none w-full px-4 py-2.5 bg-white border border-stone-200/80 rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-normal shadow-sm ${categoryFilter ? 'text-stone-900' : 'text-stone-400'}`}
               >
                 <option value="">All Categories</option>
                 {uniqueCategories.map(cat => (
@@ -214,7 +214,7 @@ export default function AdminProductsPage() {
                   placeholder="Min" 
                   value={minPrice}
                   onChange={(e) => setMinPrice(e.target.value)}
-                  className="w-24 pl-6 pr-3 py-2.5 bg-white border border-stone-200/80 rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-light placeholder:text-stone-400 shadow-sm"
+                  className="w-24 pl-6 pr-3 py-2.5 bg-white border border-stone-200/80 rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-normal placeholder:text-stone-400 shadow-sm"
                 />
               </div>
               <span className="text-stone-400">-</span>
@@ -226,7 +226,7 @@ export default function AdminProductsPage() {
                   placeholder="Max" 
                   value={maxPrice}
                   onChange={(e) => setMaxPrice(e.target.value)}
-                  className="w-24 pl-6 pr-3 py-2.5 bg-white border border-stone-200/80 rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-light placeholder:text-stone-400 shadow-sm"
+                  className="w-24 pl-6 pr-3 py-2.5 bg-white border border-stone-200/80 rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-normal placeholder:text-stone-400 shadow-sm"
                 />
               </div>
             </div>
@@ -263,7 +263,7 @@ export default function AdminProductsPage() {
               <tbody className="divide-y divide-stone-100 bg-white">
                 {loading ? (
                   <tr>
-                    <td colSpan={6} className="px-8 py-16 text-center text-stone-400 font-light text-base">Loading product catalog...</td>
+                    <td colSpan={6} className="px-8 py-16 text-center text-stone-400 font-normal text-base">Loading product catalog...</td>
                   </tr>
                 ) : filteredProducts.length > 0 ? (
                   filteredProducts.map((p) => {
@@ -280,9 +280,9 @@ export default function AdminProductsPage() {
                           </div>
                         </td>
                         <td className="px-8 py-4 font-medium text-stone-900 tracking-tight">{p.name}</td>
-                        <td className="px-8 py-4 text-stone-500 font-light">{p.category}</td>
-                        <td className="px-8 py-4 text-stone-900 font-light">${p.price}</td>
-                        <td className="px-8 py-4 text-stone-500 font-light">
+                        <td className="px-8 py-4 text-stone-500 font-normal">{p.category}</td>
+                        <td className="px-8 py-4 text-stone-900 font-normal">${p.price}</td>
+                        <td className="px-8 py-4 text-stone-500 font-normal">
                           <span className={`px-2.5 py-1 ${p.stock && p.stock > 0 ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'} rounded-full text-[10px] font-medium uppercase tracking-widest`}>
                             {p.stock && p.stock > 0 ? p.stock : 'Out'}
                           </span>
@@ -308,7 +308,7 @@ export default function AdminProductsPage() {
                   })
                 ) : (
                   <tr>
-                    <td colSpan={6} className="px-8 py-16 text-center text-stone-400 font-light">
+                    <td colSpan={6} className="px-8 py-16 text-center text-stone-400 font-normal">
                       No products found matching your current filter criteria.
                     </td>
                   </tr>

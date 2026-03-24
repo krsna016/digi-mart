@@ -36,14 +36,20 @@ const getProductById = async (req, res) => {
 // @access  Public
 const createProduct = async (req, res) => {
   try {
-    const { name, price, description, image, category, stock } = req.body;
+    const { name, price, description, image, mainCategory, category, subcategory, stock } = req.body;
+
+    if (!name || !price || !description || !image || !mainCategory || !category || !subcategory) {
+      return res.status(400).json({ message: 'Please provide all required fields including the full category hierarchy.' });
+    }
 
     const product = new Product({
       name,
       price,
       description,
       image,
+      mainCategory,
       category,
+      subcategory,
       stock,
     });
 
@@ -59,8 +65,8 @@ const createProduct = async (req, res) => {
 // @access  Public
 const updateProduct = async (req, res) => {
   try {
-    const { name, price, description, image, category, stock } = req.body;
-
+    const { name, price, description, image, mainCategory, category, subcategory, stock } = req.body;
+    
     const product = await Product.findById(req.params.id);
 
     if (product) {
@@ -68,7 +74,9 @@ const updateProduct = async (req, res) => {
       product.price = price !== undefined ? price : product.price;
       product.description = description || product.description;
       product.image = image || product.image;
+      product.mainCategory = mainCategory || product.mainCategory;
       product.category = category || product.category;
+      product.subcategory = subcategory || product.subcategory;
       product.stock = stock !== undefined ? stock : product.stock;
 
       const updatedProduct = await product.save();

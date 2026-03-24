@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import ProductCard from './ProductCard';
 
 export default function ProductGrid() {
@@ -47,12 +48,12 @@ export default function ProductGrid() {
     <section className="mx-auto max-w-[1400px] px-6 lg:px-12 py-32">
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
         <div className="max-w-xl">
-          <span className="block text-[10px] font-medium uppercase tracking-[0.2em] text-stone-900/50 mb-4">Latest Additions</span>
+          <span className="block text-[12px] font-medium uppercase tracking-[0.2em] text-stone-900/50 mb-4">Latest Additions</span>
           <h2 className="text-4xl md:text-5xl font-serif text-stone-900 tracking-tight leading-tight">Quiet Luxury line</h2>
         </div>
-        <button className="text-[11px] font-medium uppercase tracking-[0.2em] text-stone-900 border-b border-stone-900/30 pb-1 hover:border-stone-900 transition-colors self-start md:self-auto group relative flex-shrink-0">
+        <Link href="/collection" className="text-[11px] font-medium uppercase tracking-[0.2em] text-stone-900 border-b border-stone-900/30 pb-1 hover:border-stone-900 transition-colors self-start md:self-auto group relative flex-shrink-0">
           View Collection
-        </button>
+        </Link>
       </div>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-16">

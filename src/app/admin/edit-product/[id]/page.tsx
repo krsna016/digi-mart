@@ -3,20 +3,23 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter, useParams } from 'next/navigation';
+import { categoryConfig } from '@/data/categoryConfig';
 
 export default function EditProductPage() {
   const router = useRouter();
   const params = useParams();
   const id = params.id as string;
   
-  const [formData, setFormData] = useState({
-    name: '',
-    category: '',
-    price: '',
-    stock: '',
-    image: '',
-    description: ''
-  });
+  const [product, setProduct] = useState<any>(null);
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const [price, setPrice] = useState('');
+  const [stock, setStock] = useState('');
+  const [image, setImage] = useState('');
+
+  const [mainCategory, setMainCategory] = useState('');
+  const [category, setCategory] = useState('');
+  const [subcategory, setSubcategory] = useState('');
   
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -29,19 +32,21 @@ export default function EditProductPage() {
     
     const fetchProduct = async () => {
       try {
+        setIsLoading(true);
         const res = await fetch(`http://localhost:5001/api/products/${id}`);
-        if (!res.ok) throw new Error('Product not found in specific lookup');
+        
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          throw new Error(errData.message || 'Product not found');
+        }
+        
         const data = await res.json();
-        setFormData({
-          name: data.name || '',
-          category: data.category || '',
-          price: data.price ? String(data.price) : '',
-          stock: data.stock !== undefined ? String(data.stock) : '',
-          image: data.image || '',
-          description: data.description || ''
-        });
+        
+        if (data) {
+          setProduct(data);
+        }
       } catch (err: any) {
-        setToastMessage({ title: 'Failed to fetch product details.', type: 'error' });
+        setToastMessage({ title: `Error: ${err.message}`, type: 'error' });
       } finally {
         setIsLoading(false);
       }
@@ -49,6 +54,19 @@ export default function EditProductPage() {
     
     fetchProduct();
   }, [id]);
+
+  useEffect(() => {
+    if (product) {
+      setName(product.name || '');
+      setDescription(product.description || '');
+      setPrice(product.price !== undefined ? String(product.price) : '');
+      setStock(product.stock !== undefined ? String(product.stock) : '');
+      setImage(product.image || '');
+      setMainCategory(product.mainCategory?.trim().toLowerCase() || '');
+      setCategory(product.category?.trim().toLowerCase() || '');
+      setSubcategory(product.subcategory?.trim().toLowerCase() || '');
+    }
+  }, [product]);
 
   useEffect(() => {
     if (toastMessage) {
@@ -59,26 +77,47 @@ export default function EditProductPage() {
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
-    if (!formData.name.trim()) newErrors.name = 'Product name is required';
-    if (!formData.category.trim()) newErrors.category = 'Category is required';
-    if (!formData.price || isNaN(Number(formData.price)) || Number(formData.price) <= 0) {
+    if (!name.trim()) newErrors.name = 'Product name is required';
+    if (!mainCategory.trim()) newErrors.mainCategory = 'Main category is required';
+    if (!category.trim()) newErrors.category = 'Category is required';
+    if (!subcategory.trim()) newErrors.subcategory = 'Subcategory is required';
+    if (!price || isNaN(Number(price)) || Number(price) <= 0) {
       newErrors.price = 'Please enter a valid positive price';
     }
-    if (!formData.stock || isNaN(Number(formData.stock)) || Number(formData.stock) < 0) {
+    if (!stock || isNaN(Number(stock)) || Number(stock) < 0) {
       newErrors.stock = 'Please enter a valid stock integer, 0 or above';
     }
-    if (!formData.description.trim()) newErrors.description = 'Description is required';
+    if (!description.trim()) newErrors.description = 'Description is required';
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: undefined as any }));
-    }
+  const handleInputChange = (field: string, val: string) => {
+    if (field === 'name') setName(val);
+    else if (field === 'description') setDescription(val);
+    else if (field === 'price') setPrice(val);
+    else if (field === 'stock') setStock(val);
+    
+    if (errors[field]) setErrors(prev => ({ ...prev, [field]: undefined as any }));
+  };
+
+  const handleMainCategoryChange = (val: string) => {
+    setMainCategory(val);
+    setCategory('');
+    setSubcategory('');
+    if (errors.mainCategory) setErrors(prev => ({ ...prev, mainCategory: undefined as any }));
+  };
+
+  const handleCategoryChange = (val: string) => {
+    setCategory(val);
+    setSubcategory('');
+    if (errors.category) setErrors(prev => ({ ...prev, category: undefined as any }));
+  };
+
+  const handleSubcategoryChange = (val: string) => {
+    setSubcategory(val);
+    if (errors.subcategory) setErrors(prev => ({ ...prev, subcategory: undefined as any }));
   };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -105,7 +144,7 @@ export default function EditProductPage() {
       }
 
       const json = await res.json();
-      setFormData(prev => ({ ...prev, image: json.secure_url }));
+      setImage(json.secure_url);
       setToastMessage({ title: 'Image securely uploaded!', type: 'success' });
       setTimeout(() => setToastMessage(null), 3000);
     } catch (err: any) {
@@ -127,10 +166,23 @@ export default function EditProductPage() {
     try {
       setIsSubmitting(true);
       const payload = {
-        ...formData,
-        price: Number(formData.price),
-        stock: parseInt(formData.stock, 10),
+        name: name.trim(),
+        price: Number(price) || 0,
+        description: description.trim(),
+        image,
+        mainCategory,
+        category,
+        subcategory,
+        stock: parseInt(stock, 10) || 0,
       };
+
+      console.log('Update Product ID:', id);
+      console.log({
+        mainCategory,
+        category,
+        subcategory
+      });
+      console.log('Update Payload:', payload);
 
       const res = await fetch(`http://localhost:5001/api/products/${id}`, {
         method: 'PUT',
@@ -140,10 +192,16 @@ export default function EditProductPage() {
         body: JSON.stringify(payload),
       });
 
+      console.log('Update Response Status:', res.status);
+
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({}));
+        console.error('Update Error Data:', errorData);
         throw new Error(errorData.message || 'Failed to update product via API framework');
       }
+
+      const updatedData = await res.json();
+      console.log('Update Success Data:', updatedData);
 
       setToastMessage({ title: 'Product successfully updated!', type: 'success' });
       
@@ -194,7 +252,7 @@ export default function EditProductPage() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-10">
         <div>
           <h1 className="text-3xl font-serif tracking-tight text-stone-900 mb-2">Edit Product</h1>
-          <p className="text-sm text-stone-500 font-light">Make changes to the existing product data map.</p>
+          <p className="text-sm text-stone-500 font-normal">Make changes to the existing product data map.</p>
         </div>
         <button 
           onClick={() => router.push('/admin/products')}
@@ -216,10 +274,10 @@ export default function EditProductPage() {
                 type="text" 
                 id="name" 
                 name="name" 
-                value={formData.name} 
-                onChange={handleChange}
+                value={name} 
+                onChange={(e) => handleInputChange('name', e.target.value)}
                 placeholder="e.g. Cashmere Crew Sweater"
-                className={`w-full px-4 py-3.5 bg-stone-50 border ${errors.name ? 'border-red-300 ring-1 ring-red-300' : 'border-stone-200/80'} rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-light placeholder:text-stone-400`}
+                className={`w-full px-4 py-3.5 bg-stone-50 border ${errors.name ? 'border-red-300 ring-1 ring-red-300' : 'border-stone-200/80'} rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-normal placeholder:text-stone-400`}
               />
               {errors.name && <p className="text-red-500 text-xs mt-2 font-medium">{errors.name}</p>}
             </div>
@@ -230,36 +288,89 @@ export default function EditProductPage() {
                 id="description" 
                 name="description" 
                 rows={5}
-                value={formData.description} 
-                onChange={handleChange}
+                value={description} 
+                onChange={(e) => handleInputChange('description', e.target.value)}
                 placeholder="Detailed description of the product..."
-                className={`w-full px-4 py-3.5 bg-stone-50 border ${errors.description ? 'border-red-300 ring-1 ring-red-300' : 'border-stone-200/80'} rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-light placeholder:text-stone-400 resize-none`}
+                className={`w-full px-4 py-3.5 bg-stone-50 border ${errors.description ? 'border-red-300 ring-1 ring-red-300' : 'border-stone-200/80'} rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-normal placeholder:text-stone-400 resize-none`}
               />
               {errors.description && <p className="text-red-500 text-xs mt-2 font-medium">{errors.description}</p>}
             </div>
             
-            <div>
-              <label htmlFor="category" className="block text-[11px] font-medium uppercase tracking-[0.2em] text-stone-500 mb-3">Category <span className="text-red-500">*</span></label>
-              <div className="relative">
-                <select 
-                  id="category" 
-                  name="category" 
-                  value={formData.category} 
-                  onChange={handleChange}
-                  className={`appearance-none w-full px-4 py-3.5 bg-stone-50 border ${errors.category ? 'border-red-300 ring-1 ring-red-300' : 'border-stone-200/80'} rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-light ${formData.category ? 'text-stone-900' : 'text-stone-400'}`}
-                >
-                  <option value="" disabled>Select a category</option>
-                  <option value="Apparel">Apparel</option>
-                  <option value="Accessories">Accessories</option>
-                  <option value="Home">Home</option>
-                  <option value="Decor">Decor</option>
-                  <option value="Kitchen">Kitchen</option>
-                </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-stone-500">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+            <div className="flex flex-col gap-6">
+              {/* Main Category */}
+              <div>
+                <label htmlFor="mainCategory" className="block text-[11px] font-medium uppercase tracking-[0.2em] text-stone-500 mb-3">Main Category <span className="text-red-500">*</span></label>
+                <div className="relative">
+                  <select 
+                    id="mainCategory" 
+                    name="mainCategory" 
+                    value={mainCategory} 
+                    onChange={(e) => handleMainCategoryChange(e.target.value)}
+                    className={`appearance-none w-full px-4 py-3.5 bg-stone-50 border ${errors.mainCategory ? 'border-red-300 ring-1 ring-red-300' : 'border-stone-200/80'} rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-normal ${mainCategory ? 'text-stone-900' : 'text-stone-400'}`}
+                  >
+                    <option value="" disabled>Select main category</option>
+                    {Object.keys(categoryConfig).map(mainCat => (
+                      <option key={mainCat} value={mainCat}>{mainCat.charAt(0).toUpperCase() + mainCat.slice(1)}</option>
+                    ))}
+                  </select>
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-stone-500">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                  </div>
                 </div>
+                {errors.mainCategory && <p className="text-red-500 text-xs mt-2 font-medium">{errors.mainCategory}</p>}
               </div>
-              {errors.category && <p className="text-red-500 text-xs mt-2 font-medium">{errors.category}</p>}
+
+              {/* Category */}
+              <div>
+                <label htmlFor="category" className="block text-[11px] font-medium uppercase tracking-[0.2em] text-stone-500 mb-3">Category <span className="text-red-500">*</span></label>
+                <div className="relative">
+                  <select 
+                    id="category" 
+                    name="category" 
+                    value={category} 
+                    onChange={(e) => handleCategoryChange(e.target.value)}
+                    disabled={!mainCategory}
+                    className={`appearance-none w-full px-4 py-3.5 bg-stone-50 border ${errors.category ? 'border-red-300 ring-1 ring-red-300' : 'border-stone-200/80'} rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-normal ${!mainCategory ? 'opacity-50 cursor-not-allowed' : ''} ${category ? 'text-stone-900' : 'text-stone-400'}`}
+                  >
+                    <option value="" disabled>Select category</option>
+                    {mainCategory && Object.keys((categoryConfig as any)[mainCategory] || {}).map(cat => (
+                      <option key={cat} value={cat}>{cat.charAt(0).toUpperCase() + cat.slice(1)}</option>
+                    ))}
+                  </select>
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-stone-500">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                  </div>
+                </div>
+                {errors.category && <p className="text-red-500 text-xs mt-2 font-medium">{errors.category}</p>}
+              </div>
+
+              {/* Subcategory */}
+              <div>
+                <label htmlFor="subcategory" className="block text-[11px] font-medium uppercase tracking-[0.2em] text-stone-500 mb-3">Subcategory <span className="text-red-500">*</span></label>
+                <div className="relative">
+                  <select 
+                    id="subcategory" 
+                    name="subcategory" 
+                    value={subcategory} 
+                    onChange={(e) => handleSubcategoryChange(e.target.value)}
+                    disabled={!category}
+                    className={`appearance-none w-full px-4 py-3.5 bg-stone-50 border ${errors.subcategory ? 'border-red-300 ring-1 ring-red-300' : 'border-stone-200/80'} rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-normal ${!category ? 'opacity-50 cursor-not-allowed' : ''} ${subcategory ? 'text-stone-900' : 'text-stone-400'}`}
+                  >
+                    <option value="" disabled>Select subcategory</option>
+                    {mainCategory && category && (categoryConfig as any)[mainCategory]?.[category]?.map((subcat: string) => (
+                      <option key={subcat} value={subcat}>{subcat.charAt(0).toUpperCase() + subcat.slice(1)}</option>
+                    ))}
+                    {/* Defensive: Show the current subcategory if it's not in the config for this category */}
+                    {subcategory && mainCategory && category && !(categoryConfig as any)[mainCategory]?.[category]?.includes(subcategory) && (
+                      <option value={subcategory}>{subcategory.charAt(0).toUpperCase() + subcategory.slice(1)} (current)</option>
+                    )}
+                  </select>
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-stone-500">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                  </div>
+                </div>
+                {errors.subcategory && <p className="text-red-500 text-xs mt-2 font-medium">{errors.subcategory}</p>}
+              </div>
             </div>
           </div>
         </div>
@@ -287,14 +398,14 @@ export default function EditProductPage() {
                 </span>
               </label>
 
-              {formData.image ? (
+              {image ? (
                 <div className="relative mt-6 aspect-square w-full rounded-xl overflow-hidden border border-stone-200/60 shadow-inner bg-stone-100 group">
-                  <img src={formData.image} alt="Preview" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onError={(e) => (e.currentTarget.style.display = 'none')} />
+                  <img src={image} alt="Preview" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onError={(e) => (e.currentTarget.style.display = 'none')} />
                   
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     <button 
                       type="button"
-                      onClick={() => setFormData(prev => ({ ...prev, image: '' }))}
+                      onClick={() => setImage('')}
                       className="text-[10px] font-medium uppercase tracking-widest text-white bg-black/80 px-5 py-2.5 rounded-full hover:bg-red-600 transition-colors shadow-lg"
                     >
                       Remove
@@ -324,10 +435,10 @@ export default function EditProductPage() {
                     step="0.01"
                     id="price" 
                     name="price" 
-                    value={formData.price} 
-                    onChange={handleChange}
+                    value={price} 
+                    onChange={(e) => handleInputChange('price', e.target.value)}
                     placeholder="0.00"
-                    className={`w-full pl-9 pr-4 py-3.5 bg-stone-50 border ${errors.price ? 'border-red-300 ring-1 ring-red-300' : 'border-stone-200/80'} rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-light placeholder:text-stone-400`}
+                    className={`w-full pl-9 pr-4 py-3.5 bg-stone-50 border ${errors.price ? 'border-red-300 ring-1 ring-red-300' : 'border-stone-200/80'} rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-normal placeholder:text-stone-400`}
                   />
                 </div>
                 {errors.price && <p className="text-red-500 text-xs mt-2 font-medium">{errors.price}</p>}
@@ -339,10 +450,10 @@ export default function EditProductPage() {
                   type="number" 
                   id="stock" 
                   name="stock" 
-                  value={formData.stock} 
-                  onChange={handleChange}
+                  value={stock} 
+                  onChange={(e) => handleInputChange('stock', e.target.value)}
                   placeholder="e.g. 50"
-                  className={`w-full px-4 py-3.5 bg-stone-50 border ${errors.stock ? 'border-red-300 ring-1 ring-red-300' : 'border-stone-200/80'} rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-light placeholder:text-stone-400`}
+                  className={`w-full px-4 py-3.5 bg-stone-50 border ${errors.stock ? 'border-red-300 ring-1 ring-red-300' : 'border-stone-200/80'} rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-normal placeholder:text-stone-400`}
                 />
                 {errors.stock && <p className="text-red-500 text-xs mt-2 font-medium">{errors.stock}</p>}
               </div>

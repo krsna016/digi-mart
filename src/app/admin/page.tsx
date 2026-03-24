@@ -19,7 +19,7 @@ export default async function AdminDashboard() {
     <div className="animate-fade-in">
       <div className="mb-10">
         <h1 className="text-3xl font-serif tracking-tight text-stone-900 mb-2">Overview</h1>
-        <p className="text-sm text-stone-500 font-light">Welcome back. Here's what's happening with your store today.</p>
+        <p className="text-sm text-stone-500 font-normal">Welcome back. Here's what's happening with your store today.</p>
       </div>
 
       {error && (
@@ -32,17 +32,17 @@ export default async function AdminDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
         <div className="bg-white p-6 rounded-xl border border-stone-200/60 shadow-[0_2px_8px_-4px_rgba(0,0,0,0.05)]">
           <div className="text-[10px] font-medium uppercase tracking-[0.2em] text-stone-400 mb-3">Total Products</div>
-          <div className="text-4xl font-light text-stone-900 tracking-tight">{totalProducts}</div>
+          <div className="text-4xl font-normal text-stone-900 tracking-tight">{totalProducts}</div>
         </div>
         
         <div className="bg-white p-6 rounded-xl border border-stone-200/60 shadow-[0_2px_8px_-4px_rgba(0,0,0,0.05)]">
           <div className="text-[10px] font-medium uppercase tracking-[0.2em] text-stone-400 mb-3">Total Stock Units</div>
-          <div className="text-4xl font-light text-stone-900 tracking-tight">{totalStock}</div>
+          <div className="text-4xl font-normal text-stone-900 tracking-tight">{totalStock}</div>
         </div>
         
         <div className="bg-white p-6 rounded-xl border border-stone-200/60 shadow-[0_2px_8px_-4px_rgba(0,0,0,0.05)]">
           <div className="text-[10px] font-medium uppercase tracking-[0.2em] text-stone-400 mb-3">Active Sales</div>
-          <div className="text-4xl font-light text-stone-900 tracking-tight">0</div>
+          <div className="text-4xl font-normal text-stone-900 tracking-tight">0</div>
         </div>
       </div>
 
@@ -75,14 +75,14 @@ export default async function AdminDashboard() {
                     </div>
                     <span className="font-medium text-stone-900 tracking-tight">{p.name}</span>
                   </td>
-                  <td className="px-8 py-4 text-stone-500 font-light">{p.category}</td>
-                  <td className="px-8 py-4 text-stone-900 font-light">${p.price}</td>
-                  <td className="px-8 py-4 text-stone-500 font-light">{p.stock || 0}</td>
+                  <td className="px-8 py-4 text-stone-500 font-normal">{p.category}</td>
+                  <td className="px-8 py-4 text-stone-900 font-normal">${p.price}</td>
+                  <td className="px-8 py-4 text-stone-500 font-normal">{p.stock || 0}</td>
                 </tr>
               ))}
               {products.length === 0 && !error && (
                 <tr>
-                  <td colSpan={4} className="px-8 py-12 text-center text-stone-400 font-light">No products registered in the database yet.</td>
+                  <td colSpan={4} className="px-8 py-12 text-center text-stone-400 font-normal">No products registered in the database yet.</td>
                 </tr>
               )}
             </tbody>

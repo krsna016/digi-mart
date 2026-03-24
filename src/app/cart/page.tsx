@@ -32,7 +32,7 @@ export default function CartPage() {
       
       <main className="flex-1 max-w-[1200px] mx-auto w-full px-6 py-16 animate-fade-in">
         <h1 className="text-4xl font-serif text-stone-900 mb-2">Shopping Bag</h1>
-        <p className="text-sm text-stone-500 font-light mb-12">
+        <p className="text-sm text-stone-500 font-normal mb-12">
           {cart.length === 0 ? "Your bag is currently empty." : `You have ${cart.length} unique item${cart.length !== 1 ? 's' : ''} in your bag.`}
         </p>
 
@@ -42,7 +42,7 @@ export default function CartPage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
             </svg>
             <h2 className="text-2xl font-serif text-stone-900 mb-3">Your bag is empty</h2>
-            <p className="text-stone-500 font-light mb-10 max-w-md">Looks like you haven't added anything to your bag yet. Explore our premium collections to get started.</p>
+            <p className="text-stone-500 font-normal mb-10 max-w-md">Looks like you haven't added anything to your bag yet. Explore our premium collections to get started.</p>
             <Link 
               href="/" 
               className="px-8 py-4.5 bg-stone-900 text-white text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-stone-800 transition-all rounded-xl shadow-[0_4px_14px_0_rgba(0,0,0,0.39)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.23)] hover:-translate-y-0.5"
@@ -70,7 +70,7 @@ export default function CartPage() {
                         <Link href={`/product/${item.id}`}>
                           <h3 className="text-lg font-medium text-stone-900 hover:text-stone-600 transition-colors">{item.name}</h3>
                         </Link>
-                        {item.category && <p className="text-xs text-stone-500 font-light mt-1">{item.category}</p>}
+                        {item.category && <p className="text-xs text-stone-500 font-normal mt-1">{item.category}</p>}
                         <p className="text-sm font-medium text-stone-900 mt-2">${item.price.toFixed(2)}</p>
                       </div>
                       <button 
@@ -115,7 +115,7 @@ export default function CartPage() {
             <div className="w-full lg:w-1/3 sticky top-28 bg-white border border-stone-200/80 rounded-2xl p-8 shadow-sm">
               <h2 className="text-xl font-serif text-stone-900 mb-6">Order Summary</h2>
               
-              <div className="space-y-4 text-sm font-light text-stone-600 border-b border-stone-100 pb-6 mb-6">
+              <div className="space-y-4 text-sm font-normal text-stone-600 border-b border-stone-100 pb-6 mb-6">
                 <div className="flex justify-between">
                   <span>Subtotal</span>
                   <span className="font-medium text-stone-900">${cartTotal.toFixed(2)}</span>

@@ -17,7 +17,17 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  mainCategory: {
+    type: String,
+    enum: ['apparel', 'accessories', 'home', 'decor', 'kitchen'],
+    required: true
+  },
   category: {
+    type: String,
+    enum: ['women', 'men', 'general'],
+    required: true
+  },
+  subcategory: {
     type: String,
     required: true
   },

@@ -1,105 +1,139 @@
 "use client";
 
-import { useState } from 'react';
+import React, { useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/context/AuthContext';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { Eye, EyeOff, Mail, Lock, ArrowRight } from 'lucide-react';
 
 export default function LoginPage() {
-  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  
+  const { login } = useAuth();
+  const router = useRouter();
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     setError('');
+    setIsLoading(true);
 
-    // Simulate network delay
-    await new Promise(resolve => setTimeout(resolve, 800));
-
-    // Hardcoded mock credentials
-    if (email === 'admin@digimart.com' && password === 'admin123') {
-      // Set an administrative cookie matching the exact key expected by middleware.ts
-      document.cookie = "admin_token=true; path=/; max-age=86400; SameSite=Strict";
-      router.push('/admin');
-    } else {
-      setError("Invalid credentials. Use admin@digimart.com / admin123");
+    // Basic validation
+    if (!email || !password) {
+      setError('Please fill in all fields');
+      setIsLoading(false);
+      return;
     }
-    setLoading(false);
+
+    try {
+      await login(email, password);
+      router.push('/');
+    } catch (err: any) {
+      setError(err.message || 'Invalid email or password');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#FBFBFB]">
+    <div className="flex flex-col min-h-screen bg-[#FCFBF8]">
       <Navbar />
-      <main className="flex-1 flex flex-col items-center justify-center p-6 animate-fade-in relative z-10 w-full overflow-hidden">
-        
-        {/* Decorative Background Elements */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-stone-100/50 blur-[100px] pointer-events-none -z-10" />
-
-        <div className="w-full max-w-sm bg-white p-10 sm:p-12 rounded-2xl border border-stone-200/60 shadow-[0_8px_40px_-12px_rgba(0,0,0,0.1)] relative z-20">
+      
+      <main className="flex-1 flex items-center justify-center px-6 py-20">
+        <div className="w-full max-w-[420px] animate-fade-up">
+          {/* Header */}
           <div className="text-center mb-10">
-            <h1 className="text-3xl font-serif text-stone-900 tracking-tight mb-3">Admin Login</h1>
-            <p className="text-[13px] text-stone-500 font-light loading-relaxed">
-              Sign in to manage your premium inventory and storefront settings.
-            </p>
+            <Link href="/" className="inline-block mb-8 text-2xl font-serif tracking-tighter text-stone-900">
+              DIGIMART
+            </Link>
+            <h1 className="text-2xl font-serif text-stone-900 mb-2">Welcome Back</h1>
+            <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-stone-400">Enter your details to sign in</p>
           </div>
-          
-          <form onSubmit={handleLogin} className="space-y-6">
-            {error && (
-              <div className="text-[12px] font-medium tracking-wide text-red-600 bg-red-50 p-4 rounded-lg border border-red-100 animate-fade-in text-center">
-                {error}
-              </div>
-            )}
-            
-            <div className="space-y-2.5">
-              <label className="block text-[10px] font-bold uppercase tracking-[0.2em] text-stone-900">Email Address</label>
-              <input 
-                type="email" 
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                className="w-full px-4 py-3.5 bg-stone-50/50 border border-stone-200/80 rounded-xl text-[13px] outline-none focus:ring-1 focus:ring-stone-900 focus:bg-white transition-all font-light placeholder:text-stone-400 shadow-inner"
-                placeholder="admin@digimart.com"
-                required
-              />
-            </div>
-            
-            <div className="space-y-2.5">
-              <label className="block text-[10px] font-bold uppercase tracking-[0.2em] text-stone-900">Password</label>
-              <input 
-                type="password" 
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                className="w-full px-4 py-3.5 bg-stone-50/50 border border-stone-200/80 rounded-xl text-[13px] outline-none focus:ring-1 focus:ring-stone-900 focus:bg-white transition-all font-light placeholder:text-stone-400 shadow-inner tracking-widest"
-                placeholder="••••••••"
-                required
-              />
-            </div>
-            
-            <button 
-              type="submit" 
-              disabled={loading}
-              className="w-full bg-stone-900 text-white px-6 py-4 text-[11px] font-bold uppercase tracking-[0.2em] rounded-xl hover:bg-stone-800 transition-all mt-4 shadow-[0_4px_14px_0_rgba(0,0,0,0.39)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.23)] hover:-translate-y-0.5 disabled:opacity-50 disabled:hover:translate-y-0 flex justify-center items-center gap-3"
-            >
-              {loading ? (
-                <>
-                  <svg className="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  Authenticating...
-                </>
-              ) : 'Sign In'}
-            </button>
-          </form>
 
-          <p className="text-[11px] text-stone-400 text-center mt-8 font-light">
-            Need help? <a href="#" className="hover:text-stone-900 underline transition-colors">Contact Support</a>
-          </p>
+          {/* Form */}
+          <div className="bg-white p-8 lg:p-10 rounded-2xl shadow-[0_20px_50px_-12px_rgba(0,0,0,0.06)] border border-stone-100">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {error && (
+                <div className="p-3 bg-red-50 text-red-500 text-[11px] font-bold uppercase tracking-widest text-center rounded-lg border border-red-100">
+                  {error}
+                </div>
+              )}
+
+              <div className="space-y-4">
+                {/* Email Input */}
+                <div className="space-y-1.5">
+                  <label htmlFor="email" className="text-[9px] font-bold uppercase tracking-[0.2em] text-stone-400 ml-1">Email Address</label>
+                  <div className="relative group">
+                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-300 group-focus-within:text-stone-900 transition-colors" strokeWidth={1.5} />
+                    <input
+                      id="email"
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="name@example.com"
+                      className="w-full bg-stone-50 border border-stone-100 focus:bg-white focus:border-stone-900 rounded-xl px-11 py-3.5 text-sm text-stone-900 outline-none transition-all placeholder:text-stone-300"
+                      required
+                    />
+                  </div>
+                </div>
+
+                {/* Password Input */}
+                <div className="space-y-1.5">
+                  <div className="flex justify-between items-center ml-1">
+                    <label htmlFor="password" className="text-[9px] font-bold uppercase tracking-[0.2em] text-stone-400">Password</label>
+                    <Link href="/forgot-password" title="Forgot Password" className="text-[9px] font-bold uppercase tracking-[0.2em] text-stone-900 hover:opacity-60 transition-opacity">Forgot?</Link>
+                  </div>
+                  <div className="relative group">
+                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-300 group-focus-within:text-stone-900 transition-colors" strokeWidth={1.5} />
+                    <input
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="••••••••"
+                      className="w-full bg-stone-50 border border-stone-100 focus:bg-white focus:border-stone-900 rounded-xl px-11 py-3.5 text-sm text-stone-900 outline-none transition-all placeholder:text-stone-300"
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-stone-300 hover:text-stone-900 transition-colors"
+                    >
+                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full bg-stone-900 text-white py-4 rounded-xl text-[11px] font-bold uppercase tracking-[0.3em] hover:bg-stone-800 transition-all shadow-sm hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed group"
+              >
+                <span className="flex items-center justify-center gap-2">
+                  {isLoading ? 'Signing In...' : 'Sign In'}
+                  {!isLoading && <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" /> }
+                </span>
+              </button>
+            </form>
+
+            <div className="mt-8 pt-8 border-t border-stone-50 text-center">
+              <p className="text-[11px] font-medium text-stone-400">
+                Don't have an account? {' '}
+                <Link href="/signup" className="text-stone-900 font-bold uppercase tracking-widest hover:underline underline-offset-4 decoration-stone-200">
+                  Create Account
+                </Link>
+              </p>
+            </div>
+          </div>
         </div>
       </main>
+
       <Footer />
     </div>
   );

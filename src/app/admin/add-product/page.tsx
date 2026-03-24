@@ -3,13 +3,16 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { categoryConfig } from '@/data/categoryConfig';
 
 export default function AddProductPage() {
   const router = useRouter();
   
   const [formData, setFormData] = useState({
     name: '',
+    mainCategory: '',
     category: '',
+    subcategory: '',
     price: '',
     stock: '',
     image: '',
@@ -24,7 +27,9 @@ export default function AddProductPage() {
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
     if (!formData.name.trim()) newErrors.name = 'Product name is required';
+    if (!formData.mainCategory.trim()) newErrors.mainCategory = 'Main category is required';
     if (!formData.category.trim()) newErrors.category = 'Category is required';
+    if (!formData.subcategory.trim()) newErrors.subcategory = 'Subcategory is required';
     if (!formData.price || isNaN(Number(formData.price)) || Number(formData.price) <= 0) {
       newErrors.price = 'Please enter a valid positive price';
     }
@@ -39,7 +44,17 @@ export default function AddProductPage() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    
+    setFormData(prev => {
+      if (name === 'mainCategory') {
+        return { ...prev, [name]: value, category: '', subcategory: '' };
+      }
+      if (name === 'category') {
+        return { ...prev, [name]: value, subcategory: '' };
+      }
+      return { ...prev, [name]: value };
+    });
+
     // Clear error for field on change
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: undefined as any }));
@@ -117,7 +132,9 @@ export default function AddProductPage() {
       // Reset form
       setFormData({
         name: '',
+        mainCategory: '',
         category: '',
+        subcategory: '',
         price: '',
         stock: '',
         image: '',
@@ -157,7 +174,7 @@ export default function AddProductPage() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-10">
         <div>
           <h1 className="text-3xl font-serif tracking-tight text-stone-900 mb-2">Add New Product</h1>
-          <p className="text-sm text-stone-500 font-light">Create a new product listing in your catalog.</p>
+          <p className="text-sm text-stone-500 font-normal">Create a new product listing in your catalog.</p>
         </div>
         <button 
           onClick={() => router.push('/admin/products')}
@@ -182,7 +199,7 @@ export default function AddProductPage() {
                 value={formData.name} 
                 onChange={handleChange}
                 placeholder="e.g. Cashmere Crew Sweater"
-                className={`w-full px-4 py-3.5 bg-stone-50 border ${errors.name ? 'border-red-300 ring-1 ring-red-300' : 'border-stone-200/80'} rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-light placeholder:text-stone-400`}
+                className={`w-full px-4 py-3.5 bg-stone-50 border ${errors.name ? 'border-red-300 ring-1 ring-red-300' : 'border-stone-200/80'} rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-normal placeholder:text-stone-400`}
               />
               {errors.name && <p className="text-red-500 text-xs mt-2 font-medium">{errors.name}</p>}
             </div>
@@ -196,33 +213,82 @@ export default function AddProductPage() {
                 value={formData.description} 
                 onChange={handleChange}
                 placeholder="Detailed description of the product..."
-                className={`w-full px-4 py-3.5 bg-stone-50 border ${errors.description ? 'border-red-300 ring-1 ring-red-300' : 'border-stone-200/80'} rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-light placeholder:text-stone-400 resize-none`}
+                className={`w-full px-4 py-3.5 bg-stone-50 border ${errors.description ? 'border-red-300 ring-1 ring-red-300' : 'border-stone-200/80'} rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-normal placeholder:text-stone-400 resize-none`}
               />
               {errors.description && <p className="text-red-500 text-xs mt-2 font-medium">{errors.description}</p>}
             </div>
             
-            <div>
-              <label htmlFor="category" className="block text-[11px] font-medium uppercase tracking-[0.2em] text-stone-500 mb-3">Category <span className="text-red-500">*</span></label>
-              <div className="relative">
-                <select 
-                  id="category" 
-                  name="category" 
-                  value={formData.category} 
-                  onChange={handleChange}
-                  className={`appearance-none w-full px-4 py-3.5 bg-stone-50 border ${errors.category ? 'border-red-300 ring-1 ring-red-300' : 'border-stone-200/80'} rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-light ${formData.category ? 'text-stone-900' : 'text-stone-400'}`}
-                >
-                  <option value="" disabled>Select a category</option>
-                  <option value="Apparel">Apparel</option>
-                  <option value="Accessories">Accessories</option>
-                  <option value="Home">Home</option>
-                  <option value="Decor">Decor</option>
-                  <option value="Kitchen">Kitchen</option>
-                </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-stone-500">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+            <div className="flex flex-col gap-6">
+              {/* Main Category */}
+              <div>
+                <label htmlFor="mainCategory" className="block text-[11px] font-medium uppercase tracking-[0.2em] text-stone-500 mb-3">Main Category <span className="text-red-500">*</span></label>
+                <div className="relative">
+                  <select 
+                    id="mainCategory" 
+                    name="mainCategory" 
+                    value={formData.mainCategory} 
+                    onChange={handleChange}
+                    className={`appearance-none w-full px-4 py-3.5 bg-stone-50 border ${errors.mainCategory ? 'border-red-300 ring-1 ring-red-300' : 'border-stone-200/80'} rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-normal ${formData.mainCategory ? 'text-stone-900' : 'text-stone-400'}`}
+                  >
+                    <option value="" disabled>Select main category</option>
+                    {Object.keys(categoryConfig).map(mainCat => (
+                      <option key={mainCat} value={mainCat}>{mainCat.charAt(0).toUpperCase() + mainCat.slice(1)}</option>
+                    ))}
+                  </select>
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-stone-500">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                  </div>
                 </div>
+                {errors.mainCategory && <p className="text-red-500 text-xs mt-2 font-medium">{errors.mainCategory}</p>}
               </div>
-              {errors.category && <p className="text-red-500 text-xs mt-2 font-medium">{errors.category}</p>}
+
+              {/* Category */}
+              <div>
+                <label htmlFor="category" className="block text-[11px] font-medium uppercase tracking-[0.2em] text-stone-500 mb-3">Category <span className="text-red-500">*</span></label>
+                <div className="relative">
+                  <select 
+                    id="category" 
+                    name="category" 
+                    value={formData.category} 
+                    onChange={handleChange}
+                    disabled={!formData.mainCategory}
+                    className={`appearance-none w-full px-4 py-3.5 bg-stone-50 border ${errors.category ? 'border-red-300 ring-1 ring-red-300' : 'border-stone-200/80'} rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-normal ${!formData.mainCategory ? 'opacity-50 cursor-not-allowed' : ''} ${formData.category ? 'text-stone-900' : 'text-stone-400'}`}
+                  >
+                    <option value="" disabled>Select category</option>
+                    {formData.mainCategory && Object.keys((categoryConfig as any)[formData.mainCategory] || {}).map(cat => (
+                      <option key={cat} value={cat}>{cat.charAt(0).toUpperCase() + cat.slice(1)}</option>
+                    ))}
+                  </select>
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-stone-500">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                  </div>
+                </div>
+                {errors.category && <p className="text-red-500 text-xs mt-2 font-medium">{errors.category}</p>}
+              </div>
+
+              {/* Subcategory */}
+              <div>
+                <label htmlFor="subcategory" className="block text-[11px] font-medium uppercase tracking-[0.2em] text-stone-500 mb-3">Subcategory <span className="text-red-500">*</span></label>
+                <div className="relative">
+                  <select 
+                    id="subcategory" 
+                    name="subcategory" 
+                    value={formData.subcategory} 
+                    onChange={handleChange}
+                    disabled={!formData.category}
+                    className={`appearance-none w-full px-4 py-3.5 bg-stone-50 border ${errors.subcategory ? 'border-red-300 ring-1 ring-red-300' : 'border-stone-200/80'} rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-normal ${!formData.category ? 'opacity-50 cursor-not-allowed' : ''} ${formData.subcategory ? 'text-stone-900' : 'text-stone-400'}`}
+                  >
+                    <option value="" disabled>Select subcategory</option>
+                    {formData.mainCategory && formData.category && (categoryConfig as any)[formData.mainCategory]?.[formData.category]?.map((subcat: string) => (
+                      <option key={subcat} value={subcat}>{subcat.charAt(0).toUpperCase() + subcat.slice(1)}</option>
+                    ))}
+                  </select>
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-stone-500">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                  </div>
+                </div>
+                {errors.subcategory && <p className="text-red-500 text-xs mt-2 font-medium">{errors.subcategory}</p>}
+              </div>
             </div>
           </div>
         </div>
@@ -290,7 +356,7 @@ export default function AddProductPage() {
                     value={formData.price} 
                     onChange={handleChange}
                     placeholder="0.00"
-                    className={`w-full pl-9 pr-4 py-3.5 bg-stone-50 border ${errors.price ? 'border-red-300 ring-1 ring-red-300' : 'border-stone-200/80'} rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-light placeholder:text-stone-400`}
+                    className={`w-full pl-9 pr-4 py-3.5 bg-stone-50 border ${errors.price ? 'border-red-300 ring-1 ring-red-300' : 'border-stone-200/80'} rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-normal placeholder:text-stone-400`}
                   />
                 </div>
                 {errors.price && <p className="text-red-500 text-xs mt-2 font-medium">{errors.price}</p>}
@@ -305,7 +371,7 @@ export default function AddProductPage() {
                   value={formData.stock} 
                   onChange={handleChange}
                   placeholder="e.g. 50"
-                  className={`w-full px-4 py-3.5 bg-stone-50 border ${errors.stock ? 'border-red-300 ring-1 ring-red-300' : 'border-stone-200/80'} rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-light placeholder:text-stone-400`}
+                  className={`w-full px-4 py-3.5 bg-stone-50 border ${errors.stock ? 'border-red-300 ring-1 ring-red-300' : 'border-stone-200/80'} rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-normal placeholder:text-stone-400`}
                 />
                 {errors.stock && <p className="text-red-500 text-xs mt-2 font-medium">{errors.stock}</p>}
               </div>

@@ -1,59 +1,123 @@
+"use client";
+
+import { useState } from 'react';
 import Link from 'next/link';
 
 export default function Footer() {
+  const [email, setEmail] = useState('');
+  const [status, setStatus] = useState<{ type: 'success' | 'error' | null, message: string }>({ type: null, message: '' });
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+
+    setLoading(true);
+    setStatus({ type: null, message: '' });
+
+    try {
+      const res = await fetch('http://localhost:5001/api/subscribe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setStatus({ type: 'success', message: 'Subscribed successfully' });
+        setEmail('');
+      } else {
+        setStatus({ type: 'error', message: data.message || 'Something went wrong. Please try again.' });
+      }
+    } catch (error) {
+      setStatus({ type: 'error', message: 'Unable to connect to server. Please try again later.' });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <footer className="bg-stone-950 text-stone-300 py-24">
+    <footer className="bg-stone-950 text-stone-100 py-24">
       <div className="mx-auto max-w-[1400px] px-6 lg:px-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-16 mb-24">
+          {/* Brand & Newsletter */}
           <div className="lg:col-span-4 lg:pr-12">
-            <h3 className="text-2xl font-serif text-white mb-6 tracking-tight">DIGIMART</h3>
-            <p className="text-sm text-stone-400 leading-relaxed font-light max-w-sm mb-8">
-              Premium essentials for a well-lived life. Minimal design, maximal quality. Crafted to endure beautifully through the seasons.
-            </p>
+            <h3 className="text-6xl font-serif text-white mb-6 tracking-tight">DIGIMART</h3>
+
+            <div className="max-w-sm">
+              <h4 className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/70 mb-6">Newsletter</h4>
+              <form onSubmit={handleSubmit} className="relative flex border-b border-stone-800 focus-within:border-white transition-colors pb-3 group">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="EMAIL ADDRESS"
+                  className="bg-transparent w-full text-[11px] font-medium tracking-widest outline-none placeholder-stone-600 !text-white uppercase caret-white"
+                  required
+                />
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="text-[11px] font-bold uppercase tracking-[0.2em] hover:text-white text-stone-500 transition-colors absolute right-0 bottom-3 disabled:opacity-50"
+                >
+                  {loading ? '...' : 'Join'}
+                </button>
+              </form>
+              {status.message && (
+                <p className={`mt-4 text-[11px] font-medium tracking-wide ${status.type === 'success' ? 'text-green-500' : 'text-red-500'}`}>
+                  {status.message}
+                </p>
+              )}
+            </div>
           </div>
-          
+
+          {/* Shop */}
           <div className="lg:col-span-2">
-            <h4 className="text-[10px] font-medium uppercase tracking-[0.2em] text-white/50 mb-8">Shop</h4>
-            <ul className="space-y-4 text-[13px] text-stone-400 font-light">
-              <li><Link href="#" className="hover:text-white transition-colors duration-300">Women</Link></li>
-              <li><Link href="#" className="hover:text-white transition-colors duration-300">Men</Link></li>
-              <li><Link href="#" className="hover:text-white transition-colors duration-300">Home</Link></li>
-              <li><Link href="#" className="hover:text-white transition-colors duration-300">Accessories</Link></li>
+            <h4 className="text-[10px] font-medium uppercase tracking-[0.2em] text-white/70 mb-8">Shop</h4>
+            <ul className="space-y-5 text-sm tracking-wide text-stone-200 font-normal">
+              <li><Link href="/category/apparel" className="hover:text-white transition-all duration-300">Apparel</Link></li>
+              <li><Link href="/category/accessories" className="hover:text-white transition-all duration-300">Accessories</Link></li>
+              <li><Link href="/category/home" className="hover:text-white transition-all duration-300">Home</Link></li>
+              <li><Link href="/category/decor" className="hover:text-white transition-all duration-300">Decor</Link></li>
+              <li><Link href="/category/kitchen" className="hover:text-white transition-all duration-300">Kitchen</Link></li>
             </ul>
           </div>
-          
+
+          {/* About */}
           <div className="lg:col-span-2">
-            <h4 className="text-[10px] font-medium uppercase tracking-[0.2em] text-white/50 mb-8">About</h4>
-            <ul className="space-y-4 text-[13px] text-stone-400 font-light">
-              <li><Link href="#" className="hover:text-white transition-colors duration-300">Our Story</Link></li>
-              <li><Link href="#" className="hover:text-white transition-colors duration-300">Sustainability</Link></li>
-              <li><Link href="#" className="hover:text-white transition-colors duration-300">Materials</Link></li>
-              <li><Link href="#" className="hover:text-white transition-colors duration-300">Journal</Link></li>
+            <h4 className="text-[10px] font-medium uppercase tracking-[0.2em] text-white/70 mb-8">About</h4>
+            <ul className="space-y-4 text-[13px] text-stone-200 font-normal">
+              <li><Link href="/about" className="hover:text-white transition-colors duration-300">Our Story</Link></li>
+              <li><Link href="/sustainability" className="hover:text-white transition-colors duration-300">Sustainability</Link></li>
+              <li><Link href="/materials" className="hover:text-white transition-colors duration-300">Materials</Link></li>
+              <li><Link href="/journal" className="hover:text-white transition-colors duration-300">Journal</Link></li>
             </ul>
           </div>
-          
-          <div className="lg:col-span-4">
-            <h4 className="text-[10px] font-medium uppercase tracking-[0.2em] text-white/50 mb-8">Newsletter</h4>
-            <p className="text-[13px] text-stone-400 mb-6 font-light">Sign up for exclusive offers, original stories, and events.</p>
-            <form className="relative flex border-b border-stone-800 focus-within:border-white transition-colors pb-3 group">
-              <input 
-                type="email" 
-                placeholder="EMAIL ADDRESS" 
-                className="bg-transparent w-full text-[11px] font-medium tracking-widest outline-none placeholder-stone-600 text-white"
-              />
-              <button type="button" className="text-[11px] font-medium uppercase tracking-[0.2em] hover:text-white text-stone-500 transition-colors absolute right-0 bottom-3">
-                Join
-              </button>
-            </form>
+
+          {/* Support */}
+          <div className="lg:col-span-2">
+            <h4 className="text-[10px] font-medium uppercase tracking-[0.2em] text-white/70 mb-8">Support</h4>
+            <ul className="space-y-4 text-[13px] text-stone-200 font-normal">
+              <li><Link href="/contact" className="hover:text-white transition-colors duration-300">Contact</Link></li>
+              <li><Link href="/faqs" className="hover:text-white transition-colors duration-300">FAQs</Link></li>
+            </ul>
+          </div>
+
+          {/* Legal */}
+          <div className="lg:col-span-2">
+            <h4 className="text-[10px] font-medium uppercase tracking-[0.2em] text-white/70 mb-8">Legal</h4>
+            <ul className="space-y-4 text-[13px] text-stone-200 font-normal">
+              <li><Link href="/privacy-policy" className="hover:text-white transition-colors duration-300">Privacy Policy</Link></li>
+              <li><Link href="/terms" className="hover:text-white transition-colors duration-300">Terms &amp; Conditions</Link></li>
+            </ul>
           </div>
         </div>
-        
-        <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-6 text-[11px] uppercase tracking-widest text-stone-600 font-medium">
+
+        <div className="pt-8 border-t border-stone-900 flex flex-col md:flex-row items-center justify-between gap-6 text-[11px] uppercase tracking-widest text-stone-400 font-medium">
           <p>&copy; {new Date().getFullYear()} DigiMart. All rights reserved.</p>
-          <div className="flex gap-8">
-            <Link href="#" className="hover:text-stone-300 transition-colors">Privacy</Link>
-            <Link href="#" className="hover:text-stone-300 transition-colors">Terms</Link>
-          </div>
         </div>
       </div>
     </footer>

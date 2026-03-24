@@ -42,13 +42,13 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif text-stone-900 tracking-tight leading-tight mb-6">
               {product.name}
             </h1>
-            <p className="text-xl text-stone-600 font-light mb-10">
+            <p className="text-xl text-stone-600 font-normal mb-10">
               ${product.price.toFixed(2)}
             </p>
             
             <div className="h-px w-full bg-stone-200 mb-10" />
             
-            <p className="text-sm text-stone-600 leading-relaxed font-light mb-12 max-w-prose">
+            <p className="text-sm text-stone-600 leading-relaxed font-normal mb-12 max-w-prose">
               {product.description}
             </p>
 

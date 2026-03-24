@@ -7,27 +7,40 @@
 }
 
 @keyframes fade-up {
-  0% { opacity: 0; transform: translateY(20px); }
-  100% { opacity: 1; transform: translateY(0); }
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .animate-fade-up {
-  animation: fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: fade-up 0.7s cubic-bezier(0.2, 0, 0, 1) forwards;
 }
 
 @keyframes fade-in {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
 }
 
 .animate-fade-in {
-  animation: fade-in 1s ease-out forwards;
+  animation: fade-in 0.7s cubic-bezier(0.2, 0, 0, 1) forwards;
 }
 
 :root {
   --background: #FCFBF8;
   --foreground: #111111;
-  color-scheme: light; /* Forces Safari/Chrome to treat native inputs as light mode */
+  color-scheme: light;
+  /* Forces Safari/Chrome to treat native inputs as light mode */
 }
 
 body {
@@ -38,7 +51,9 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Force all form controls to use deep contrasting text */
-input, textarea, select {
-  color: #111111 !important;
+/* Force all form controls to use deep contrasting text by default */
+input,
+textarea,
+select {
+  color: #111111;
 }

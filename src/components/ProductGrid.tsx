@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import ProductCard from './ProductCard';
+import { BASE_URL } from '@/utils/api';
 
 export default function ProductGrid() {
   const [products, setProducts] = useState([]);
@@ -12,7 +13,7 @@ export default function ProductGrid() {
   useEffect(() => {
     async function fetchProducts() {
       try {
-        const res = await fetch('http://localhost:5001/api/products');
+        const res = await fetch(`${BASE_URL}/products`);
         if (!res.ok) throw new Error('Failed to load products from server');
         const data = await res.json();
         setProducts(data);

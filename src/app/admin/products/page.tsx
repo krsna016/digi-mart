@@ -2,12 +2,18 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
+import { useAuth } from '@/context/AuthContext';
+import { Edit, Trash2, Plus } from 'lucide-react';
+import { BASE_URL } from '@/utils/api';
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState<any[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { user } = useAuth();
   
   // Filter States
   const [searchQuery, setSearchQuery] = useState('');
@@ -59,7 +65,7 @@ export default function AdminProductsPage() {
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      const res = await fetch('http://localhost:5001/api/products');
+      const res = await fetch(`${BASE_URL}/products`);
       if (!res.ok) throw new Error('Failed to load products');
       const data = await res.json();
       setProducts(data);
@@ -77,7 +83,7 @@ export default function AdminProductsPage() {
     
     try {
       setIsDeleting(true);
-      const res = await fetch(`http://localhost:5001/api/products/${id}`, {
+      const res = await fetch(`${BASE_URL}/products/${id}`, {
         method: 'DELETE',
       });
       if (!res.ok) throw new Error('Failed to delete product from server');

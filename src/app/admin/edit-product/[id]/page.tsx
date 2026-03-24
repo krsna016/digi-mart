@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter, useParams } from 'next/navigation';
 import { categoryConfig } from '@/data/categoryConfig';
+import { BASE_URL } from '@/utils/api';
 
 export default function EditProductPage() {
   const router = useRouter();
@@ -33,7 +34,7 @@ export default function EditProductPage() {
     const fetchProduct = async () => {
       try {
         setIsLoading(true);
-        const res = await fetch(`http://localhost:5001/api/products/${id}`);
+        const res = await fetch(`${BASE_URL}/products/${id}`);
         
         if (!res.ok) {
           const errData = await res.json().catch(() => ({}));
@@ -184,7 +185,7 @@ export default function EditProductPage() {
       });
       console.log('Update Payload:', payload);
 
-      const res = await fetch(`http://localhost:5001/api/products/${id}`, {
+      const res = await fetch(`${BASE_URL}/products/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

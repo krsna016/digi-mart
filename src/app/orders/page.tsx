@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { BASE_URL } from '@/utils/api';
 import { Package, ChevronDown, ChevronUp, ChevronRight, ExternalLink, Calendar, CreditCard, Clock, CheckCircle2, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -53,7 +54,7 @@ export default function OrdersPage() {
       if (!user?.token) return;
       
       try {
-        const response = await fetch('http://localhost:5001/api/orders/my-orders', {
+        const response = await fetch(`${BASE_URL}/orders/my-orders`, {
           headers: {
             'Authorization': `Bearer ${user.token}`,
           },

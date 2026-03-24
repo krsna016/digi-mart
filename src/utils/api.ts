@@ -1,6 +1,6 @@
 "use client";
 
-const BASE_URL = 'http://localhost:5001/api';
+export const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api';
 
 interface RequestOptions extends RequestInit {
   body?: any;

@@ -4,13 +4,14 @@ import { useEffect, useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ProductCard from '@/components/ProductCard';
+import { BASE_URL } from '@/utils/api';
 
 export default function AllCollectionPage() {
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('http://localhost:5001/api/products')
+    fetch(`${BASE_URL}/products`)
       .then(r => r.json())
       .then(data => setProducts(data))
       .catch(() => setProducts([]))

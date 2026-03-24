@@ -1,6 +1,5 @@
-"use client";
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { api } from '@/utils/api';
 
 export interface User {
   _id: string; // Match MongoDB _id
@@ -75,18 +74,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch('http://localhost:5001/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Login failed');
-      }
-
+      const data = await api.post('/auth/login', { email, password });
       setUser(data);
     } catch (err: any) {
       setError(err.message);
@@ -105,18 +93,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch('http://localhost:5001/api/auth/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Registration failed');
-      }
-
+      const data = await api.post('/auth/signup', { name, email, password });
       setUser(data);
     } catch (err: any) {
       setError(err.message);
@@ -131,20 +108,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     
     setIsLoading(true);
     try {
-      const response = await fetch('http://localhost:5001/api/auth/me', {
-        method: 'GET',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user.token}`
-        },
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Failed to fetch profile');
-      }
-
+      const data = await api.get('/auth/me');
       // Merge current token with fetched data
       setUser({ ...data, token: user.token });
     } catch (err: any) {
@@ -160,24 +124,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch('http://localhost:5001/api/auth/profile', {
-        method: 'PUT',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user.token}`
-        },
-        body: JSON.stringify(profileData),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Failed to update profile');
-      }
-
+      const data = await api.put('/auth/profile', profileData);
       // Update local storage and state with new details (keeping token)
       const updatedUser = { ...data, token: user.token };
-      localStorage.setItem('user', JSON.stringify(updatedUser));
       setUser(updatedUser);
     } catch (err: any) {
       setError(err.message);
@@ -190,16 +139,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const addAddress = async (addressData: Partial<Address>) => {
     if (!user?.token) return [];
     try {
-      const response = await fetch('http://localhost:5001/api/user/address', {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user.token}`
-        },
-        body: JSON.stringify(addressData),
-      });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message || 'Failed to add address');
+      const data = await api.post('/user/address', addressData);
       return data;
     } catch (err: any) {
       setError(err.message);
@@ -210,11 +150,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const getAddresses = async (): Promise<Address[]> => {
     if (!user?.token) return [];
     try {
-      const response = await fetch('http://localhost:5001/api/user/address', {
-        headers: { 'Authorization': `Bearer ${user.token}` },
-      });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message || 'Failed to fetch addresses');
+      const data = await api.get('/user/address');
       return data;
     } catch (err: any) {
       setError(err.message);
@@ -225,16 +161,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const updateAddress = async (id: string, addressData: Partial<Address>) => {
     if (!user?.token) return [];
     try {
-      const response = await fetch(`http://localhost:5001/api/user/address/${id}`, {
-        method: 'PUT',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user.token}`
-        },
-        body: JSON.stringify(addressData),
-      });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message || 'Failed to update address');
+      const data = await api.put(`/user/address/${id}`, addressData);
       return data;
     } catch (err: any) {
       setError(err.message);
@@ -245,12 +172,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const deleteAddress = async (id: string) => {
     if (!user?.token) return [];
     try {
-      const response = await fetch(`http://localhost:5001/api/user/address/${id}`, {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${user.token}` },
-      });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message || 'Failed to delete address');
+      const data = await api.delete(`/user/address/${id}`);
       return data;
     } catch (err: any) {
       setError(err.message);

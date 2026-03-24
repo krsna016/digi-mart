@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { BASE_URL } from '@/utils/api';
 
 export default function Footer() {
   const [email, setEmail] = useState('');
@@ -16,7 +17,7 @@ export default function Footer() {
     setStatus({ type: null, message: '' });
 
     try {
-      const res = await fetch('http://localhost:5001/api/subscribe', {
+      const res = await fetch(`${BASE_URL}/subscribe`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

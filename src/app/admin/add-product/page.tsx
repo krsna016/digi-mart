@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { categoryConfig } from '@/data/categoryConfig';
+import { BASE_URL } from '@/utils/api';
 
 export default function AddProductPage() {
   const router = useRouter();
@@ -114,7 +115,7 @@ export default function AddProductPage() {
         stock: parseInt(formData.stock, 10),
       };
 
-      const res = await fetch('http://localhost:5001/api/products', {
+      const res = await fetch(`${BASE_URL}/products`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -1,11 +1,12 @@
 export const dynamic = 'force-dynamic';
+import { BASE_URL } from "@/utils/api";
 
 export default async function AdminDashboard() {
   let products = [];
   let error = null;
 
   try {
-    const res = await fetch('http://localhost:5001/api/products', { cache: 'no-store' });
+    const res = await fetch(`${BASE_URL}/products`, { cache: 'no-store' });
     if (!res.ok) throw new Error('Failed to fetch products from backend');
     products = await res.json();
   } catch (err: any) {

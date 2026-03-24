@@ -2,19 +2,24 @@ import { notFound } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import AddToCartButton from '@/components/AddToCartButton';
+import { BASE_URL } from '@/utils/api';
 
-export default async function ProductPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
-  
-  let product = null;
+async function getProduct(id: string) {
   try {
-    const res = await fetch(`http://localhost:5001/api/products/${id}`, { cache: 'no-store' });
+    const res = await fetch(`${BASE_URL}/products/${id}`, { cache: 'no-store' });
     if (res.ok) {
-      product = await res.json();
+      return await res.json();
     }
   } catch (error) {
     console.error("Failed to fetch product:", error);
   }
+  return null;
+}
+
+export default async function ProductPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  
+  const product = await getProduct(id);
 
   if (!product) {
     notFound();

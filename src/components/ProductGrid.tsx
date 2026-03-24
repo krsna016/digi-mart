@@ -37,10 +37,25 @@ export default function ProductGrid() {
 
   if (error) {
     return (
-      <section className="mx-auto max-w-[1400px] px-6 lg:px-12 py-32 text-center min-h-[50vh] flex flex-col justify-center">
-        <h2 className="text-2xl font-serif text-red-700 mb-4">Unable to Load Collection</h2>
-        <p className="text-stone-600 mb-2">{error}</p>
-        <p className="text-stone-500 text-sm">Please ensure your backend server is running on http://localhost:5000</p>
+      <section className="mx-auto max-w-[1400px] px-6 lg:px-12 py-32 text-center min-h-[50vh] flex flex-col justify-center animate-fade-in">
+        <div className="bg-red-50/50 border border-red-100 rounded-3xl p-12 max-w-2xl mx-auto shadow-sm">
+          <h2 className="text-2xl font-serif text-red-700 mb-6">Database Connectivity Issue</h2>
+          <div className="space-y-4 mb-8">
+            <p className="text-stone-600 text-sm leading-relaxed">
+              The frontend was unable to load products from your server at:
+            </p>
+            <code className="block bg-white px-4 py-3 rounded-xl border border-red-100 text-red-600 font-mono text-[13px] break-all">
+              {BASE_URL}
+            </code>
+          </div>
+          <div className="text-left space-y-4 text-xs text-stone-500 font-normal border-t border-red-100 pt-8">
+            <p className="font-bold text-stone-700 uppercase tracking-widest text-[10px]">How to fix this:</p>
+            <ul className="list-disc pl-5 space-y-2">
+              <li>If testing <strong>locally</strong>: Ensure your backend is running on port 5001.</li>
+              <li>If on <strong>Vercel</strong>: Change your <code>NEXT_PUBLIC_API_URL</code> to your Render URL (<code>https://...onrender.com/api</code>).</li>
+            </ul>
+          </div>
+        </div>
       </section>
     );
   }

@@ -33,15 +33,34 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
     return (
       <div className="flex flex-col min-h-screen bg-[#FCFBF8]">
         <Navbar />
-        <main className="flex-1 flex flex-col items-center justify-center p-6 text-center">
-          <h1 className="text-2xl font-serif text-stone-900 mb-4">Connection Issue</h1>
-          <p className="text-stone-600 mb-8 max-w-md">
-            We couldn't reach the product database. If you're running this on Vercel, 
-            ensure your backend is deployed and <code>NEXT_PUBLIC_API_URL</code> is set correctly.
-          </p>
-          <Link href="/" className="px-8 py-3 bg-stone-900 text-white text-[10px] font-bold uppercase tracking-widest rounded-full">
-            Back to Home
-          </Link>
+        <main className="flex-1 flex flex-col items-center justify-center p-8 text-center max-w-2xl mx-auto">
+          <div className="bg-white border border-stone-100 rounded-3xl p-10 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.05)] w-full">
+            <h1 className="text-3xl font-serif text-stone-900 mb-6">Connection Issue</h1>
+            <p className="text-stone-500 text-sm mb-8 leading-relaxed">
+              Vercel was unable to reach your backend server from its cloud environment.
+            </p>
+            
+            <div className="space-y-4 mb-10 text-left">
+              <div className="space-y-2">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-stone-400 ml-1">Attempted URL:</span>
+                <code className="block bg-stone-50 px-4 py-3 rounded-xl border border-stone-100 text-stone-600 font-mono text-[12px] break-all">
+                  {BASE_URL}/products/{id}
+                </code>
+              </div>
+              <div className="space-y-2">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-stone-400 ml-1">Error Detail:</span>
+                <code className="block bg-red-50/30 px-4 py-3 rounded-xl border border-red-100/30 text-red-500 font-mono text-[12px] break-all">
+                  {result?.message || result?.error || 'Unknown Fetch Failure'}
+                </code>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href="/" className="px-10 py-4 bg-stone-900 text-white text-[10px] font-bold uppercase tracking-widest rounded-full hover:bg-stone-800 transition-all shadow-lg active:scale-95">
+                Back to Home
+              </Link>
+            </div>
+          </div>
         </main>
         <Footer />
       </div>

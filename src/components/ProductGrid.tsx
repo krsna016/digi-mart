@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import ProductCard from './ProductCard';
-import { BASE_URL } from '@/utils/api';
+import { BASE_URL } from '@/utils/config';
 
 export default function ProductGrid() {
   const [products, setProducts] = useState([]);

@@ -1,6 +1,4 @@
-"use client";
-
-export const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api';
+import { BASE_URL } from '@/utils/config';
 
 interface RequestOptions extends RequestInit {
   body?: any;

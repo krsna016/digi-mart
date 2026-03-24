@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { BASE_URL } from '@/utils/api';
+import { BASE_URL } from '@/utils/config';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });

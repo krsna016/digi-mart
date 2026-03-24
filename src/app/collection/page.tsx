@@ -6,7 +6,7 @@ import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ProductCard from '@/components/ProductCard';
-import { BASE_URL } from '@/utils/api';
+import { BASE_URL } from '@/utils/config';
 
 type SortOption = 'featured' | 'price-asc' | 'price-desc';
 

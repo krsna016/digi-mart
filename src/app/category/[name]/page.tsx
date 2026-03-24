@@ -7,7 +7,7 @@ import Footer from '@/components/Footer';
 import Link from 'next/link';
 import { categoryConfig } from '@/data/categoryConfig';
 import ProductCard from '@/components/ProductCard';
-import { BASE_URL } from '@/utils/api';
+import { BASE_URL } from '@/utils/config';
 
 type SortOption = 'featured' | 'price-asc' | 'price-desc';
 

@@ -3,7 +3,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import AddToCartButton from '@/components/AddToCartButton';
 import Link from 'next/link';
-import { BASE_URL } from '@/utils/api';
+import { BASE_URL } from '@/utils/config';
 
 async function getProduct(id: string) {
   try {

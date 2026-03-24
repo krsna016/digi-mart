@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ProductCard from '@/components/ProductCard';
-import { BASE_URL } from '@/utils/api';
+import { BASE_URL } from '@/utils/config';
 
 export default function AllCollectionPage() {
   const [products, setProducts] = useState<any[]>([]);

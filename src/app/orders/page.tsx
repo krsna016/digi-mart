@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { BASE_URL } from '@/utils/api';
+import { BASE_URL } from '@/utils/config';
 import { Package, ChevronDown, ChevronUp, ChevronRight, ExternalLink, Calendar, CreditCard, Clock, CheckCircle2, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';

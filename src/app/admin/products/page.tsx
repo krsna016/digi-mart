@@ -6,7 +6,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { useAuth } from '@/context/AuthContext';
 import { Edit, Trash2, Plus } from 'lucide-react';
-import { BASE_URL } from '@/utils/api';
+import { BASE_URL } from '@/utils/config';
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState<any[]>([]);

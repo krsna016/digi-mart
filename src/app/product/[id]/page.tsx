@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import AddToCartButton from '@/components/AddToCartButton';
+import Link from 'next/link';
 import { BASE_URL } from '@/utils/api';
 
 async function getProduct(id: string) {
@@ -10,20 +11,44 @@ async function getProduct(id: string) {
     if (res.ok) {
       return await res.json();
     }
-  } catch (error) {
+    if (res.status === 404) return { error: 'not_found' };
+    return { error: 'api_error', status: res.status };
+  } catch (error: any) {
     console.error("Failed to fetch product:", error);
+    return { error: 'fetch_failed', message: error.message };
   }
-  return null;
 }
 
 export default async function ProductPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   
-  const product = await getProduct(id);
+  const result = await getProduct(id);
 
-  if (!product) {
-    notFound();
+  if (!result || result.error) {
+    if (result?.error === 'not_found') {
+      notFound();
+    }
+    
+    // For other errors (like connection refused on Vercel), show a helpful message
+    return (
+      <div className="flex flex-col min-h-screen bg-[#FCFBF8]">
+        <Navbar />
+        <main className="flex-1 flex flex-col items-center justify-center p-6 text-center">
+          <h1 className="text-2xl font-serif text-stone-900 mb-4">Connection Issue</h1>
+          <p className="text-stone-600 mb-8 max-w-md">
+            We couldn't reach the product database. If you're running this on Vercel, 
+            ensure your backend is deployed and <code>NEXT_PUBLIC_API_URL</code> is set correctly.
+          </p>
+          <Link href="/" className="px-8 py-3 bg-stone-900 text-white text-[10px] font-bold uppercase tracking-widest rounded-full">
+            Back to Home
+          </Link>
+        </main>
+        <Footer />
+      </div>
+    );
   }
+
+  const product = result;
 
   return (
     <div className="flex flex-col min-h-screen bg-[#FCFBF8]">

@@ -23,7 +23,7 @@ export default function ProductGrid() {
         setLoading(false);
       }
     }
-    
+
     fetchProducts();
   }, []);
 
@@ -56,13 +56,16 @@ export default function ProductGrid() {
           View Collection
         </Link>
       </div>
-      
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-16">
-        {products.slice(0, 8).map((product: any, idx: number) => (
-          <div key={product._id} className="opacity-0 animate-fade-up" style={{ animationDelay: `${0.1 * (idx % 4)}s` }}>
-            <ProductCard {...product} id={product._id} />
-          </div>
-        ))}
+        {products.slice(0, 8).map((product: any, idx: number) => {
+          const productId = product._id || product.id;
+          return (
+            <div key={productId} className="opacity-0 animate-fade-up" style={{ animationDelay: `${0.1 * (idx % 4)}s` }}>
+              <ProductCard {...product} id={productId} />
+            </div>
+          );
+        })}
       </div>
     </section>
   );

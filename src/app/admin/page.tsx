@@ -1,5 +1,5 @@
 export const dynamic = 'force-dynamic';
-import { BASE_URL } from "@/utils/api";
+import { BASE_URL } from "@/utils/config";
 
 export default async function AdminDashboard() {
   let products = [];

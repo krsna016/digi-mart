@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
@@ -10,7 +10,7 @@ import { BASE_URL } from '@/utils/api';
 
 type SortOption = 'featured' | 'price-asc' | 'price-desc';
 
-export default function CollectionPage() {
+function CollectionContent() {
   const searchParams = useSearchParams();
   const categoryFilter = searchParams.get('category')?.toLowerCase() || '';
 
@@ -21,7 +21,7 @@ export default function CollectionPage() {
   const [isSortOpen, setIsSortOpen] = useState(false);
 
   useEffect(() => {
-    fetch('http://localhost:5001/api/products')
+    fetch(`${BASE_URL}/products`)
       .then(r => { if (!r.ok) throw new Error('Failed to load products'); return r.json(); })
       .then(data => setAllProducts(data))
       .catch(e => setError(e.message))
@@ -49,9 +49,7 @@ export default function CollectionPage() {
   const categories = [...new Set(allProducts.map(p => p.mainCategory || p.category).filter(Boolean))];
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#FCFBF8]">
-      <Navbar />
-
+    <>
       {/* Premium Breadcrumbs */}
       <div className="max-w-[1400px] mx-auto w-full px-6 lg:px-12 pt-10 pb-4 flex items-center gap-3 text-[9px] font-bold uppercase tracking-[0.25em] text-stone-400">
         <Link href="/" className="hover:text-stone-900 transition-colors">Home</Link>
@@ -153,7 +151,7 @@ export default function CollectionPage() {
         ) : error ? (
           <div className="flex flex-col items-center justify-center py-32 text-center animate-fade-up">
             <p className="text-red-500 text-sm font-medium mb-2">{error}</p>
-            <p className="text-stone-400 text-xs font-normal">Ensure your backend is running on port 5001.</p>
+            <p className="text-stone-400 text-xs font-normal">Please check your configuration or try again later.</p>
           </div>
         ) : sortedAndFiltered.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-32 text-center animate-fade-up">
@@ -177,7 +175,21 @@ export default function CollectionPage() {
           </div>
         )}
       </main>
+    </>
+  );
+}
 
+export default function CollectionPage() {
+  return (
+    <div className="flex flex-col min-h-screen bg-[#FCFBF8]">
+      <Navbar />
+      <Suspense fallback={
+        <div className="flex items-center justify-center py-32 min-h-[60vh]">
+          <div className="w-8 h-8 rounded-full border-2 border-stone-200 border-t-stone-900 animate-spin" />
+        </div>
+      }>
+        <CollectionContent />
+      </Suspense>
       <Footer />
     </div>
   );

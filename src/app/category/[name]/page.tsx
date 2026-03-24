@@ -37,7 +37,7 @@ function CategoryContent() {
       setLoading(true);
       try {
         console.log('Fetching products from backend...');
-        const res = await fetch('http://localhost:5001/api/products', {
+        const res = await fetch(`${BASE_URL}/products`, {
           signal: controller.signal
         });
         

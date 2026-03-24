@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   // In a real production app, you would verify a JWT or session identifier here.
   // For this mock, we check for a simple identifying cookie.
   const adminToken = request.cookies.get('admin_token')?.value;

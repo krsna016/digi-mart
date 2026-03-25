@@ -71,7 +71,7 @@ export default function CartPage() {
                           <h3 className="text-lg font-medium text-stone-900 hover:text-stone-600 transition-colors">{item.name}</h3>
                         </Link>
                         {item.category && <p className="text-xs text-stone-500 font-normal mt-1">{item.category}</p>}
-                        <p className="text-sm font-medium text-stone-900 mt-2">${item.price.toFixed(2)}</p>
+                        <p className="text-sm font-medium text-stone-900 mt-2">₹{item.price.toFixed(2)}</p>
                       </div>
                       <button 
                         onClick={() => removeFromCart(item.id)}
@@ -103,7 +103,7 @@ export default function CartPage() {
                       
                       <div className="text-right">
                         <p className="text-[9px] text-stone-400 uppercase tracking-widest mb-1 font-semibold">Total</p>
-                        <p className="text-base font-medium text-stone-900">${(item.price * item.quantity).toFixed(2)}</p>
+                        <p className="text-base font-medium text-stone-900">₹{(item.price * item.quantity).toFixed(2)}</p>
                       </div>
                     </div>
                   </div>
@@ -118,7 +118,7 @@ export default function CartPage() {
               <div className="space-y-4 text-sm font-normal text-stone-600 border-b border-stone-100 pb-6 mb-6">
                 <div className="flex justify-between">
                   <span>Subtotal</span>
-                  <span className="font-medium text-stone-900">${cartTotal.toFixed(2)}</span>
+                  <span className="font-medium text-stone-900">₹{cartTotal.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Shipping</span>
@@ -128,17 +128,18 @@ export default function CartPage() {
               
               <div className="flex justify-between items-end mb-8">
                 <span className="text-base font-medium text-stone-900">Estimated Total</span>
-                <span className="text-2xl font-serif text-stone-900">${cartTotal.toFixed(2)}</span>
+                <span className="text-2xl font-serif text-stone-900">₹{cartTotal.toFixed(2)}</span>
               </div>
               
-              <button 
+              <Link 
+                href="/checkout"
                 className="w-full bg-stone-900 text-white px-6 py-4.5 text-[11px] font-bold uppercase tracking-[0.2em] rounded-xl hover:bg-stone-800 transition-all shadow-[0_4px_14px_0_rgba(0,0,0,0.39)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.23)] hover:-translate-y-0.5 flex items-center justify-center gap-2"
               >
                 Proceed to Checkout
                 <svg className="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>
-              </button>
+              </Link>
               
               <div className="mt-8 pt-6 border-t border-stone-100 flex items-center justify-center gap-2 text-stone-400 text-xs">
                 <svg className="w-4 h-4 text-stone-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">

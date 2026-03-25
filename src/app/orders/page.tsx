@@ -1,14 +1,15 @@
 "use client";
 
 import { useAuth } from '@/context/AuthContext';
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState, Suspense } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { BASE_URL } from '@/utils/config';
 import { Package, ChevronDown, ChevronUp, ChevronRight, ExternalLink, Calendar, CreditCard, Clock, CheckCircle2, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { generateInvoice } from '@/utils/invoiceGenerator';
 
 interface OrderItem {
   _id: string;
@@ -29,19 +30,37 @@ interface Order {
   deliveredAt?: string;
   orderItems: OrderItem[];
   paymentMethod: string;
+  shippingAddress: {
+    address: string;
+    city: string;
+    postalCode: string;
+    country: string;
+  };
 }
 
-export default function OrdersPage() {
+function OrdersContent() {
   const { user, isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const success = searchParams.get('success');
   const [orders, setOrders] = useState<Order[]>([]);
   const [loadingOrders, setLoadingOrders] = useState(true);
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-  }, []);
+    if (success === 'true') {
+      setShowSuccess(true);
+      // Remove success param from URL without refreshing
+      const newUrl = window.location.pathname;
+      window.history.replaceState({}, '', newUrl);
+      
+      const timer = setTimeout(() => setShowSuccess(false), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [success]);
 
   useEffect(() => {
     if (mounted && !isLoading && !isAuthenticated) {
@@ -61,7 +80,8 @@ export default function OrdersPage() {
         });
         const data = await response.json();
         if (response.ok) {
-          setOrders(data);
+          const paidOrders = data.filter((order: Order) => order.isPaid);
+          setOrders(paidOrders);
         }
       } catch (error) {
         console.error('Error fetching orders:', error);
@@ -77,6 +97,18 @@ export default function OrdersPage() {
 
   const toggleOrder = (orderId: string) => {
     setExpandedOrder(expandedOrder === orderId ? null : orderId);
+  };
+
+  const handleDownloadInvoice = (order: Order) => {
+    generateInvoice({
+      orderId: order._id,
+      date: formatDate(order.createdAt),
+      customerName: user?.name || 'Customer',
+      shippingAddress: order.shippingAddress,
+      items: order.orderItems,
+      totalPrice: order.totalPrice,
+      paymentMethod: order.paymentMethod
+    });
   };
 
   const formatDate = (dateString: string) => {
@@ -104,9 +136,16 @@ export default function OrdersPage() {
       <main className="flex-1 max-w-[1240px] mx-auto w-full px-8 lg:px-12 py-12 lg:py-20">
         <div className="flex flex-col gap-12">
           
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 relative">
             <h1 className="text-4xl font-serif text-stone-900 tracking-tight">Orders</h1>
             <p className="text-[11px] uppercase tracking-[0.3em] text-stone-400 font-medium">History of your premium essentials</p>
+            
+            {showSuccess && (
+              <div className="absolute top-0 right-0 flex items-center gap-3 bg-stone-900 text-white px-6 py-3 rounded-full shadow-2xl animate-in fade-in slide-in-from-right-8 duration-500">
+                <CheckCircle2 className="w-4 h-4 text-white" />
+                <span className="text-[11px] font-bold uppercase tracking-[0.2em]">Order Placed Successfully</span>
+              </div>
+            )}
           </div>
 
           {loadingOrders ? (
@@ -152,7 +191,7 @@ export default function OrdersPage() {
                       </div>
                       <div className="flex flex-col gap-2">
                         <span className="text-[9px] font-bold uppercase tracking-widest text-stone-400">Total</span>
-                        <span className="text-[13px] font-medium text-stone-900">${order.totalPrice.toFixed(2)}</span>
+                        <span className="text-[13px] font-medium text-stone-900">₹{order.totalPrice.toFixed(2)}</span>
                       </div>
                       <div className="flex flex-col gap-2">
                         <span className="text-[9px] font-bold uppercase tracking-widest text-stone-400">Status</span>
@@ -184,7 +223,13 @@ export default function OrdersPage() {
                     </div>
 
                     <div className="flex items-center justify-between lg:justify-end gap-6 border-t lg:border-t-0 border-stone-50 pt-6 lg:pt-0">
-                       <button className="text-[10px] font-bold uppercase tracking-[0.2em] text-stone-400 hover:text-stone-900 transition-colors flex items-center gap-2 group">
+                       <button 
+                         onClick={(e) => {
+                           e.stopPropagation();
+                           handleDownloadInvoice(order);
+                         }}
+                         className="text-[10px] font-bold uppercase tracking-[0.2em] text-stone-400 hover:text-stone-900 transition-colors flex items-center gap-2 group"
+                       >
                           Invoice
                           <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 -translate-y-1 transition-all" />
                        </button>
@@ -225,8 +270,8 @@ export default function OrdersPage() {
                                   <p className="text-[10px] uppercase tracking-widest text-stone-400 font-medium">Qty: {item.qty}</p>
                                 </div>
                                 <div className="flex flex-col md:items-end gap-1.5">
-                                   <p className="text-[13px] font-medium text-stone-900">${(item.price * item.qty).toFixed(2)}</p>
-                                   <span className="text-[10px] text-stone-400 font-normal">${item.price.toFixed(2)} per unit</span>
+                                   <p className="text-[13px] font-medium text-stone-900">₹{(item.price * item.qty).toFixed(2)}</p>
+                                   <span className="text-[10px] text-stone-400 font-normal">₹{item.price.toFixed(2)} per unit</span>
                                 </div>
                               </div>
                               <ChevronRight className="w-4 h-4 text-stone-200 lg:hidden" />
@@ -246,7 +291,7 @@ export default function OrdersPage() {
                            <div className="lg:w-80 space-y-4">
                               <div className="flex justify-between text-[11px] uppercase tracking-widest text-stone-400 font-medium">
                                  <span>Subtotal</span>
-                                 <span className="text-stone-900">${order.totalPrice.toFixed(2)}</span>
+                                  <span className="text-stone-900">₹{order.totalPrice.toFixed(2)}</span>
                               </div>
                               <div className="flex justify-between text-[11px] uppercase tracking-widest text-stone-400 font-medium">
                                  <span>Shipping</span>
@@ -254,7 +299,7 @@ export default function OrdersPage() {
                               </div>
                               <div className="pt-4 border-t border-stone-200 flex justify-between items-end">
                                  <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-stone-900">Total</span>
-                                 <span className="text-2xl font-serif text-stone-900">${order.totalPrice.toFixed(2)}</span>
+                                  <span className="text-2xl font-serif text-stone-900">₹{order.totalPrice.toFixed(2)}</span>
                               </div>
                            </div>
                         </div>
@@ -270,5 +315,17 @@ export default function OrdersPage() {
 
       <Footer />
     </div>
+  );
+}
+
+export default function OrdersPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex h-screen items-center justify-center bg-[#FCFBF8]">
+        <div className="w-8 h-8 border-2 border-stone-200 border-t-stone-900 rounded-full animate-spin" />
+      </div>
+    }>
+      <OrdersContent />
+    </Suspense>
   );
 }

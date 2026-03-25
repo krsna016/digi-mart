@@ -92,7 +92,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
               {product.name}
             </h1>
             <p className="text-xl text-stone-600 font-normal mb-10">
-              ${product.price.toFixed(2)}
+              ₹{product.price.toFixed(2)}
             </p>
             
             <div className="h-px w-full bg-stone-200 mb-10" />
@@ -112,7 +112,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
             <div className="mt-16 space-y-4 text-[13px] font-medium uppercase tracking-widest text-stone-900/60">
               <div className="flex justify-between border-b border-stone-200 pb-4">
                 <span>Free Standard Shipping</span>
-                <span>On Orders Over $150</span>
+                <span>On Orders Over ₹150</span>
               </div>
               <div className="flex justify-between border-b border-stone-200 pb-4">
                 <span>Returns</span>

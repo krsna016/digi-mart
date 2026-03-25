@@ -58,7 +58,7 @@ export default function ProductCard({ id, name, price, image, category, ...rest 
       </div>
       <div className="flex flex-col gap-1 px-0.5">
         <h3 className="text-[16px] text-stone-900 tracking-wide font-medium leading-snug">{name}</h3>
-        <p className="text-[16px] text-stone-700 font-normal">${price}</p>
+        <p className="text-[16px] text-stone-700 font-normal">₹{price}</p>
       </div>
     </Link>
   );

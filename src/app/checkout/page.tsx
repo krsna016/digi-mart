@@ -1,0 +1,277 @@
+"use client";
+
+import { useCart } from '@/context/CartContext';
+import { useAuth, Address } from '@/context/AuthContext';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
+import { api } from '@/utils/api';
+import { RAZORPAY_KEY_ID } from '@/utils/config';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { MapPin, Plus, CheckCircle2 } from 'lucide-react';
+
+export default function CheckoutPage() {
+  const { cart, cartTotal, clearCart } = useCart();
+  const { user, isAuthenticated, isLoading: authLoading, getAddresses } = useAuth();
+  const router = useRouter();
+
+  const [addresses, setAddresses] = useState<Address[]>([]);
+  const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  useEffect(() => {
+    if (!authLoading && !isAuthenticated) {
+      router.push('/login?redirect=/checkout');
+    }
+  }, [isAuthenticated, authLoading, router]);
+
+  useEffect(() => {
+    const fetchAddresses = async () => {
+      if (!isAuthenticated) return;
+      try {
+        const data = await getAddresses();
+        setAddresses(data);
+        if (data.length === 0) {
+          router.push('/account/addresses?redirect=/checkout&message=Please add a shipping address to continue');
+        } else {
+          const defaultAddr = data.find(addr => addr.isDefault) || data[0];
+          setSelectedAddress(defaultAddr);
+        }
+      } catch (err) {
+        console.error('Failed to fetch addresses', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAddresses();
+  }, [isAuthenticated, getAddresses, router]);
+
+  useEffect(() => {
+    // Load Razorpay script
+    const script = document.createElement('script');
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.async = true;
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
+  const handlePayment = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isAuthenticated || !selectedAddress) return;
+    if (cart.length === 0) return;
+
+    setIsProcessing(true);
+
+    try {
+      // 1. Create Order in DB
+      const orderData = {
+        orderItems: cart.map(item => ({
+          name: item.name,
+          qty: item.quantity,
+          image: item.image,
+          price: item.price,
+          product: item.id
+        })),
+        shippingAddress: { 
+          address: selectedAddress.addressLine, 
+          city: selectedAddress.city, 
+          postalCode: selectedAddress.pincode, 
+          country: selectedAddress.country 
+        },
+        paymentMethod: 'Razorpay',
+        itemsPrice: cartTotal,
+        shippingPrice: 0,
+        taxPrice: 0,
+        totalPrice: cartTotal,
+      };
+
+      const dbOrder = await api.post('/orders', orderData);
+
+      // 2. Create Razorpay Order in Backend
+      const razorpayOrder = await api.post('/payment/order', {
+        amount: cartTotal,
+        currency: 'INR',
+        receipt: dbOrder._id
+      });
+
+      // 3. Open Razorpay Modal
+      const options = {
+        key: RAZORPAY_KEY_ID,
+        amount: razorpayOrder.amount,
+        currency: razorpayOrder.currency,
+        name: 'DigiMart',
+        description: 'Premium Collection Purchase',
+        order_id: razorpayOrder.id,
+        handler: async function (response: any) {
+          try {
+            // 4. Verify Payment after success
+            const verifyData = {
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+              db_order_id: dbOrder._id
+            };
+
+            await api.post('/payment/verify', verifyData);
+            
+            clearCart();
+            router.push(`/orders?success=true`);
+          } catch (err) {
+            console.error('Verification failed', err);
+            alert('Payment verification failed. Please contact support.');
+          }
+        },
+        prefill: {
+          name: selectedAddress.fullName,
+          email: user?.email,
+          contact: selectedAddress.phone
+        },
+        theme: {
+          color: '#1C1917',
+        },
+      };
+
+      const rzp = new (window as any).Razorpay(options);
+      rzp.open();
+    } catch (error: any) {
+      console.error('Checkout error:', error);
+      alert(error.message || 'Something went wrong during checkout');
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  if (authLoading || loading || (!isAuthenticated && !authLoading)) {
+    return (
+      <div className="flex flex-col min-h-screen bg-[#FCFBF8]">
+        <Navbar />
+        <main className="flex-1 flex items-center justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-stone-900"></div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col min-h-screen bg-[#FCFBF8]">
+      <Navbar />
+      
+      <main className="flex-1 max-w-[1440px] mx-auto w-full px-8 lg:px-12 py-12 lg:py-20">
+        <h1 className="text-4xl font-serif text-stone-900 mb-12 text-center uppercase tracking-tight">Checkout</h1>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
+          {/* Shipping Form */}
+          <div className="lg:col-span-7 space-y-12">
+            <div className="bg-white p-10 lg:p-12 rounded-[2.5rem] border border-stone-200 shadow-sm">
+                <div className="flex justify-between items-center mb-10">
+                    <div>
+                        <h2 className="text-2xl font-serif text-stone-900 mb-1">Shipping Destination</h2>
+                        <p className="text-[13px] uppercase tracking-[0.2em] text-stone-600 font-medium whitespace-nowrap">Choose your delivery address</p>
+                    </div>
+                    <button 
+                      onClick={() => router.push('/account/addresses?redirect=/checkout')}
+                      className="p-3 bg-stone-50 rounded-full hover:bg-stone-100 transition-colors"
+                    >
+                      <Plus className="w-5 h-5 text-stone-900" />
+                    </button>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {addresses.map((addr) => (
+                        <div 
+                          key={addr._id}
+                          onClick={() => setSelectedAddress(addr)}
+                          className={`relative p-6 rounded-3xl border-2 transition-all cursor-pointer group hover:shadow-md ${
+                            selectedAddress?._id === addr._id 
+                              ? 'border-stone-900 bg-stone-50' 
+                              : 'border-stone-100 hover:border-stone-200'
+                          }`}
+                        >
+                            <div className="flex flex-col gap-4">
+                                <div className="flex justify-between items-start">
+                                    <p className="text-[14px] font-bold uppercase tracking-[0.1em] text-stone-900">{addr.fullName}</p>
+                                    {selectedAddress?._id === addr._id && (
+                                        <CheckCircle2 className="w-5 h-5 text-stone-900 fill-white" strokeWidth={1.5} />
+                                    )}
+                                </div>
+                                <div className="space-y-1 text-sm text-stone-600 font-normal leading-relaxed">
+                                    <p>{addr.addressLine}</p>
+                                    <p>{addr.city}, {addr.state} {addr.pincode}</p>
+                                    <p className="pt-2 font-medium text-stone-400">{addr.phone}</p>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                <button 
+                    onClick={handlePayment}
+                    disabled={isProcessing || !selectedAddress || cart.length === 0}
+                    className="w-full mt-12 bg-stone-900 text-white py-6 rounded-full text-[13px] font-bold uppercase tracking-[0.3em] hover:bg-stone-800 disabled:opacity-50 transition-all shadow-xl shadow-stone-900/10 active:scale-[0.98]"
+                >
+                    {isProcessing ? 'Processing Securely...' : `Proceed to Payment — ₹${cartTotal.toFixed(2)}`}
+                </button>
+            </div>
+            
+            <div className="px-10 flex gap-4 items-start text-stone-400">
+                <MapPin className="w-4 h-4 shrink-0 mt-1" />
+                <p className="text-[11px] leading-relaxed uppercase tracking-widest font-medium">
+                    All orders are handled by our global logistics partners. Premium packaging and insurance included for all international shipments.
+                </p>
+            </div>
+          </div>
+          
+          {/* Order Summary */}
+          <div className="lg:col-span-5">
+            <div className="bg-stone-50 p-10 lg:p-12 rounded-[2.5rem] border border-stone-200 sticky top-32">
+                <h2 className="text-2xl font-serif text-stone-900 mb-10 text-center uppercase tracking-widest">Bag Summary</h2>
+                <div className="space-y-8 mb-10 max-h-[400px] overflow-y-auto pr-4 scrollbar-hide">
+                    {cart.map(item => (
+                        <div key={item.id} className="flex gap-6 group">
+                            <div className="w-24 h-32 bg-white border border-stone-200 rounded-2xl overflow-hidden shrink-0 shadow-sm group-hover:shadow-md transition-shadow">
+                                <img src={item.image} alt={item.name} className="w-full h-full object-cover scale-110 group-hover:scale-100 transition-transform duration-700" />
+                            </div>
+                            <div className="flex flex-col justify-between py-2 flex-1">
+                                <div>
+                                    <h3 className="text-sm font-bold text-stone-900 uppercase tracking-widest leading-tight">{item.name}</h3>
+                                    <p className="text-[11px] text-stone-400 font-bold uppercase tracking-[0.2em] mt-2">Qty: {item.quantity}</p>
+                                </div>
+                                <span className="font-serif text-lg text-stone-900">₹{(item.price * item.quantity).toFixed(2)}</span>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+                
+                <div className="border-t border-stone-200 pt-10 space-y-6">
+                    <div className="flex justify-between text-sm">
+                        <span className="text-stone-400 font-bold uppercase tracking-widest">Subtotal</span>
+                        <span className="font-serif text-stone-900">₹{cartTotal.toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                        <span className="text-stone-400 font-bold uppercase tracking-widest">Shipping</span>
+                        <span className="text-stone-900 font-bold uppercase tracking-widest text-[10px]">Complimentary</span>
+                    </div>
+                    <div className="flex justify-between items-end border-t border-stone-200 pt-8 mt-4">
+                        <span className="font-bold uppercase tracking-[0.4em] text-[11px] text-stone-900">Total</span>
+                        <span className="font-serif text-3xl text-stone-900 leading-none">₹{cartTotal.toFixed(2)}</span>
+                    </div>
+                </div>
+                
+                <p className="mt-12 text-[10px] text-center text-stone-400 font-bold uppercase tracking-[0.15em] leading-relaxed">
+                    By purchasing, you agree to our terms. Your transaction is encrypted and secured by Razorpay.
+                </p>
+            </div>
+          </div>
+        </div>
+      </main>
+      
+      <Footer />
+    </div>
+  );
+}

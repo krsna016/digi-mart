@@ -287,7 +287,6 @@ export default function Navbar() {
                                 {Object.entries((categoryConfig as any)[mainCat]).map(([cat, subcats]: [string, any]) => (
                                   <div key={cat} className="flex flex-col gap-5">
                                     <div className="flex flex-col gap-1.5">
-                                      <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-stone-400">General</p>
                                       <Link
                                         href={`/category/${mainCat}?cat=${encodeURIComponent(cat)}`}
                                         className="text-[13px] font-bold uppercase tracking-[0.15em] text-stone-900 hover:text-stone-600 transition-colors duration-300"

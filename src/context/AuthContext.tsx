@@ -131,7 +131,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     
     setIsLoading(true);
     try {
-      const data = await api.get('/auth/me');
+      const data = await api.get('/auth/profile');
       // Merge current token with fetched data
       setUser({ ...data, token: user.token });
     } catch (err: any) {

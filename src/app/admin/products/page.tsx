@@ -207,7 +207,7 @@ export default function AdminProductsPage() {
             {/* Price Range Filter */}
             <div className="w-full md:w-auto flex items-center gap-2">
               <div className="relative">
-                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 font-medium text-xs">$</span>
+                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 font-medium text-xs">₹</span>
                  <input 
                   type="number" 
                   step="0.01"
@@ -219,7 +219,7 @@ export default function AdminProductsPage() {
               </div>
               <span className="text-stone-400">-</span>
               <div className="relative">
-                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 font-medium text-xs">$</span>
+                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 font-medium text-xs">₹</span>
                  <input 
                   type="number" 
                   step="0.01"
@@ -281,7 +281,7 @@ export default function AdminProductsPage() {
                         </td>
                         <td className="px-8 py-4 font-medium text-stone-900 tracking-tight">{p.name}</td>
                         <td className="px-8 py-4 text-stone-500 font-normal">{p.category}</td>
-                        <td className="px-8 py-4 text-stone-900 font-normal">${p.price}</td>
+                        <td className="px-8 py-4 text-stone-900 font-normal">₹{p.price}</td>
                         <td className="px-8 py-4 text-stone-500 font-normal">
                           <span className={`px-2.5 py-1 ${p.stock && p.stock > 0 ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'} rounded-full text-[10px] font-medium uppercase tracking-widest`}>
                             {p.stock && p.stock > 0 ? p.stock : 'Out'}

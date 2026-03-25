@@ -160,7 +160,7 @@ export default function AccountPage() {
               <div className="flex justify-between items-center">
                 <div className="flex flex-col gap-1">
                   <h2 className="text-xl font-serif text-stone-900">Profile Information</h2>
-                  <p className="text-sm text-stone-600 font-normal tracking-wide">Manage your personal details and account settings.</p>
+                  <p className="text-sm text-stone-600 font-normal tracking-wide">Manage your personal details.</p>
                 </div>
                 {!isEditing && (
                   <button 

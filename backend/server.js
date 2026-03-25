@@ -8,6 +8,7 @@ const orderRoutes = require('./routes/orderRoutes');
 const addressRoutes = require('./routes/addressRoutes');
 const subscriberRoutes = require('./routes/subscriberRoutes');
 const contactRoutes = require('./routes/contactRoutes');
+const paymentRoutes = require('./routes/paymentRoutes');
 
 // Connect to database
 connectDB();
@@ -34,6 +35,7 @@ app.use('/api/orders', orderRoutes);
 app.use('/api/user/address', addressRoutes);
 app.use('/api/subscribe', subscriberRoutes);
 app.use('/api/contact', contactRoutes);
+app.use('/api/payment', paymentRoutes);
 
 // Basic route for testing
 app.get('/', (req, res) => {

@@ -77,7 +77,7 @@ export default async function AdminDashboard() {
                     <span className="font-medium text-stone-900 tracking-tight">{p.name}</span>
                   </td>
                   <td className="px-8 py-4 text-stone-500 font-normal">{p.category}</td>
-                  <td className="px-8 py-4 text-stone-900 font-normal">${p.price}</td>
+                  <td className="px-8 py-4 text-stone-900 font-normal">₹{p.price}</td>
                   <td className="px-8 py-4 text-stone-500 font-normal">{p.stock || 0}</td>
                 </tr>
               ))}

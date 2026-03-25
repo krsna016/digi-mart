@@ -1,16 +1,20 @@
 "use client";
 
 import { useAuth, Address } from '@/context/AuthContext';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { User, Package, Heart, LogOut, ChevronRight, Settings, ShoppingBag, MapPin, Plus, Edit2, Trash2, CheckCircle2 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { User, Package, Heart, LogOut, ChevronRight, ShoppingBag, MapPin, Plus, Edit2, Trash2, CheckCircle2, AlertCircle } from 'lucide-react';
+import { useEffect, useState, Suspense } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
-export default function AddressesPage() {
+function AddressesContent() {
   const { user, logout, isAuthenticated, isLoading, getAddresses, addAddress, updateAddress, deleteAddress } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get('redirect');
+  const message = searchParams.get('message');
+  
   const [mounted, setMounted] = useState(false);
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [loading, setLoading] = useState(true);
@@ -101,6 +105,11 @@ export default function AddressesPage() {
       }
       setAddresses(updatedAddresses);
       setIsModalOpen(false);
+      
+      // If redirect exists, go back
+      if (redirect) {
+        router.push(redirect);
+      }
     } catch (err: any) {
       setError(err.message || 'Failed to save address');
     } finally {
@@ -147,7 +156,6 @@ export default function AddressesPage() {
     { name: 'Wishlist', href: '/wishlist', icon: Heart },
     { name: 'Shopping Bag', href: '/cart', icon: ShoppingBag },
     { name: 'Addresses', href: '/account/addresses', icon: MapPin, active: true },
-    { name: 'Settings', href: '/account/settings', icon: Settings },
   ];
 
   return (
@@ -204,6 +212,13 @@ export default function AddressesPage() {
                 Add New Address
               </button>
             </div>
+
+            {message && (
+              <div className="p-6 bg-stone-900 text-white rounded-[1.5rem] flex items-center gap-4 animate-in fade-in slide-in-from-top-4 duration-500 shadow-xl shadow-stone-900/10">
+                <AlertCircle className="w-5 h-5 text-stone-400 shrink-0" />
+                <p className="text-[12px] font-bold uppercase tracking-[0.2em]">{message}</p>
+              </div>
+            )}
 
             {addresses.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-24 bg-white border border-stone-200/50 rounded-[2.5rem] shadow-[0_4px_30px_-10px_rgba(0,0,0,0.02)] gap-6">
@@ -412,5 +427,20 @@ export default function AddressesPage() {
 
       <Footer />
     </div>
+  );
+}
+
+export default function AddressesPage() {
+  return (
+    <Suspense fallback={
+        <div className="flex h-screen items-center justify-center bg-[#FCFBF8]">
+          <div className="flex flex-col items-center gap-4">
+            <div className="w-8 h-8 border-2 border-stone-200 border-t-stone-900 rounded-full animate-spin" />
+            <p className="text-[12px] uppercase tracking-[0.3em] text-stone-600 font-medium">Loading...</p>
+          </div>
+        </div>
+    }>
+      <AddressesContent />
+    </Suspense>
   );
 }

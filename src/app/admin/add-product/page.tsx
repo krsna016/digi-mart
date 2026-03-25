@@ -333,10 +333,10 @@ export default function AddProductPage() {
             
             <div className="space-y-8">
               <div>
-                <label htmlFor="price" className="block text-[11px] font-medium uppercase tracking-[0.2em] text-stone-500 mb-3">Price ($) <span className="text-red-500">*</span></label>
+                <label htmlFor="price" className="block text-[11px] font-medium uppercase tracking-[0.2em] text-stone-500 mb-3">Price (₹) <span className="text-red-500">*</span></label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <span className="text-stone-400 font-medium">$</span>
+                    <span className="text-stone-400 font-medium">₹</span>
                   </div>
                   <input 
                     type="number" 

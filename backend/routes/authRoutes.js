@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { registerUser, loginUser, getUserProfile, updateUserProfile } = require('../controllers/userController');
+const { registerUser, loginUser, getUserProfile, updateUserProfile, verifyEmail } = require('../controllers/userController');
 const { protect } = require('../middleware/authMiddleware');
 
 // @desc    Register a new user
@@ -12,6 +12,11 @@ router.post('/signup', registerUser);
 // @route   POST /api/auth/login
 // @access  Public
 router.post('/login', loginUser);
+
+// @desc    Verify user email
+// @route   GET /api/auth/verify/:token
+// @access  Public
+router.get('/verify/:token', verifyEmail);
 
 // @desc    Get/Update user profile
 // @route   GET/PUT /api/auth/profile

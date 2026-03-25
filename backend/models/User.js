@@ -40,8 +40,18 @@ const userSchema = new mongoose.Schema({
       country: { type: String, required: true },
       isDefault: { type: Boolean, default: false }
     }
-  ]
-});
+  ],
+  isVerified: {
+    type: Boolean,
+    default: false
+  },
+  verificationToken: String,
+  verificationTokenExpires: Date
+},
+{
+  timestamps: true
+}
+);
 
 // Hash password before saving
 userSchema.pre('save', async function () {

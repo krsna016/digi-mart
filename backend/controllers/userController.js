@@ -1,5 +1,7 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
+const sendEmail = require('../utils/sendEmail');
 
 // Generate JWT token helper
 const generateToken = (id) => {
@@ -10,6 +12,11 @@ const generateToken = (id) => {
 
 const registerUser = async (req, res) => {
   const { name, email, password } = req.body;
+
+  // Enforce Gmail only
+  if (!email.endsWith('@gmail.com')) {
+    return res.status(400).json({ message: 'Only Gmail accounts are allowed for registration' });
+  }
 
   try {
     const userExists = await User.findOne({ email });
@@ -25,14 +32,39 @@ const registerUser = async (req, res) => {
     });
 
     if (user) {
-      res.status(201).json({
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        token: generateToken(user._id),
-        createdAt: user.createdAt
-      });
+      // Generate verification token
+      const verificationToken = crypto.randomBytes(32).toString('hex');
+      user.verificationToken = verificationToken;
+      user.verificationTokenExpires = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
+      await user.save();
+
+      // Send verification email
+      const verifyUrl = `${process.env.FRONTEND_URL}/verify-email?token=${verificationToken}`;
+      
+      const message = `
+        <h1>Verify your email</h1>
+        <p>Thank you for registering at DigiMart. Please verify your email by clicking the link below:</p>
+        <a href="${verifyUrl}" style="background: #1C1917; color: white; padding: 12px 24px; text-decoration: none; border-radius: 44px; display: inline-block; font-weight: bold; margin-top: 20px;">Verify Email</a>
+        <p>This link will expire in 24 hours.</p>
+      `;
+
+      try {
+        await sendEmail({
+          email: user.email,
+          subject: 'Email Verification - DigiMart',
+          html: message,
+        });
+
+        res.status(201).json({
+          message: 'Verification email sent. Please check your inbox.',
+          email: user.email
+        });
+      } catch (err) {
+        user.verificationToken = undefined;
+        user.verificationTokenExpires = undefined;
+        await user.save();
+        return res.status(500).json({ message: 'Email could not be sent' });
+      }
     } else {
       res.status(400).json({ message: 'Invalid user data' });
     }
@@ -48,6 +80,9 @@ const loginUser = async (req, res) => {
     const user = await User.findOne({ email });
 
     if (user && (await user.matchPassword(password))) {
+      if (!user.isVerified) {
+        return res.status(401).json({ message: 'Please verify your email to login' });
+      }
       res.json({
         _id: user._id,
         name: user.name,
@@ -106,9 +141,34 @@ const updateUserProfile = async (req, res) => {
   }
 };
 
+const verifyEmail = async (req, res) => {
+  const { token } = req.params;
+
+  try {
+    const user = await User.findOne({
+      verificationToken: token,
+      verificationTokenExpires: { $gt: Date.now() }
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: 'Invalid or expired verification token' });
+    }
+
+    user.isVerified = true;
+    user.verificationToken = undefined;
+    user.verificationTokenExpires = undefined;
+    await user.save();
+
+    res.json({ message: 'Email verified successfully. You can now login.' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
   getUserProfile,
-  updateUserProfile
+  updateUserProfile,
+  verifyEmail
 };

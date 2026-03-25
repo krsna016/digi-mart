@@ -46,7 +46,9 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-16 mb-24">
           {/* Brand & Newsletter */}
           <div className="lg:col-span-4 lg:pr-12">
-            <h3 className="text-6xl font-serif text-white mb-6 tracking-tight">DIGIMART</h3>
+            <Link href="/">
+              <h3 className="text-6xl font-serif text-white mb-6 tracking-tight hover:text-stone-300 transition-colors">DIGIMART</h3>
+            </Link>
 
             <div className="max-w-sm">
               <h4 className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/70 mb-6">Newsletter</h4>

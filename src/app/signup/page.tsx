@@ -135,7 +135,7 @@ export default function SignupPage() {
               <div className="flex items-start gap-3 px-1">
                 <input type="checkbox" id="terms" className="mt-1" required />
                 <label htmlFor="terms" className="text-[10px] text-stone-500 leading-relaxed font-normal">
-                  I agree to the <Link href="/terms" className="text-stone-900 font-bold hover:underline">Terms of Service</Link> and <Link href="/privacy" className="text-stone-900 font-bold hover:underline">Privacy Policy</Link>
+                  I agree to the <Link href="/terms" className="text-stone-900 font-bold hover:underline">Terms of Service</Link> and <Link href="/privacy-policy" className="text-stone-900 font-bold hover:underline">Privacy Policy</Link>
                 </label>
               </div>
 

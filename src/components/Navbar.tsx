@@ -144,16 +144,27 @@ export default function Navbar() {
               {/* Account Dropdown */}
               <div ref={accountRef} className="relative hidden lg:block">
                 <button 
-                  onClick={() => setIsAccountOpen(!isAccountOpen)}
-                  className="flex items-center p-1.5 text-stone-600 hover:text-stone-900 transition-colors duration-300"
+                  onClick={() => {
+                    if (mounted && !isAuthenticated) {
+                      router.push('/login');
+                    } else {
+                      setIsAccountOpen(!isAccountOpen);
+                    }
+                  }}
+                  className="flex items-center gap-2.5 p-1.5 text-stone-600 hover:text-stone-900 transition-all duration-300 group"
                   aria-label="Account menu"
                 >
-                  <User className="w-5 h-5" strokeWidth={1.2} />
+                  <User className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" strokeWidth={1.2} />
+                  {mounted && !isAuthenticated && (
+                    <span className="text-[10px] font-bold uppercase tracking-[0.25em] hidden xl:inline-block border-b border-transparent group-hover:border-stone-900/40 pb-0.5 transition-all">
+                      Sign In
+                    </span>
+                  )}
                 </button>
 
                 {/* Dropdown Menu */}
-                <div className={`absolute top-full right-0 mt-3 w-56 bg-white border border-stone-100 rounded-md shadow-lg transition-all duration-300 transform origin-top-right overflow-hidden z-50 ${isAccountOpen ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 -translate-y-2 pointer-events-none'}`}>
-                  {mounted && isAuthenticated ? (
+                <div className={`absolute top-full right-0 mt-3 w-56 bg-white border border-stone-100 rounded-md shadow-lg transition-all duration-300 transform origin-top-right overflow-hidden z-50 ${isAccountOpen && isAuthenticated ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 -translate-y-2 pointer-events-none'}`}>
+                  {mounted && isAuthenticated && (
                     /* Authenticated State */
                     <div className="py-2">
                       <div className="px-6 py-4 border-b border-stone-50">
@@ -202,24 +213,6 @@ export default function Navbar() {
                           Logout
                         </button>
                       </div>
-                    </div>
-                  ) : (
-                    /* Guest State */
-                    <div className="p-2 flex flex-col gap-1">
-                      <Link 
-                        href="/login" 
-                        onClick={() => setIsAccountOpen(false)}
-                        className="w-full text-center py-3.5 text-[11px] font-bold uppercase tracking-[0.2em] bg-stone-900 text-white rounded-md hover:bg-stone-800 transition-all"
-                      >
-                        Sign In
-                      </Link>
-                      <Link 
-                        href="/signup" 
-                        onClick={() => setIsAccountOpen(false)}
-                        className="w-full text-center py-3.5 text-[11px] font-bold uppercase tracking-[0.2em] text-stone-700 hover:text-stone-900 transition-all"
-                      >
-                        Sign Up
-                      </Link>
                     </div>
                   )}
                 </div>
@@ -278,19 +271,19 @@ export default function Navbar() {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 10 }}
                         transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
-                        className="absolute top-full left-1/2 -translate-x-1/2 pt-4 w-[850px] z-50 pointer-events-auto"
+                        className="absolute top-full left-1/2 -translate-x-1/2 pt-4 w-[1200px] max-w-[95vw] z-50 pointer-events-auto"
                       >
-                        <div className="bg-white border border-stone-100 shadow-[0_30px_90px_-20px_rgba(0,0,0,0.15)] rounded-2xl overflow-hidden grid grid-cols-12">
+                        <div className="bg-white border border-stone-100 shadow-[0_40px_100px_-25px_rgba(0,0,0,0.18)] rounded-3xl overflow-hidden grid grid-cols-12">
                           
                           {/* Left: Content Area */}
-                          <div className="col-span-8 p-10 pr-6">
+                          <div className="col-span-9 p-12 pr-6">
                             <div className="flex flex-col gap-10">
                               <div className="flex flex-col gap-1">
                                 <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-stone-400">Collection</p>
                                 <h3 className="text-2xl font-serif text-stone-900 capitalize tracking-tight">{mainCat}</h3>
                               </div>
 
-                              <div className="grid grid-cols-2 gap-x-12 gap-y-10">
+                              <div className="grid grid-cols-5 gap-x-8 gap-y-12">
                                 {Object.entries((categoryConfig as any)[mainCat]).map(([cat, subcats]: [string, any]) => (
                                   <div key={cat} className="flex flex-col gap-5">
                                     <div className="flex flex-col gap-1.5">
@@ -304,16 +297,15 @@ export default function Navbar() {
                                       </Link>
                                     </div>
                                     <div className="h-px w-8 bg-stone-100" />
-                                    <div className="flex flex-col gap-4">
-                                      {subcats.map((sub: string) => (
+                                    <div className="flex flex-col gap-3">
+                                      {subcats.slice(0, 12).map((sub: string) => (
                                         <Link
                                           key={sub}
                                           href={`/category/${mainCat}?cat=${encodeURIComponent(cat)}&sub=${encodeURIComponent(sub)}`}
-                                          className="group/sub text-[13px] font-normal text-stone-600 hover:text-stone-900 hover:translate-x-1 transition-all duration-300 flex items-center justify-between"
+                                          className="group/sub text-[12px] font-normal text-stone-500 hover:text-stone-900 transition-all duration-300 flex items-center justify-between"
                                           onClick={() => setHoveredCategory(null)}
                                         >
                                           <span className="capitalize">{sub}</span>
-                                          <ArrowRight className="w-3.5 h-3.5 opacity-0 -translate-x-2 group-hover/sub:opacity-100 group-hover/sub:translate-x-0 transition-all duration-300" strokeWidth={1.5} />
                                         </Link>
                                       ))}
                                     </div>
@@ -335,24 +327,24 @@ export default function Navbar() {
                           </div>
 
                           {/* Right: Visual Banner */}
-                          <div className="col-span-4 relative group/banner overflow-hidden">
+                          <div className="col-span-3 relative group/banner overflow-hidden border-l border-stone-50">
                             <img 
                               src={categoryBanners[mainCat as keyof typeof categoryBanners]?.image || categoryBanners['apparel'].image} 
                               alt={mainCat}
-                              className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover/banner:scale-105"
+                              className="absolute inset-0 w-full h-full object-cover transition-transform duration-[2000ms] ease-out group-hover/banner:scale-110"
                             />
-                            <div className="absolute inset-0 bg-black/20 group-hover/banner:bg-black/30 transition-colors duration-500" />
-                            <div className="absolute inset-0 flex flex-col items-center justify-end p-10 pb-12 text-center">
-                              <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/80 mb-2">Editor's Pick</p>
-                              <h4 className="text-2xl font-serif text-white mb-6 leading-tight">
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent transition-opacity duration-700" />
+                            <div className="absolute inset-0 flex flex-col items-center justify-end p-8 pb-10 text-center">
+                              <p className="text-[9px] font-bold uppercase tracking-[0.4em] text-white/90 mb-3 drop-shadow-sm">Seasonal Choice</p>
+                              <h4 className="text-xl font-serif text-white mb-8 leading-tight drop-shadow-md">
                                 {categoryBanners[mainCat as keyof typeof categoryBanners]?.title || 'Elevate Your Life'}
                               </h4>
                               <Link 
                                 href={categoryBanners[mainCat as keyof typeof categoryBanners]?.path || '/collection'}
-                                className="w-full py-4 bg-white text-stone-900 text-[11px] font-bold uppercase tracking-[0.2em] rounded-md hover:bg-stone-50 transition-all shadow-lg active:scale-95"
+                                className="w-full py-4 bg-white/95 backdrop-blur-sm text-stone-900 text-[10px] font-bold uppercase tracking-[0.25em] rounded-sm hover:bg-white transition-all shadow-xl active:scale-[0.98]"
                                 onClick={() => setHoveredCategory(null)}
                               >
-                                {categoryBanners[mainCat as keyof typeof categoryBanners]?.cta || 'Shop Now'} →
+                                Exploration →
                               </Link>
                             </div>
                           </div>

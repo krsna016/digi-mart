@@ -5,7 +5,7 @@ import { useCart } from '@/context/CartContext';
 import { useWishlist } from '@/context/WishlistContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { User, Package, Heart, LogOut, ChevronRight, Settings, ShoppingBag, MapPin } from 'lucide-react';
+import { User, Package, Heart, LogOut, ChevronRight, ShoppingBag, MapPin } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -86,7 +86,6 @@ export default function AccountPage() {
     { name: 'Wishlist', href: '/wishlist', icon: Heart },
     { name: 'Shopping Bag', href: '/cart', icon: ShoppingBag },
     { name: 'Addresses', href: '/account/addresses', icon: MapPin },
-    { name: 'Settings', href: '/account/settings', icon: Settings },
   ];
 
   return (

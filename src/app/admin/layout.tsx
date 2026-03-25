@@ -1,18 +1,30 @@
 "use client";
 
-import Link from 'next/link';
+import { useAuth } from '@/context/AuthContext';
 import { ReactNode, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 const AUTO_LOGOUT_DURATION = 30 * 60 * 1000; // 30 minutes
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
+  const { user, isAdmin, isAuthenticated, isLoading } = useAuth();
 
   const handleLogout = () => {
     document.cookie = 'admin_token=; path=/; max-age=0; SameSite=Strict';
     router.push('/login');
   };
+
+  // Ensure cookie is set for admin users (fix for existing sessions)
+  useEffect(() => {
+    if (!isLoading && isAuthenticated && isAdmin && user?.token) {
+      const hasCookie = document.cookie.includes('admin_token=');
+      if (!hasCookie) {
+        document.cookie = `admin_token=${user.token}; path=/; max-age=86400; SameSite=Strict`;
+      }
+    }
+  }, [isAuthenticated, isAdmin, user, isLoading]);
 
   // Auto-logout on inactivity
   useEffect(() => {
@@ -41,9 +53,11 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       {/* Sidebar */}
       <aside className="w-64 bg-white border-r border-stone-200 flex flex-col flex-shrink-0 shadow-sm z-10">
         <div className="h-20 flex items-center px-8 border-b border-stone-200">
-          <span className="font-serif text-xl tracking-tight font-medium text-stone-900">
-            DIGIMART ADMIN
-          </span>
+          <Link href="/" className="hover:opacity-70 transition-opacity">
+            <span className="font-serif text-xl tracking-tight font-medium text-stone-900">
+              DIGIMART ADMIN
+            </span>
+          </Link>
         </div>
         <nav className="flex-1 py-8 px-4 flex flex-col gap-2">
           <Link href="/admin" className="px-4 py-3 text-sm font-medium rounded-md bg-stone-100 text-stone-900 hover:bg-stone-200/50 transition-colors">

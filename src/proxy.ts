@@ -2,13 +2,12 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function proxy(request: NextRequest) {
-  // In a real production app, you would verify a JWT or session identifier here.
-  // For this mock, we check for a simple identifying cookie.
+  // In Next.js App Router, middleware runs on every request that matches the config
   const adminToken = request.cookies.get('admin_token')?.value;
 
   if (request.nextUrl.pathname.startsWith('/admin')) {
     if (!adminToken) {
-      // Redirect unauthorized unauthenticated traffic directly back to the login gateway
+      // Redirect unauthorized/unauthenticated traffic back to login
       const loginUrl = new URL('/login', request.url);
       return NextResponse.redirect(loginUrl);
     }
@@ -17,7 +16,7 @@ export function proxy(request: NextRequest) {
   return NextResponse.next();
 }
 
-// Ensure the middleware exclusively triggers on the admin path tree
+// matcher ensures this ONLY runs for /admin paths
 export const config = {
   matcher: ['/admin/:path*'],
 };

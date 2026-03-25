@@ -1,4 +1,9 @@
-export const categoryConfig = {
+require('dotenv').config();
+const mongoose = require('mongoose');
+const Product = require('./models/Product');
+const connectDB = require('./config/db');
+
+const categoryConfig = {
   apparel: {
     women: ["dresses", "tops", "skirts", "pants", "sweaters", "jackets", "activewear", "swimwear", "lingerie", "sleepwear"],
     men: ["shirts", "t-shirts", "pants", "jeans", "sweaters", "jackets", "outerwear", "activewear", "underwear", "sleepwear"],
@@ -60,3 +65,48 @@ export const categoryConfig = {
     gadgets: ["thermometers", "scales", "timers", "presses", "slicers", "choppers", "spiralizers", "infusers", "scrubbers", "dish racks"]
   }
 };
+
+const generateProducts = () => {
+  const products = [];
+  const images = [
+    "https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&q=80&w=800",
+    "https://images.unsplash.com/photo-1533659828870-95ee305cee3e?auto=format&fit=crop&q=80&w=800",
+    "https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&q=80&w=800",
+    "https://images.unsplash.com/photo-1591195853828-11db59a44f6b?auto=format&fit=crop&q=80&w=800",
+    "https://images.unsplash.com/photo-1564859228273-274232fdb516?auto=format&fit=crop&q=80&w=800"
+  ];
+
+  Object.entries(categoryConfig).forEach(([mainCat, cats]) => {
+    Object.entries(cats).forEach(([cat, subcats]) => {
+      // Create at least one product for each category
+      const subcat = subcats[0];
+      products.push({
+        name: `${cat.charAt(0).toUpperCase() + cat.slice(1)} ${subcat.charAt(0).toUpperCase() + subcat.slice(1)}`,
+        price: Math.floor(Math.random() * 200) + 50,
+        description: `Premium quality ${subcat} for your ${cat} collection in the ${mainCat} category.`,
+        image: images[Math.floor(Math.random() * images.length)],
+        mainCategory: mainCat,
+        category: cat,
+        subcategory: subcat,
+        stock: Math.floor(Math.random() * 100) + 10
+      });
+    });
+  });
+  return products;
+};
+
+const seedData = async () => {
+  try {
+    await connectDB();
+    await Product.deleteMany();
+    const products = generateProducts();
+    await Product.insertMany(products);
+    console.log(`Successfully seeded ${products.length} products cross 50 categories!`);
+    process.exit();
+  } catch (error) {
+    console.error(`Error during seeding: ${error}`);
+    process.exit(1);
+  }
+};
+
+seedData();

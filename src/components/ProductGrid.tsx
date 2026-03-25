@@ -61,7 +61,7 @@ export default function ProductGrid() {
   }
 
   return (
-    <section className="mx-auto max-w-[1400px] px-6 lg:px-12 py-32">
+    <section id="products-grid" className="mx-auto max-w-[1400px] px-6 lg:px-12 py-32">
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
         <div className="max-w-xl">
           <span className="block text-[12px] font-medium uppercase tracking-[0.2em] text-stone-900/50 mb-4">Latest Additions</span>

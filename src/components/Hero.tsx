@@ -55,6 +55,13 @@ export default function Hero() {
     },
   };
 
+  const scrollToProducts = () => {
+    const element = document.getElementById('products-grid');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   return (
     <section className="relative w-full min-h-[85vh] overflow-hidden bg-[#F2F0E9] flex items-center justify-center border-b border-stone-200">
       <motion.div
@@ -102,7 +109,10 @@ export default function Hero() {
         </motion.div>
 
         <motion.div variants={itemVariants}>
-          <button className="group relative overflow-hidden bg-stone-900 text-white px-10 py-4 text-[11px] font-medium uppercase tracking-[0.2em] transition-transform duration-300 hover:scale-105">
+          <button 
+            onClick={scrollToProducts}
+            className="group relative overflow-hidden bg-stone-900 text-white px-10 py-4 text-[11px] font-medium uppercase tracking-[0.2em] transition-transform duration-300 hover:scale-105"
+          >
             <span className="relative z-10">Explore Now</span>
             <div className="absolute inset-0 bg-stone-800 transform translate-y-full transition-transform duration-500 ease-in-out group-hover:translate-y-0"></div>
           </button>

@@ -53,7 +53,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const savedUser = localStorage.getItem('digimart_user');
     if (savedUser) {
       try {
-        setUser(JSON.parse(savedUser));
+        const parsedUser = JSON.parse(savedUser);
+        setUser(parsedUser);
+        
+        // Restore admin cookie for middleware if it's missing but user is admin
+        if (parsedUser.role === 'admin' && parsedUser.token) {
+          const hasCookie = document.cookie.includes('admin_token=');
+          if (!hasCookie) {
+            document.cookie = `admin_token=${parsedUser.token}; path=/; max-age=86400; SameSite=Strict`;
+          }
+        }
       } catch (e) {
         console.error('Failed to parse user from local storage');
       }
@@ -78,6 +87,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const data = await api.post('/auth/login', { email, password });
       setUser(data);
+      
+      // Set admin cookie if user is admin for middleware protection
+      if (data.role === 'admin') {
+        document.cookie = `admin_token=${data.token}; path=/; max-age=86400; SameSite=Strict`;
+      }
     } catch (err: any) {
       setError(err.message);
       throw err;
@@ -89,6 +103,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = () => {
     setUser(null);
     localStorage.removeItem('digimart_user');
+    // Clear admin cookie
+    document.cookie = 'admin_token=; path=/; max-age=0; SameSite=Strict';
   };
 
   const register = async (name: string, email: string, password: string) => {
@@ -97,6 +113,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const data = await api.post('/auth/signup', { name, email, password });
       setUser(data);
+      
+      // Set admin cookie if user is admin
+      if (data.role === 'admin') {
+        document.cookie = `admin_token=${data.token}; path=/; max-age=86400; SameSite=Strict`;
+      }
     } catch (err: any) {
       setError(err.message);
       throw err;

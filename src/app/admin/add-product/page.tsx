@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { categoryConfig } from '@/data/categoryConfig';
-import { BASE_URL } from '@/utils/config';
+import { api } from '@/utils/api';
 
 export default function AddProductPage() {
   const router = useRouter();
@@ -115,18 +115,7 @@ export default function AddProductPage() {
         stock: parseInt(formData.stock, 10),
       };
 
-      const res = await fetch(`${BASE_URL}/products`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.message || 'Failed to add product via server interface');
-      }
+      await api.post('/products', payload);
 
       setToastMessage({ title: 'Product successfully added!', type: 'success' });
       

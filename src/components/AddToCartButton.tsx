@@ -41,7 +41,7 @@ export default function AddToCartButton({ product }: AddToCartButtonProps) {
     <>
       <button 
         onClick={handleAdd}
-        className="w-full sm:w-max px-12 py-5 bg-stone-900 text-white text-[11px] font-medium uppercase tracking-[0.2em] hover:bg-stone-800 transition-colors duration-300 group shadow-[0_4px_14px_0_rgba(0,0,0,0.39)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.23)] hover:-translate-y-0.5 relative active:translate-y-0"
+        className="w-full sm:w-max px-10 py-4 bg-stone-900 text-white text-[14px] font-medium uppercase tracking-[0.2em] hover:bg-stone-800 transition-colors duration-300 group shadow-[0_4px_14px_0_rgba(0,0,0,0.39)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.23)] hover:-translate-y-0.5 relative active:translate-y-0"
       >
         <span className="flex items-center justify-center gap-3">
           Add to Bag

@@ -5,8 +5,7 @@ import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { useAuth } from '@/context/AuthContext';
-import { Edit, Trash2, Plus } from 'lucide-react';
-import { BASE_URL } from '@/utils/config';
+import { api } from '@/utils/api';
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState<any[]>([]);
@@ -65,9 +64,7 @@ export default function AdminProductsPage() {
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      const res = await fetch(`${BASE_URL}/products`);
-      if (!res.ok) throw new Error('Failed to load products');
-      const data = await res.json();
+      const data = await api.get('/products');
       setProducts(data);
       setFilteredProducts(data);
     } catch (err: any) {
@@ -83,10 +80,7 @@ export default function AdminProductsPage() {
     
     try {
       setIsDeleting(true);
-      const res = await fetch(`${BASE_URL}/products/${id}`, {
-        method: 'DELETE',
-      });
-      if (!res.ok) throw new Error('Failed to delete product from server');
+      await api.delete(`/products/${id}`);
       
       const updatedProducts = products.filter(p => (p._id || p.id) !== id);
       setProducts(updatedProducts);

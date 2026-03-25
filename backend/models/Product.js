@@ -24,7 +24,20 @@ const productSchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    enum: ['women', 'men', 'general'],
+    enum: [
+      // Apparel
+      'women', 'men', 'kids', 'unisex', 'sportswear', 'lounge', 'formal', 'casual', 'outerwear', 'intimates',
+      // Accessories
+      'bags', 'jewelry', 'watches', 'eyewear', 'belts', 'hats', 'scarves', 'gloves', 'tech', 'travel',
+      // Home
+      'bedding', 'bath', 'kitchen', 'dining', 'lighting', 'rugs', 'curtains', 'storage', 'furniture', 'garden',
+      // Decor
+      'wall art', 'vases', 'candles', 'sculptures', 'mirrors', 'pillows', 'throws', 'clocks', 'frames', 'plants',
+      // Kitchen
+      'cookware', 'bakeware', 'cutlery', 'utensils', 'appliances', 'storage', 'coffee & tea', 'barware', 'textiles', 'gadgets',
+      // Fallback
+      'general'
+    ],
     required: true
   },
   subcategory: {

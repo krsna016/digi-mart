@@ -75,7 +75,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
       <main className="flex-1 max-w-[1400px] w-full mx-auto px-6 lg:px-12 py-24 sm:py-32">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16 lg:gap-24 items-center">
           {/* Image Gallery Column */}
-          <div className="w-full aspect-[3/4] bg-stone-200 relative overflow-hidden animate-fade-in group">
+          <div className="w-full aspect-[3/4] bg-stone-200 relative rounded-2xl overflow-hidden animate-fade-in group">
             <img 
               src={product.image} 
               alt={product.name}
@@ -85,7 +85,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
 
           {/* Product Details Column */}
           <div className="flex flex-col opacity-0 animate-fade-up" style={{ animationDelay: '0.2s' }}>
-            <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-stone-900/50 mb-6">
+            <span className="text-[12px] font-medium uppercase tracking-[0.2em] text-stone-900/50 mb-6">
               {product.category}
             </span>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif text-stone-900 tracking-tight leading-tight mb-6">
@@ -97,7 +97,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
             
             <div className="h-px w-full bg-stone-200 mb-10" />
             
-            <p className="text-sm text-stone-600 leading-relaxed font-normal mb-12 max-w-prose">
+            <p className="text-[16px] text-stone-600 leading-relaxed font-normal mb-12 max-w-prose">
               {product.description}
             </p>
 
@@ -109,7 +109,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
               category: product.category
             }} />
             
-            <div className="mt-16 space-y-4 text-[11px] font-medium uppercase tracking-widest text-stone-900/60">
+            <div className="mt-16 space-y-4 text-[13px] font-medium uppercase tracking-widest text-stone-900/60">
               <div className="flex justify-between border-b border-stone-200 pb-4">
                 <span>Free Standard Shipping</span>
                 <span>On Orders Over $150</span>

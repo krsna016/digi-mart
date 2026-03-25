@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter, useParams } from 'next/navigation';
+import { api } from '@/utils/api';
 import { categoryConfig } from '@/data/categoryConfig';
-import { BASE_URL } from '@/utils/config';
 
 export default function EditProductPage() {
   const router = useRouter();
@@ -34,14 +34,7 @@ export default function EditProductPage() {
     const fetchProduct = async () => {
       try {
         setIsLoading(true);
-        const res = await fetch(`${BASE_URL}/products/${id}`);
-        
-        if (!res.ok) {
-          const errData = await res.json().catch(() => ({}));
-          throw new Error(errData.message || 'Product not found');
-        }
-        
-        const data = await res.json();
+        const data = await api.get(`/products/${id}`);
         
         if (data) {
           setProduct(data);
@@ -185,23 +178,8 @@ export default function EditProductPage() {
       });
       console.log('Update Payload:', payload);
 
-      const res = await fetch(`${BASE_URL}/products/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
-
-      console.log('Update Response Status:', res.status);
-
-      if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
-        console.error('Update Error Data:', errorData);
-        throw new Error(errorData.message || 'Failed to update product via API framework');
-      }
-
-      const updatedData = await res.json();
+      const updatedData = await api.put(`/products/${id}`, payload);
+      console.log('Update Success Data:', updatedData);
       console.log('Update Success Data:', updatedData);
 
       setToastMessage({ title: 'Product successfully updated!', type: 'success' });

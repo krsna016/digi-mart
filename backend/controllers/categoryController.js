@@ -46,7 +46,16 @@ exports.syncFromProducts = async (req, res) => {
 };
 
 // @desc    Get all categories
-//...
+// @route   GET /api/categories
+// @access  Public
+exports.getCategories = async (req, res) => {
+  try {
+    const categories = await Category.find();
+    res.json(categories);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 // @desc    Create a category group
 // @route   POST /api/categories

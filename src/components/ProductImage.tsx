@@ -20,7 +20,7 @@ export default function ProductImage({ src, alt, className = "" }: ProductImageP
       )}
       
       <img 
-        src={hasError ? '/placeholder.png' : src} 
+        src={hasError ? '/images/fallback.png' : src} 
         alt={alt}
         onLoad={() => setIsLoading(false)}
         onError={() => {

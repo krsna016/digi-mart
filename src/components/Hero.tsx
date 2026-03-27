@@ -8,25 +8,25 @@ const HERO_CONTENT = [
   {
     label: "Luxury Essentials",
     description: "Discover curated essentials crafted with uncompromising quality.",
-    cta: "Explore Collection",
+    cta: "Explore Now",
     path: "/collection"
   },
   {
     label: "Spring Drop",
     description: "Experience the perfect blend of timeless design and modern functionality in our new arrivals.",
-    cta: "Shop New",
+    cta: "Explore Now",
     path: "/new"
   },
   {
     label: "Seasonal Event",
     description: "Elevate your rituals with our ethically sourced materials, now at specialized value.",
-    cta: "Shop Sale",
+    cta: "Explore Now",
     path: "/sale"
   },
   {
     label: "Sustainable Style",
     description: "Meticulously engineered for longevity, helping you build a more intentional wardrobe.",
-    cta: "About Us",
+    cta: "Explore Now",
     path: "/about"
   }
 ];

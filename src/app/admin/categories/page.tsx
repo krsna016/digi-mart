@@ -39,7 +39,10 @@ export default function CategoriesPage() {
   };
 
   const handleCreateGroup = async () => {
-    if (!newGroupName.trim()) return;
+    if (!newGroupName.trim()) {
+      showToast('Please enter a group name', 'error');
+      return;
+    }
     try {
       await api.post('/categories', {
         gender: activeGender,
@@ -48,9 +51,10 @@ export default function CategoriesPage() {
       });
       setNewGroupName('');
       fetchCategories();
-      showToast('Category group created', 'success');
+      showToast(`${newGroupName} group created for ${activeGender}`, 'success');
     } catch (err: any) {
-      showToast(err.message || 'Failed to create group', 'error');
+      console.error('[Diagnostic] Group creation failed:', err);
+      showToast(err.message || 'Failed to create group. Check if it already exists.', 'error');
     }
   };
 
@@ -92,7 +96,23 @@ export default function CategoriesPage() {
     }
   };
 
-  const filteredCategories = categories.filter(c => c.gender === activeGender);
+  const handleQuickSeed = async () => {
+    if (!confirm('This will populate the database with default categories. Continue?')) return;
+    try {
+      setIsLoading(true);
+      await api.post('/categories/seed?force=true', {});
+      await fetchCategories();
+      showToast('Database seeded successfully', 'success');
+    } catch (err: any) {
+      showToast(err.message || 'Seeding failed', 'error');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const filteredCategories = categories.filter(c => 
+    c.gender && c.gender.toLowerCase() === activeGender.toLowerCase()
+  );
 
   return (
     <div className="animate-fade-in relative min-h-[calc(100vh-140px)] pb-20 px-4 sm:px-8">
@@ -109,16 +129,24 @@ export default function CategoriesPage() {
           <h1 className="text-4xl font-serif tracking-tight text-stone-900 mb-2">Category Ecosystem</h1>
           <p className="text-sm text-stone-500 font-normal">Manage store varieties and groupings in real-time.</p>
         </div>
-        <div className="flex bg-stone-100 p-1 rounded-xl">
-          {(['men', 'women', 'kids'] as const).map((g) => (
-            <button
-              key={g}
-              onClick={() => setActiveGender(g)}
-              className={`px-6 py-2.5 rounded-lg text-[11px] font-bold uppercase tracking-[0.2em] transition-all ${activeGender === g ? 'bg-white text-stone-900 shadow-sm' : 'text-stone-400 hover:text-stone-600'}`}
-            >
-              {g}
-            </button>
-          ))}
+        <div className="flex items-center gap-4">
+          <button
+            onClick={handleQuickSeed}
+            className="px-5 py-2.5 border border-stone-200 rounded-lg text-[10px] font-bold uppercase tracking-[0.2em] text-stone-400 hover:text-stone-900 hover:border-stone-900 transition-all"
+          >
+            Quick Seed
+          </button>
+          <div className="flex bg-stone-100 p-1 rounded-xl">
+            {(['men', 'women', 'kids'] as const).map((g) => (
+              <button
+                key={g}
+                onClick={() => setActiveGender(g)}
+                className={`px-6 py-2.5 rounded-lg text-[11px] font-bold uppercase tracking-[0.2em] transition-all ${activeGender === g ? 'bg-white text-stone-900 shadow-sm' : 'text-stone-400 hover:text-stone-600'}`}
+              >
+                {g}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -197,8 +225,16 @@ export default function CategoriesPage() {
           {filteredCategories.length === 0 && (
             <div className="col-span-full py-20 bg-stone-50 rounded-2xl border border-dashed border-stone-200 flex flex-col items-center justify-center text-center">
               <LayoutGrid className="w-12 h-12 text-stone-200 mb-4" />
-              <p className="font-serif text-xl text-stone-400">No collections found for {activeGender}</p>
-              <p className="text-xs text-stone-400 uppercase tracking-widest mt-2">Start by creating your first group above</p>
+              <p className="font-serif text-xl text-stone-900 mb-2">No {activeGender} collections found</p>
+              <p className="text-xs text-stone-400 uppercase tracking-widest max-w-xs mx-auto leading-loose">
+                Your database appears empty for this category. Use "Quick Seed" above to populate defaults or add a new group manually.
+              </p>
+              <button 
+                onClick={fetchCategories}
+                className="mt-6 text-[10px] font-bold uppercase tracking-widest text-stone-900 border-b border-stone-900 pb-1 hover:text-stone-500 hover:border-stone-500 transition-all"
+              >
+                Refresh Data
+              </button>
             </div>
           )}
         </div>

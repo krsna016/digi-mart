@@ -9,14 +9,14 @@ export default async function AdminDashboard() {
   let error = null;
 
   try {
+    console.log(`[Admin] Fetching products from: ${BASE_URL}/products`);
     const productsRes = await fetch(`${BASE_URL}/products`, { cache: 'no-store' });
-    if (!productsRes.ok) throw new Error('Failed to fetch products');
+    if (!productsRes.ok) throw new Error(`Products fetch failed: ${productsRes.status} ${productsRes.statusText}`);
     products = await productsRes.json();
 
     const headerList = await headers();
     const cookieHeader = headerList.get('cookie') || '';
     
-    // More robust cookie extraction
     const token = cookieHeader
       .split(';')
       .map(c => c.trim())
@@ -24,23 +24,21 @@ export default async function AdminDashboard() {
       ?.split('=')[1];
     
     if (token) {
-      console.log('Fetching notifications with token found in cookies');
+      console.log(`[Admin] Fetching notifications from: ${BASE_URL}/notifications`);
       const notesRes = await fetch(`${BASE_URL}/notifications`, {
         cache: 'no-store',
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (notesRes.ok) {
         notifications = await notesRes.json();
-        console.log(`Successfully fetched ${notifications.length} notifications`);
       } else {
-        console.error(`Failed to fetch notifications: ${notesRes.status} ${notesRes.statusText}`);
+        const errText = await notesRes.text();
+        console.error(`[Admin] Notifications fetch failed: ${notesRes.status} ${errText.substring(0, 100)}`);
       }
-    } else {
-      console.warn('No admin_token found in cookies');
     }
   } catch (err: any) {
-    console.error('Admin Dashboard fetch error:', err);
-    error = err.message || 'Unknown error';
+    console.error('[Admin Dashboard] Critical Fetch Error:', err.message);
+    error = err.message;
   }
 
   const totalProducts = products.length;

@@ -5,8 +5,12 @@ const {
   createCategory,
   updateCategory,
   deleteCategory,
+  seedCategories,
 } = require('../controllers/categoryController');
 const { protect, admin } = require('../middleware/authMiddleware');
+
+router.route('/seed')
+  .post(protect, admin, seedCategories);
 
 router.route('/')
   .get(getCategories)

@@ -47,23 +47,6 @@ export default function Navbar() {
   const [categories, setCategories] = useState<any>({ men: {}, women: {}, kids: {} });
   const [isCatLoading, setIsCatLoading] = useState(true);
   
-  const DEFAULT_CATEGORIES = {
-    men: { 
-      'Tops': ['Casual Shirts', 'T-Shirts', 'Hoodies & Sweatshirts', 'Polo Shirts'],
-      'Bottoms': ['Chinos', 'Jeans', 'Shorts', 'Trousers'],
-      'Outerwear': ['Blazers', 'Jackets', 'Coats', 'Overshirts']
-    },
-    women: { 
-      'Dresses': ['Midi Dresses', 'Maxi Dresses', 'Evening Gowns', 'Cocktail Dresses'], 
-      'Tops': ['Blouses & Shirts', 'Knitwear', 'T-Shirts', 'Tanks'], 
-      'Bottoms': ['Jeans', 'Skirts', 'Trousers', 'Shorts'],
-      'Outerwear': ['Coats', 'Jackets', 'Cardigans', 'Blazers']
-    },
-    kids: { 
-      'Essentials': ['T-Shirts', 'Bodysuits', 'Leggings', 'Pyjamas'], 
-      'Outfits': ['Dresses', 'Sets', 'Outerwear', 'Swimwear'] 
-    }
-  };
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -73,22 +56,22 @@ export default function Navbar() {
         
         const data = await api.get('/categories');
         if (!data || !Array.isArray(data) || data.length === 0) {
-          console.warn('[Diagnostic] No categories found in DB, using fallbacks');
-          setCategories(DEFAULT_CATEGORIES);
+          console.warn('[Diagnostic] No categories found in DB');
+          setCategories({ men: {}, women: {}, kids: {} }); 
           return;
         }
 
         const transformed: any = { men: {}, women: {}, kids: {} };
         data.forEach((cat: any) => {
-          const gender = cat.gender.toLowerCase();
-          if (transformed[gender]) {
+          const gender = cat.gender?.toLowerCase();
+          if (gender && transformed[gender]) {
             transformed[gender][cat.group] = cat.items;
           }
         });
         setCategories(transformed);
       } catch (err) {
         console.error('[Diagnostic] Navbar category fetch failed:', err);
-        setCategories(DEFAULT_CATEGORIES);
+        setCategories({ men: {}, women: {}, kids: {} });
       } finally {
         setIsCatLoading(false);
       }

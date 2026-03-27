@@ -33,8 +33,9 @@ export default function AddProductPage() {
         const data = await api.get('/categories');
         const transformed: any = { men: {}, women: {}, kids: {} };
         data.forEach((cat: any) => {
-          if (transformed[cat.gender]) {
-            transformed[cat.gender][cat.group] = cat.items;
+          const genderKey = cat.gender?.toLowerCase();
+          if (genderKey && transformed[genderKey]) {
+            transformed[genderKey][cat.group] = cat.items;
           }
         });
         setCategories(transformed);

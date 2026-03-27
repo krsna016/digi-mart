@@ -49,6 +49,17 @@ app.use('/api/payment', paymentRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/notifications', notificationRoutes);
 
+// TEMPORARY: Direct route definition to bypass potential router issues for debugging
+const Category = require('./models/Category');
+app.get('/api/live-categories', async (req, res) => {
+  try {
+    const categories = await Category.find();
+    res.json(categories);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 // Basic route for testing
 app.get('/', (req, res) => {
   res.json({ message: 'Backend server is running!' });

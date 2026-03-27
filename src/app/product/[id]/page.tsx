@@ -4,6 +4,7 @@ import Footer from '@/components/Footer';
 import AddToCartButton from '@/components/AddToCartButton';
 import Link from 'next/link';
 import { BASE_URL } from '@/utils/config';
+import ProductImage from '@/components/ProductImage';
 
 async function getProduct(id: string) {
   try {
@@ -75,11 +76,11 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
       <main className="flex-1 max-w-[1400px] w-full mx-auto px-6 lg:px-12 py-24 sm:py-32">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16 lg:gap-24 items-center">
           {/* Image Gallery Column */}
-          <div className="w-full aspect-[3/4] bg-stone-200 relative rounded-2xl overflow-hidden animate-fade-in group">
-            <img 
+          <div className="w-full aspect-[3/4] relative rounded-2xl overflow-hidden animate-fade-in group">
+            <ProductImage 
               src={product.image} 
               alt={product.name}
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105"
+              className="absolute inset-0 w-full h-full"
             />
           </div>
 
@@ -91,9 +92,22 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif text-stone-900 tracking-tight leading-tight mb-6">
               {product.name}
             </h1>
-            <p className="text-xl text-stone-600 font-normal mb-10">
-              ₹{product.price.toFixed(2)}
-            </p>
+            <div className="flex items-center gap-4 mb-10">
+              {product.onSale && product.discountPrice ? (
+                <>
+                  <p className="text-3xl text-red-600 font-bold">
+                    ₹{product.discountPrice.toFixed(2)}
+                  </p>
+                  <p className="text-xl text-stone-400 font-normal line-through italic">
+                    ₹{product.price.toFixed(2)}
+                  </p>
+                </>
+              ) : (
+                <p className="text-3xl text-stone-900 font-normal">
+                  ₹{product.price.toFixed(2)}
+                </p>
+              )}
+            </div>
             
             <div className="h-px w-full bg-stone-200 mb-10" />
             
@@ -106,7 +120,9 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
               name: product.name,
               price: product.price,
               image: product.image,
-              category: product.category
+              category: product.category,
+              onSale: product.onSale,
+              discountPrice: product.discountPrice
             }} />
             
             <div className="mt-16 space-y-4 text-[13px] font-medium uppercase tracking-widest text-stone-900/60">

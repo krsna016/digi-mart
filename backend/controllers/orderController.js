@@ -1,4 +1,5 @@
 const Order = require('../models/Order');
+const Notification = require('../models/Notification');
 
 // @desc    Create new order
 // @route   POST /api/orders
@@ -30,6 +31,20 @@ const addOrderItems = async (req, res) => {
     });
 
     const createdOrder = await order.save();
+
+    // Create Admin Notification
+    try {
+      const notification = await Notification.create({
+        type: 'NEW_ORDER',
+        title: 'New Order Received',
+        message: `Order #${createdOrder._id} for ₹${createdOrder.totalPrice} has been placed.`,
+        orderId: createdOrder._id
+      });
+      console.log('Admin notification created successfully:', notification._id);
+    } catch (err) {
+      console.error('Failed to create admin notification:', err);
+      // Don't fail the order if notification creation fails
+    }
 
     res.status(201).json(createdOrder);
   }

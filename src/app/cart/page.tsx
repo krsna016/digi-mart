@@ -71,7 +71,16 @@ export default function CartPage() {
                           <h3 className="text-lg font-medium text-stone-900 hover:text-stone-600 transition-colors">{item.name}</h3>
                         </Link>
                         {item.category && <p className="text-xs text-stone-500 font-normal mt-1">{item.category}</p>}
-                        <p className="text-sm font-medium text-stone-900 mt-2">₹{item.price.toFixed(2)}</p>
+                        <div className="flex items-center gap-2 mt-2">
+                          {item.onSale && item.discountPrice ? (
+                            <>
+                              <p className="text-sm font-bold text-red-600">₹{item.discountPrice.toFixed(2)}</p>
+                              <p className="text-xs text-stone-400 line-through italic font-normal">₹{item.price.toFixed(2)}</p>
+                            </>
+                          ) : (
+                            <p className="text-sm font-medium text-stone-900">₹{item.price.toFixed(2)}</p>
+                          )}
+                        </div>
                       </div>
                       <button 
                         onClick={() => removeFromCart(item.id)}
@@ -103,7 +112,9 @@ export default function CartPage() {
                       
                       <div className="text-right">
                         <p className="text-[9px] text-stone-400 uppercase tracking-widest mb-1 font-semibold">Total</p>
-                        <p className="text-base font-medium text-stone-900">₹{(item.price * item.quantity).toFixed(2)}</p>
+                        <p className="text-base font-medium text-stone-900">
+                          ₹{((item.onSale && item.discountPrice ? item.discountPrice : item.price) * item.quantity).toFixed(2)}
+                        </p>
                       </div>
                     </div>
                   </div>

@@ -2,13 +2,14 @@
 
 import { useAuth } from '@/context/AuthContext';
 import { ReactNode, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 
 const AUTO_LOGOUT_DURATION = 30 * 60 * 1000; // 30 minutes
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
+  const pathname = usePathname();
   const { user, isAdmin, isAuthenticated, isLoading } = useAuth();
 
   const handleLogout = () => {
@@ -60,14 +61,29 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
           </Link>
         </div>
         <nav className="flex-1 py-8 px-4 flex flex-col gap-2">
-          <Link href="/admin" className="px-4 py-3 text-sm font-medium rounded-md bg-stone-100 text-stone-900 hover:bg-stone-200/50 transition-colors">
+          <Link 
+            href="/admin" 
+            className={`px-4 py-3 text-sm font-medium rounded-md transition-colors ${pathname === '/admin' ? 'bg-stone-100 text-stone-900' : 'text-stone-500 hover:bg-stone-100 hover:text-stone-900'}`}
+          >
             Dashboard
           </Link>
-          <Link href="/admin/products" className="px-4 py-3 text-sm font-medium rounded-md text-stone-500 hover:bg-stone-100 hover:text-stone-900 transition-colors">
+          <Link 
+            href="/admin/products" 
+            className={`px-4 py-3 text-sm font-medium rounded-md transition-colors ${pathname.startsWith('/admin/products') ? 'bg-stone-100 text-stone-900' : 'text-stone-500 hover:bg-stone-100 hover:text-stone-900'}`}
+          >
             Products
           </Link>
-          <Link href="/admin/add-product" className="px-4 py-3 text-sm font-medium rounded-md text-stone-500 hover:bg-stone-100 hover:text-stone-900 transition-colors">
+          <Link 
+            href="/admin/add-product" 
+            className={`px-4 py-3 text-sm font-medium rounded-md transition-colors ${pathname === '/admin/add-product' ? 'bg-stone-100 text-stone-900' : 'text-stone-500 hover:bg-stone-100 hover:text-stone-900'}`}
+          >
             Add Product
+          </Link>
+          <Link 
+            href="/admin/categories" 
+            className={`px-4 py-3 text-sm font-medium rounded-md transition-colors ${pathname === '/admin/categories' ? 'bg-stone-100 text-stone-900' : 'text-stone-500 hover:bg-stone-100 hover:text-stone-900'}`}
+          >
+            Categories
           </Link>
         </nav>
         <div className="p-6 border-t border-stone-200 flex flex-col gap-3">

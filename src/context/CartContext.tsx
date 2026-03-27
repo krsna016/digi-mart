@@ -8,6 +8,8 @@ export interface CartItem {
   price: number;
   image?: string;
   category?: string;
+  onSale?: boolean;
+  discountPrice?: number;
   quantity: number;
 }
 
@@ -83,7 +85,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     setCart([]);
   };
 
-  const cartTotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+  const cartTotal = cart.reduce((total, item) => {
+    const itemPrice = item.onSale && item.discountPrice ? item.discountPrice : item.price;
+    return total + (itemPrice * item.quantity);
+  }, 0);
   const cartCount = cart.reduce((count, item) => count + item.quantity, 0);
 
   return (

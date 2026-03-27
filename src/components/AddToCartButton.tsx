@@ -10,6 +10,8 @@ interface AddToCartButtonProps {
     price: number;
     image?: string;
     category?: string;
+    onSale?: boolean;
+    discountPrice?: number;
   };
 }
 
@@ -24,6 +26,8 @@ export default function AddToCartButton({ product }: AddToCartButtonProps) {
       price: product.price,
       image: product.image,
       category: product.category,
+      onSale: product.onSale,
+      discountPrice: product.discountPrice,
       quantity: 1
     });
     

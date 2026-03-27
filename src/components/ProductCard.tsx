@@ -1,11 +1,16 @@
+import { useState } from 'react';
 import Link from 'next/link';
 import { Product } from '@/data/products';
 import { Heart } from 'lucide-react';
 import { useWishlist } from '@/context/WishlistContext';
+import ProductImage from './ProductImage';
 
-export default function ProductCard({ id, name, price, image, category, ...rest }: Product & { mainCategory?: string }) {
+export default function ProductCard({ id, name, price, image, category, onSale, discountPrice, ...rest }: Product & { mainCategory?: string }) {
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const isWishlisted = isInWishlist(id);
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
 
   const handleWishlistToggle = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -18,8 +23,10 @@ export default function ProductCard({ id, name, price, image, category, ...rest 
         id, 
         name, 
         price, 
-        image, 
+        image: hasError ? '/placeholder.png' : image, 
         category,
+        onSale,
+        discountPrice,
         description: (rest as any).description || "",
         mainCategory: (rest as any).mainCategory
       });
@@ -28,13 +35,20 @@ export default function ProductCard({ id, name, price, image, category, ...rest 
 
   return (
     <Link href={`/product/${id}`} className="group flex flex-col cursor-pointer w-full">
-      <div className="relative aspect-[3/4] w-full overflow-hidden bg-stone-100 mb-4 rounded-md">
-        <img 
+      <div className="relative aspect-[3/4] w-full mb-4">
+        <ProductImage 
           src={image} 
           alt={name}
-          className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+          className="rounded-md"
         />
         
+        {/* Sale Badge */}
+        {onSale && (
+          <div className="absolute top-3 left-3 z-10 bg-red-600 text-white text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-sm shadow-sm animate-fade-in">
+            Sale
+          </div>
+        )}
+
         {/* Wishlist Button */}
         <button 
           onClick={handleWishlistToggle}
@@ -57,8 +71,17 @@ export default function ProductCard({ id, name, price, image, category, ...rest 
         </div>
       </div>
       <div className="flex flex-col gap-1 px-0.5">
-        <h3 className="text-[16px] text-stone-900 tracking-wide font-medium leading-snug">{name}</h3>
-        <p className="text-[16px] text-stone-700 font-normal">₹{price}</p>
+        <h3 className="text-[14px] text-stone-900 tracking-wide font-medium leading-snug truncate">{name}</h3>
+        <div className="flex items-center gap-2">
+          {onSale && discountPrice ? (
+            <>
+              <p className="text-[14px] text-red-600 font-bold">₹{discountPrice}</p>
+              <p className="text-[12px] text-stone-400 font-normal line-through italic">₹{price}</p>
+            </>
+          ) : (
+            <p className="text-[14px] text-stone-700 font-normal">₹{price}</p>
+          )}
+        </div>
       </div>
     </Link>
   );

@@ -15,8 +15,14 @@ const createPaymentOrder = async (req, res) => {
   const { amount, currency = 'INR', receipt } = req.body;
 
   try {
+    const amountInPaise = Math.round(amount * 100);
+    
+    if (amountInPaise < 100) {
+      return res.status(400).json({ message: 'Minimum transaction amount is ₹1.00' });
+    }
+
     const options = {
-      amount: amount * 100, // amount in the smallest currency unit (paise for INR)
+      amount: amountInPaise,
       currency,
       receipt,
     };

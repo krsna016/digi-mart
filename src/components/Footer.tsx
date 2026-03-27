@@ -79,20 +79,18 @@ export default function Footer() {
 
           {/* Shop */}
           <div className="lg:col-span-2">
-            <h4 className="text-[10px] font-medium uppercase tracking-[0.2em] text-white/70 mb-8">Shop</h4>
-            <ul className="space-y-5 text-sm tracking-wide text-stone-200 font-normal">
-              <li><Link href="/category/apparel" className="hover:text-white transition-all duration-300">Apparel</Link></li>
-              <li><Link href="/category/accessories" className="hover:text-white transition-all duration-300">Accessories</Link></li>
-              <li><Link href="/category/home" className="hover:text-white transition-all duration-300">Home</Link></li>
-              <li><Link href="/category/decor" className="hover:text-white transition-all duration-300">Decor</Link></li>
-              <li><Link href="/category/kitchen" className="hover:text-white transition-all duration-300">Kitchen</Link></li>
+            <h4 className="text-[14px] font-medium uppercase tracking-[0.2em] text-white/70 mb-8">Shop</h4>
+            <ul className="space-y-5 text-[16px] tracking-wide text-stone-200 font-normal">
+              <li><Link href="/category/men" className="hover:text-white transition-all duration-300">Men</Link></li>
+              <li><Link href="/category/women" className="hover:text-white transition-all duration-300">Women</Link></li>
+              <li><Link href="/category/kids" className="hover:text-white transition-all duration-300">Kids</Link></li>
             </ul>
           </div>
 
           {/* About */}
           <div className="lg:col-span-2">
-            <h4 className="text-[10px] font-medium uppercase tracking-[0.2em] text-white/70 mb-8">About</h4>
-            <ul className="space-y-4 text-[13px] text-stone-200 font-normal">
+            <h4 className="text-[14px] font-medium uppercase tracking-[0.2em] text-white/70 mb-8">About</h4>
+            <ul className="space-y-4 text-[16px] text-stone-200 font-normal">
               <li><Link href="/about" className="hover:text-white transition-colors duration-300">Our Story</Link></li>
               <li><Link href="/sustainability" className="hover:text-white transition-colors duration-300">Sustainability</Link></li>
               <li><Link href="/materials" className="hover:text-white transition-colors duration-300">Materials</Link></li>
@@ -102,8 +100,8 @@ export default function Footer() {
 
           {/* Support */}
           <div className="lg:col-span-2">
-            <h4 className="text-[10px] font-medium uppercase tracking-[0.2em] text-white/70 mb-8">Support</h4>
-            <ul className="space-y-4 text-[13px] text-stone-200 font-normal">
+            <h4 className="text-[14px] font-medium uppercase tracking-[0.2em] text-white/70 mb-8">Support</h4>
+            <ul className="space-y-4 text-[16px] text-stone-200 font-normal">
               <li><Link href="/contact" className="hover:text-white transition-colors duration-300">Contact</Link></li>
               <li><Link href="/faqs" className="hover:text-white transition-colors duration-300">FAQs</Link></li>
             </ul>
@@ -111,15 +109,15 @@ export default function Footer() {
 
           {/* Legal */}
           <div className="lg:col-span-2">
-            <h4 className="text-[10px] font-medium uppercase tracking-[0.2em] text-white/70 mb-8">Legal</h4>
-            <ul className="space-y-4 text-[13px] text-stone-200 font-normal">
+            <h4 className="text-[14px] font-medium uppercase tracking-[0.2em] text-white/70 mb-8">Legal</h4>
+            <ul className="space-y-4 text-[16px] text-stone-200 font-normal">
               <li><Link href="/privacy-policy" className="hover:text-white transition-colors duration-300">Privacy Policy</Link></li>
               <li><Link href="/terms" className="hover:text-white transition-colors duration-300">Terms &amp; Conditions</Link></li>
             </ul>
           </div>
         </div>
 
-        <div className="pt-8 border-t border-stone-900 flex flex-col md:flex-row items-center justify-between gap-6 text-[11px] uppercase tracking-widest text-stone-400 font-medium">
+        <div className="pt-8 border-t border-stone-900 flex flex-col md:flex-row items-center justify-between gap-6 text-[14px] uppercase tracking-widest text-stone-400 font-medium">
           <p>&copy; {new Date().getFullYear()} DigiMart. All rights reserved.</p>
         </div>
       </div>

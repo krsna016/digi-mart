@@ -1,5 +1,6 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
+import PromoGrid from "@/components/PromoGrid";
 import ProductGrid from "@/components/ProductGrid";
 import Footer from "@/components/Footer";
 
@@ -9,6 +10,7 @@ export default function Home() {
       <Navbar />
       <main className="flex-1">
         <Hero />
+        <PromoGrid />
         <ProductGrid />
       </main>
       <Footer />

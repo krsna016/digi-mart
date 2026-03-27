@@ -9,6 +9,8 @@ export interface WishlistItem {
   image: string;
   category: string;
   description: string;
+  onSale?: boolean;
+  discountPrice?: number;
   mainCategory?: string;
 }
 

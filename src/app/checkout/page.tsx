@@ -70,13 +70,16 @@ export default function CheckoutPage() {
     try {
       // 1. Create Order in DB
       const orderData = {
-        orderItems: cart.map(item => ({
-          name: item.name,
-          qty: item.quantity,
-          image: item.image,
-          price: item.price,
-          product: item.id
-        })),
+        orderItems: cart.map(item => {
+          const effectivePrice = item.onSale && item.discountPrice ? item.discountPrice : item.price;
+          return {
+            name: item.name,
+            qty: item.quantity,
+            image: item.image,
+            price: effectivePrice,
+            product: item.id
+          };
+        }),
         shippingAddress: { 
           address: selectedAddress.addressLine, 
           city: selectedAddress.city, 
@@ -212,10 +215,12 @@ export default function CheckoutPage() {
 
                 <button 
                     onClick={handlePayment}
-                    disabled={isProcessing || !selectedAddress || cart.length === 0}
+                    disabled={isProcessing || !selectedAddress || cart.length === 0 || cartTotal < 1}
                     className="w-full mt-12 bg-stone-900 text-white py-6 rounded-full text-[13px] font-bold uppercase tracking-[0.3em] hover:bg-stone-800 disabled:opacity-50 transition-all shadow-xl shadow-stone-900/10 active:scale-[0.98]"
                 >
-                    {isProcessing ? 'Processing Securely...' : `Proceed to Payment — ₹${cartTotal.toFixed(2)}`}
+                    {isProcessing ? 'Processing Securely...' : 
+                     cartTotal < 1 ? 'Minimum Order ₹1.00 Required' :
+                     `Proceed to Payment — ₹${cartTotal.toFixed(2)}`}
                 </button>
             </div>
             
@@ -242,7 +247,16 @@ export default function CheckoutPage() {
                                     <h3 className="text-sm font-bold text-stone-900 uppercase tracking-widest leading-tight">{item.name}</h3>
                                     <p className="text-[11px] text-stone-400 font-bold uppercase tracking-[0.2em] mt-2">Qty: {item.quantity}</p>
                                 </div>
-                                <span className="font-serif text-lg text-stone-900">₹{(item.price * item.quantity).toFixed(2)}</span>
+                                <div className="flex flex-col">
+                                    {item.onSale && item.discountPrice ? (
+                                        <>
+                                            <span className="font-serif text-lg text-red-600">₹{(item.discountPrice * item.quantity).toFixed(2)}</span>
+                                            <span className="text-[10px] text-stone-400 line-through font-normal">₹{(item.price * item.quantity).toFixed(2)}</span>
+                                        </>
+                                    ) : (
+                                        <span className="font-serif text-lg text-stone-900">₹{(item.price * item.quantity).toFixed(2)}</span>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     ))}

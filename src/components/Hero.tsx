@@ -2,23 +2,32 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
+import Link from "next/link";
 
 const HERO_CONTENT = [
   {
     label: "Luxury Essentials",
-    description: "Discover curated essentials crafted with uncompromising quality."
+    description: "Discover curated essentials crafted with uncompromising quality.",
+    cta: "Explore Collection",
+    path: "/collection"
   },
   {
-    label: "Premium Cotton",
-    description: "Experience the perfect blend of timeless design and modern functionality in every piece of our collection."
+    label: "Spring Drop",
+    description: "Experience the perfect blend of timeless design and modern functionality in our new arrivals.",
+    cta: "Shop New",
+    path: "/new"
   },
   {
-    label: "Everyday Comfort",
-    description: "Elevate your daily rituals with our ethically sourced, high-performance materials designed for life."
+    label: "Seasonal Event",
+    description: "Elevate your rituals with our ethically sourced materials, now at specialized value.",
+    cta: "Shop Sale",
+    path: "/sale"
   },
   {
     label: "Sustainable Style",
-    description: "Meticulously engineered for longevity, helping you build a more intentional and lasting wardrobe."
+    description: "Meticulously engineered for longevity, helping you build a more intentional wardrobe.",
+    cta: "About Us",
+    path: "/about"
   }
 ];
 
@@ -55,12 +64,6 @@ export default function Hero() {
     },
   };
 
-  const scrollToProducts = () => {
-    const element = document.getElementById('products-grid');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  };
 
   return (
     <section className="relative w-full min-h-[85vh] overflow-hidden bg-[#F2F0E9] flex items-center justify-center border-b border-stone-200">
@@ -109,13 +112,13 @@ export default function Hero() {
         </motion.div>
 
         <motion.div variants={itemVariants}>
-          <button 
-            onClick={scrollToProducts}
-            className="group relative overflow-hidden bg-stone-900 text-white px-10 py-4 text-[11px] font-medium uppercase tracking-[0.2em] transition-transform duration-300 hover:scale-105"
+          <Link 
+            href={HERO_CONTENT[textIndex].path}
+            className="group relative inline-block overflow-hidden bg-stone-900 text-white px-10 py-4 text-[11px] font-medium uppercase tracking-[0.2em] transition-transform duration-300 hover:scale-105"
           >
-            <span className="relative z-10">Explore Now</span>
+            <span className="relative z-10">{HERO_CONTENT[textIndex].cta}</span>
             <div className="absolute inset-0 bg-stone-800 transform translate-y-full transition-transform duration-500 ease-in-out group-hover:translate-y-0"></div>
-          </button>
+          </Link>
         </motion.div>
       </motion.div>
     </section>

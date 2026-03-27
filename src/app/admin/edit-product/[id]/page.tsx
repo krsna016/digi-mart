@@ -1,10 +1,9 @@
 "use client";
 
+import { api } from '@/utils/api';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter, useParams } from 'next/navigation';
-import { api } from '@/utils/api';
-import { categoryConfig } from '@/data/categoryConfig';
 
 export default function EditProductPage() {
   const router = useRouter();
@@ -17,11 +16,14 @@ export default function EditProductPage() {
   const [price, setPrice] = useState('');
   const [stock, setStock] = useState('');
   const [image, setImage] = useState('');
-
-  const [mainCategory, setMainCategory] = useState('');
+  const [gender, setGender] = useState('');
   const [category, setCategory] = useState('');
-  const [subcategory, setSubcategory] = useState('');
+  const [onSale, setOnSale] = useState(false);
+  const [discountPrice, setDiscountPrice] = useState('');
+
   
+  const [categories, setCategories] = useState<any>({ men: {}, women: {}, kids: {} });
+  const [isCatLoading, setIsCatLoading] = useState(true);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -50,15 +52,37 @@ export default function EditProductPage() {
   }, [id]);
 
   useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const data = await api.get('/categories');
+        const transformed: any = { men: {}, women: {}, kids: {} };
+        data.forEach((cat: any) => {
+          if (transformed[cat.gender]) {
+            transformed[cat.gender][cat.group] = cat.items;
+          }
+        });
+        setCategories(transformed);
+      } catch (err) {
+        console.error('Failed to fetch categories:', err);
+      } finally {
+        setIsCatLoading(false);
+      }
+    };
+    fetchCategories();
+  }, []);
+
+  useEffect(() => {
     if (product) {
       setName(product.name || '');
       setDescription(product.description || '');
       setPrice(product.price !== undefined ? String(product.price) : '');
       setStock(product.stock !== undefined ? String(product.stock) : '');
       setImage(product.image || '');
-      setMainCategory(product.mainCategory?.trim().toLowerCase() || '');
-      setCategory(product.category?.trim().toLowerCase() || '');
-      setSubcategory(product.subcategory?.trim().toLowerCase() || '');
+      setGender(product.gender || '');
+      setCategory(product.category || '');
+      setOnSale(product.onSale || false);
+      setDiscountPrice(product.discountPrice !== undefined && product.discountPrice !== null ? String(product.discountPrice) : '');
+
     }
   }, [product]);
 
@@ -72,11 +96,13 @@ export default function EditProductPage() {
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
     if (!name.trim()) newErrors.name = 'Product name is required';
-    if (!mainCategory.trim()) newErrors.mainCategory = 'Main category is required';
+    if (!gender.trim()) newErrors.gender = 'Gender is required';
     if (!category.trim()) newErrors.category = 'Category is required';
-    if (!subcategory.trim()) newErrors.subcategory = 'Subcategory is required';
     if (!price || isNaN(Number(price)) || Number(price) <= 0) {
       newErrors.price = 'Please enter a valid positive price';
+    }
+    if (onSale && (!discountPrice || isNaN(Number(discountPrice)) || Number(discountPrice) >= Number(price))) {
+      newErrors.discountPrice = 'Discount price must be less than regular price';
     }
     if (!stock || isNaN(Number(stock)) || Number(stock) < 0) {
       newErrors.stock = 'Please enter a valid stock integer, 0 or above';
@@ -87,6 +113,7 @@ export default function EditProductPage() {
     return Object.keys(newErrors).length === 0;
   };
 
+
   const handleInputChange = (field: string, val: string) => {
     if (field === 'name') setName(val);
     else if (field === 'description') setDescription(val);
@@ -96,23 +123,12 @@ export default function EditProductPage() {
     if (errors[field]) setErrors(prev => ({ ...prev, [field]: undefined as any }));
   };
 
-  const handleMainCategoryChange = (val: string) => {
-    setMainCategory(val);
+  const handleGenderChange = (val: string) => {
+    setGender(val);
     setCategory('');
-    setSubcategory('');
-    if (errors.mainCategory) setErrors(prev => ({ ...prev, mainCategory: undefined as any }));
+    if (errors.gender) setErrors(prev => ({ ...prev, gender: undefined as any }));
   };
 
-  const handleCategoryChange = (val: string) => {
-    setCategory(val);
-    setSubcategory('');
-    if (errors.category) setErrors(prev => ({ ...prev, category: undefined as any }));
-  };
-
-  const handleSubcategoryChange = (val: string) => {
-    setSubcategory(val);
-    if (errors.subcategory) setErrors(prev => ({ ...prev, subcategory: undefined as any }));
-  };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -164,19 +180,13 @@ export default function EditProductPage() {
         price: Number(price) || 0,
         description: description.trim(),
         image,
-        mainCategory,
+        gender,
         category,
-        subcategory,
+        onSale,
+        discountPrice: onSale ? Number(discountPrice) : null,
         stock: parseInt(stock, 10) || 0,
       };
 
-      console.log('Update Product ID:', id);
-      console.log({
-        mainCategory,
-        category,
-        subcategory
-      });
-      console.log('Update Payload:', payload);
 
       const updatedData = await api.put(`/products/${id}`, payload);
       console.log('Update Success Data:', updatedData);
@@ -275,82 +285,49 @@ export default function EditProductPage() {
               {errors.description && <p className="text-red-500 text-xs mt-2 font-medium">{errors.description}</p>}
             </div>
             
-            <div className="flex flex-col gap-6">
-              {/* Main Category */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Gender */}
               <div>
-                <label htmlFor="mainCategory" className="block text-[11px] font-medium uppercase tracking-[0.2em] text-stone-500 mb-3">Main Category <span className="text-red-500">*</span></label>
+                <label className="block text-[11px] font-bold uppercase tracking-[0.2em] text-stone-400 mb-3">Gender</label>
                 <div className="relative">
                   <select 
-                    id="mainCategory" 
-                    name="mainCategory" 
-                    value={mainCategory} 
-                    onChange={(e) => handleMainCategoryChange(e.target.value)}
-                    className={`appearance-none w-full px-4 py-3.5 bg-stone-50 border ${errors.mainCategory ? 'border-red-300 ring-1 ring-red-300' : 'border-stone-200/80'} rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-normal ${mainCategory ? 'text-stone-900' : 'text-stone-400'}`}
+                    value={gender} 
+                    onChange={(e) => handleGenderChange(e.target.value)}
+                    className="w-full px-4 py-4 bg-stone-50 border border-stone-100 rounded-xl text-sm focus:ring-1 focus:ring-stone-900 outline-none appearance-none cursor-pointer"
                   >
-                    <option value="" disabled>Select main category</option>
-                    {Object.keys(categoryConfig).map(mainCat => (
-                      <option key={mainCat} value={mainCat}>{mainCat.charAt(0).toUpperCase() + mainCat.slice(1)}</option>
-                    ))}
+                    <option value="" disabled>Select Gender</option>
+                    <option value="men">Men</option>
+                    <option value="women">Women</option>
+                    <option value="kids">Kids</option>
                   </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-stone-500">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
-                  </div>
                 </div>
-                {errors.mainCategory && <p className="text-red-500 text-xs mt-2 font-medium">{errors.mainCategory}</p>}
+                {errors.gender && <p className="text-red-500 text-xs mt-2">{errors.gender}</p>}
               </div>
 
               {/* Category */}
               <div>
-                <label htmlFor="category" className="block text-[11px] font-medium uppercase tracking-[0.2em] text-stone-500 mb-3">Category <span className="text-red-500">*</span></label>
+                <label className="block text-[11px] font-bold uppercase tracking-[0.2em] text-stone-400 mb-3">Category</label>
                 <div className="relative">
                   <select 
-                    id="category" 
-                    name="category" 
                     value={category} 
-                    onChange={(e) => handleCategoryChange(e.target.value)}
-                    disabled={!mainCategory}
-                    className={`appearance-none w-full px-4 py-3.5 bg-stone-50 border ${errors.category ? 'border-red-300 ring-1 ring-red-300' : 'border-stone-200/80'} rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-normal ${!mainCategory ? 'opacity-50 cursor-not-allowed' : ''} ${category ? 'text-stone-900' : 'text-stone-400'}`}
+                    onChange={(e) => setCategory(e.target.value)} 
+                    disabled={!gender || isCatLoading}
+                    className="w-full px-4 py-4 bg-stone-50 border border-stone-100 rounded-xl text-sm focus:ring-1 focus:ring-stone-900 outline-none appearance-none cursor-pointer disabled:opacity-50"
                   >
-                    <option value="" disabled>Select category</option>
-                    {mainCategory && Object.keys((categoryConfig as any)[mainCategory] || {}).map(cat => (
-                      <option key={cat} value={cat}>{cat.charAt(0).toUpperCase() + cat.slice(1)}</option>
+                    <option value="" disabled>{isCatLoading ? 'Loading...' : 'Select Category'}</option>
+                    {gender && categories[gender] && Object.entries(categories[gender]).map(([group, cats]: [string, any]) => (
+                      <optgroup key={group} label={group} className="font-bold text-stone-900 bg-stone-100">
+                        {cats.map((cat: string) => (
+                          <option key={cat} value={cat.toLowerCase().replace(/\s+/g, '')} className="font-normal bg-white">{cat}</option>
+                        ))}
+                      </optgroup>
                     ))}
                   </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-stone-500">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
-                  </div>
                 </div>
-                {errors.category && <p className="text-red-500 text-xs mt-2 font-medium">{errors.category}</p>}
-              </div>
-
-              {/* Subcategory */}
-              <div>
-                <label htmlFor="subcategory" className="block text-[11px] font-medium uppercase tracking-[0.2em] text-stone-500 mb-3">Subcategory <span className="text-red-500">*</span></label>
-                <div className="relative">
-                  <select 
-                    id="subcategory" 
-                    name="subcategory" 
-                    value={subcategory} 
-                    onChange={(e) => handleSubcategoryChange(e.target.value)}
-                    disabled={!category}
-                    className={`appearance-none w-full px-4 py-3.5 bg-stone-50 border ${errors.subcategory ? 'border-red-300 ring-1 ring-red-300' : 'border-stone-200/80'} rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-normal ${!category ? 'opacity-50 cursor-not-allowed' : ''} ${subcategory ? 'text-stone-900' : 'text-stone-400'}`}
-                  >
-                    <option value="" disabled>Select subcategory</option>
-                    {mainCategory && category && (categoryConfig as any)[mainCategory]?.[category]?.map((subcat: string) => (
-                      <option key={subcat} value={subcat}>{subcat.charAt(0).toUpperCase() + subcat.slice(1)}</option>
-                    ))}
-                    {/* Defensive: Show the current subcategory if it's not in the config for this category */}
-                    {subcategory && mainCategory && category && !(categoryConfig as any)[mainCategory]?.[category]?.includes(subcategory) && (
-                      <option value={subcategory}>{subcategory.charAt(0).toUpperCase() + subcategory.slice(1)} (current)</option>
-                    )}
-                  </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-stone-500">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
-                  </div>
-                </div>
-                {errors.subcategory && <p className="text-red-500 text-xs mt-2 font-medium">{errors.subcategory}</p>}
+                {errors.category && <p className="text-red-500 text-xs mt-2">{errors.category}</p>}
               </div>
             </div>
+
           </div>
         </div>
 
@@ -359,6 +336,15 @@ export default function EditProductPage() {
           
           <div className="bg-white rounded-xl border border-stone-200/60 shadow-[0_2px_8px_-4px_rgba(0,0,0,0.05)] p-8">
             <h2 className="text-lg font-serif text-stone-900 mb-8 pb-4 border-b border-stone-100">Media</h2>
+            <div className="mb-6 p-4 bg-stone-50 rounded-lg border border-stone-100">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-stone-900 mb-2 flex items-center gap-2">
+                <svg className="w-3.5 h-3.5 text-stone-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                Image Guidelines
+              </p>
+              <p className="text-[11px] text-stone-500 leading-relaxed">
+                For a premium look, use portrait images with a <span className="text-stone-900 font-bold">3:4 aspect ratio</span> (e.g., 1200 x 1600 px). Other sizes will be automatically cropped to fit.
+              </p>
+            </div>
             <div>
               <label className="block text-[11px] font-medium uppercase tracking-[0.2em] text-stone-500 mb-3">Product Image</label>
               
@@ -400,28 +386,51 @@ export default function EditProductPage() {
           </div>
 
           <div className="bg-white rounded-xl border border-stone-200/60 shadow-[0_2px_8px_-4px_rgba(0,0,0,0.05)] p-8">
-            <h2 className="text-lg font-serif text-stone-900 mb-8 pb-4 border-b border-stone-100">Attributes</h2>
+            <h2 className="text-lg font-serif text-stone-900 mb-8 pb-4 border-b border-stone-100">Pricing & Stock</h2>
             
-            <div className="space-y-8">
+            <div className="space-y-6">
               <div>
-                <label htmlFor="price" className="block text-[11px] font-medium uppercase tracking-[0.2em] text-stone-500 mb-3">Price (₹) <span className="text-red-500">*</span></label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <span className="text-stone-400 font-medium">₹</span>
-                  </div>
+                <label htmlFor="price" className="block text-[11px] font-medium uppercase tracking-[0.2em] text-stone-500 mb-3">Regular Price (₹) <span className="text-red-500">*</span></label>
+                <input 
+                  type="number" 
+                  step="0.01"
+                  id="price" 
+                  name="price" 
+                  value={price} 
+                  onChange={(e) => setPrice(e.target.value)}
+                  placeholder="0.00"
+                  className={`w-full px-4 py-3.5 bg-stone-50 border ${errors.price ? 'border-red-300 ring-1 ring-red-300' : 'border-stone-200/80'} rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-normal placeholder:text-stone-400`}
+                />
+                {errors.price && <p className="text-red-500 text-xs mt-2 font-medium">{errors.price}</p>}
+              </div>
+
+              <div className="flex items-center gap-3 py-2">
+                <input 
+                  type="checkbox" 
+                  id="onSale" 
+                  checked={onSale}
+                  onChange={(e) => setOnSale(e.target.checked)}
+                  className="w-4 h-4 rounded border-stone-300 text-stone-900 focus:ring-stone-900"
+                />
+                <label htmlFor="onSale" className="text-[11px] font-medium uppercase tracking-[0.2em] text-stone-700 cursor-pointer">This product is on sale</label>
+              </div>
+
+              {onSale && (
+                <div className="animate-fade-down duration-300">
+                  <label htmlFor="discountPrice" className="block text-[11px] font-medium uppercase tracking-[0.2em] text-stone-500 mb-3">Discount Price (₹) <span className="text-red-500">*</span></label>
                   <input 
                     type="number" 
                     step="0.01"
-                    id="price" 
-                    name="price" 
-                    value={price} 
-                    onChange={(e) => handleInputChange('price', e.target.value)}
+                    id="discountPrice" 
+                    name="discountPrice" 
+                    value={discountPrice} 
+                    onChange={(e) => setDiscountPrice(e.target.value)}
                     placeholder="0.00"
-                    className={`w-full pl-9 pr-4 py-3.5 bg-stone-50 border ${errors.price ? 'border-red-300 ring-1 ring-red-300' : 'border-stone-200/80'} rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-normal placeholder:text-stone-400`}
+                    className={`w-full px-4 py-3.5 bg-stone-50 border ${errors.discountPrice ? 'border-red-300 ring-1 ring-red-300' : 'border-stone-200/80'} rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-normal placeholder:text-stone-400`}
                   />
+                  {errors.discountPrice && <p className="text-red-500 text-xs mt-2 font-medium">{errors.discountPrice}</p>}
                 </div>
-                {errors.price && <p className="text-red-500 text-xs mt-2 font-medium">{errors.price}</p>}
-              </div>
+              )}
 
               <div>
                 <label htmlFor="stock" className="block text-[11px] font-medium uppercase tracking-[0.2em] text-stone-500 mb-3">Stock Quantity <span className="text-red-500">*</span></label>
@@ -430,7 +439,7 @@ export default function EditProductPage() {
                   id="stock" 
                   name="stock" 
                   value={stock} 
-                  onChange={(e) => handleInputChange('stock', e.target.value)}
+                  onChange={(e) => setStock(e.target.value)}
                   placeholder="e.g. 50"
                   className={`w-full px-4 py-3.5 bg-stone-50 border ${errors.stock ? 'border-red-300 ring-1 ring-red-300' : 'border-stone-200/80'} rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-normal placeholder:text-stone-400`}
                 />
@@ -442,18 +451,11 @@ export default function EditProductPage() {
           <button 
             type="submit" 
             disabled={isSubmitting || isUploading}
-            className="w-full bg-stone-900 text-white px-6 py-4.5 text-[11px] font-bold uppercase tracking-[0.2em] rounded-xl hover:bg-stone-800 transition-all shadow-[0_4px_14px_0_rgba(0,0,0,0.39)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.23)] hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 flex items-center justify-center gap-3"
+            className="w-full bg-stone-900 text-white px-6 py-4.5 text-[11px] font-bold uppercase tracking-[0.2em] rounded-xl hover:bg-stone-800 transition-all shadow-[0_4px_14px_0_rgba(0,0,0,0.39)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.23)] hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
           >
-            {isSubmitting ? (
-              <>
-                <svg className="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                Saving Changes...
-              </>
-            ) : 'Save Changes'}
+            {isSubmitting ? 'Saving Changes...' : 'Save Changes'}
           </button>
+
         </div>
       </form>
     </div>

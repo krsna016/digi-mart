@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js",
+    "start": "nodemon server.js",
     "seed": "node seeder.js"
   },
   "keywords": [],
@@ -22,5 +22,8 @@
     "nodemailer": "^8.0.4",
     "razorpay": "^2.9.6",
     "validator": "^13.15.26"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
   }
 }

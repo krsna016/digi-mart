@@ -22,7 +22,7 @@ const getBaseUrl = () => {
   if (typeof window === 'undefined' && !url.startsWith('http')) {
     console.error(`[Critical] NEXT_PUBLIC_API_URL is relative or missing in SSR environment: ${url}`);
   }
-  return url;
+  return url.endsWith('/') ? url.slice(0, -1) : url;
 };
 
 export const BASE_URL = getBaseUrl();

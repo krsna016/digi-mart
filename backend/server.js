@@ -54,6 +54,23 @@ app.get('/', (req, res) => {
   res.json({ message: 'Backend server is running!' });
 });
 
+// Diagnostic route to list routes
+app.get('/api/debug-routes', (req, res) => {
+  const routes = [];
+  app._router.stack.forEach((middleware) => {
+    if (middleware.route) {
+      routes.push(`${Object.keys(middleware.route.methods)} ${middleware.route.path}`);
+    } else if (middleware.name === 'router') {
+      middleware.handle.stack.forEach((handler) => {
+        if (handler.route) {
+          routes.push(`${Object.keys(handler.route.methods)} ${middleware.regexp} ${handler.route.path}`);
+        }
+      });
+    }
+  });
+  res.json({ routes });
+});
+
 // 404 Handler
 app.use((req, res, next) => {
   res.status(404).json({ message: `Route not found - ${req.originalUrl}` });

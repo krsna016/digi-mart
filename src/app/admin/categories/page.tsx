@@ -96,19 +96,6 @@ export default function CategoriesPage() {
     }
   };
 
-  const handleQuickSeed = async () => {
-    if (!confirm('This will populate the database with default categories. Continue?')) return;
-    try {
-      setIsLoading(true);
-      await api.post('/categories/seed?force=true', {});
-      await fetchCategories();
-      showToast('Database seeded successfully', 'success');
-    } catch (err: any) {
-      showToast(err.message || 'Seeding failed', 'error');
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const filteredCategories = categories.filter(c => 
     c.gender && c.gender.toLowerCase() === activeGender.toLowerCase()
@@ -130,30 +117,6 @@ export default function CategoriesPage() {
           <p className="text-sm text-stone-500 font-normal">Manage store varieties and groupings in real-time.</p>
         </div>
         <div className="flex items-center gap-4">
-          <button
-            onClick={handleQuickSeed}
-            className="px-5 py-2.5 border border-stone-200 rounded-lg text-[10px] font-bold uppercase tracking-[0.2em] text-stone-400 hover:text-stone-900 hover:border-stone-900 transition-all"
-          >
-            Quick Seed
-          </button>
-          <button
-            onClick={async () => {
-              if (!confirm('This will import all unique categories from your products. Continue?')) return;
-              try {
-                setIsLoading(true);
-                const data = await api.post('/categories/sync', {});
-                await fetchCategories();
-                showToast(`Sync complete! Added ${data.addedCount} new categories.`, 'success');
-              } catch (err: any) {
-                showToast(err.message || 'Sync failed', 'error');
-              } finally {
-                setIsLoading(false);
-              }
-            }}
-            className="px-5 py-2.5 border border-stone-900 bg-stone-900 text-white rounded-lg text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-stone-800 transition-all shadow-md"
-          >
-            Sync from Products
-          </button>
           <div className="flex bg-stone-100 p-1 rounded-xl">
             {(['men', 'women', 'kids'] as const).map((g) => (
               <button
@@ -245,7 +208,7 @@ export default function CategoriesPage() {
               <LayoutGrid className="w-12 h-12 text-stone-200 mb-4" />
               <p className="font-serif text-xl text-stone-900 mb-2">No {activeGender} collections found</p>
               <p className="text-xs text-stone-400 uppercase tracking-widest max-w-xs mx-auto leading-loose">
-                Your database appears empty for this category. Use "Quick Seed" above to populate defaults or add a new group manually.
+                Your database appears empty for this category. Please add a new group manually using the form above.
               </p>
               <button 
                 onClick={fetchCategories}

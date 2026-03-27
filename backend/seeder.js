@@ -1,7 +1,51 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 const Product = require('./models/Product');
+const Category = require('./models/Category');
 const connectDB = require('./config/db');
+
+const categories = [
+  {
+    gender: 'women',
+    group: 'Dresses',
+    items: ['Midi Dresses', 'Maxi Dresses', 'Evening Gowns']
+  },
+  {
+    gender: 'women',
+    group: 'Tops',
+    items: ['Blouses & Shirts', 'Knitwear', 'T-Shirts']
+  },
+  {
+    gender: 'women',
+    group: 'Bottoms',
+    items: ['Jeans', 'Skirts', 'Trousers']
+  },
+  {
+    gender: 'men',
+    group: 'Tops',
+    items: ['Casual Shirts', 'T-Shirts', 'Hoodies & Sweatshirts', 'Polo Shirts']
+  },
+  {
+    gender: 'men',
+    group: 'Bottoms',
+    items: ['Chinos', 'Jeans', 'Shorts']
+  },
+  {
+    gender: 'men',
+    group: 'Outerwear',
+    items: ['Blazers', 'Jackets', 'Coats']
+  },
+  {
+    gender: 'kids',
+    group: 'Essentials',
+    items: ['T-Shirts', 'Bodysuits', 'Leggings']
+  },
+  {
+    gender: 'kids',
+    group: 'Outfits',
+    items: ['Dresses', 'Sets', 'Outerwear']
+  }
+];
 
 const products = [
   // --- WOMEN ---
@@ -146,9 +190,16 @@ const products = [
 const importData = async () => {
   try {
     await connectDB();
+    
+    // Clear existing data
     await Product.deleteMany();
+    await Category.deleteMany();
+    
+    // Insert new data
     await Product.insertMany(products);
-    console.log('MongoDB successfully seeded with latest clothing dataset!');
+    await Category.insertMany(categories);
+    
+    console.log('MongoDB successfully seeded with latest clothing and category dataset!');
     process.exit();
   } catch (error) {
     console.error(`Error during database seeding: ${error}`);
@@ -157,4 +208,5 @@ const importData = async () => {
 };
 
 importData();
+
 

@@ -46,12 +46,26 @@ export default function Navbar() {
   const [searchQuery, setSearchQuery] = useState('');
   const [categories, setCategories] = useState<any>({ men: {}, women: {}, kids: {} });
   const [isCatLoading, setIsCatLoading] = useState(true);
+  
+  const DEFAULT_CATEGORIES = {
+    men: { 'Essentials': ['T-Shirts', 'Hoodies', 'Jeans'], 'Formal': ['Blazers', 'Shirts'] },
+    women: { 'Dresses': ['Midi', 'Maxi'], 'Tops': ['Blouses', 'Shirts'], 'Bottoms': ['Jeans', 'Skirts'] },
+    kids: { 'Essentials': ['T-Shirts', 'Bodysuits'], 'Outfits': ['Sets', 'Dresses'] }
+  };
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
+        const { BASE_URL } = await import('@/utils/config');
+        console.log(`[Diagnostic] Navbar attempting to fetch from: ${BASE_URL}/categories`);
+        
         const data = await api.get('/categories');
-        console.log('Categories data from API:', data);
+        if (!data || !Array.isArray(data) || data.length === 0) {
+          console.warn('[Diagnostic] No categories found in DB, using fallbacks');
+          setCategories(DEFAULT_CATEGORIES);
+          return;
+        }
+
         const transformed: any = { men: {}, women: {}, kids: {} };
         data.forEach((cat: any) => {
           const gender = cat.gender.toLowerCase();
@@ -59,10 +73,10 @@ export default function Navbar() {
             transformed[gender][cat.group] = cat.items;
           }
         });
-        console.log('Transformed categories:', transformed);
         setCategories(transformed);
       } catch (err) {
-        console.error('Failed to fetch categories:', err);
+        console.error('[Diagnostic] Navbar category fetch failed:', err);
+        setCategories(DEFAULT_CATEGORIES);
       } finally {
         setIsCatLoading(false);
       }

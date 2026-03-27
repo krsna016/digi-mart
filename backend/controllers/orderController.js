@@ -1,5 +1,6 @@
 const Order = require('../models/Order');
 const Notification = require('../models/Notification');
+const sendEmail = require('../utils/sendEmail');
 
 // @desc    Create new order
 // @route   POST /api/orders
@@ -41,9 +42,26 @@ const addOrderItems = async (req, res) => {
         orderId: createdOrder._id
       });
       console.log('Admin notification created successfully:', notification._id);
+
+      // Send Email Alert to Admin
+      await sendEmail({
+        email: process.env.EMAIL_USER,
+        subject: `New Order Received - DigiMart #${createdOrder._id}`,
+        message: `A new order has been placed.\nOrder ID: ${createdOrder._id}\nTotal: ₹${createdOrder.totalPrice}\nCustomer: ${req.user.name} (${req.user.email})`,
+        html: `
+          <h1>New Order Alert</h1>
+          <p>A new order has been placed on DigiMart.</p>
+          <ul>
+            <li><strong>Order ID:</strong> ${createdOrder._id}</li>
+            <li><strong>Total Amount:</strong> ₹${createdOrder.totalPrice}</li>
+            <li><strong>Customer:</strong> ${req.user.name} (${req.user.email})</li>
+          </ul>
+          <p><a href="${process.env.FRONTEND_URL}/admin">View in Dashboard</a></p>
+        `
+      });
+      console.log('Admin email alert sent');
     } catch (err) {
-      console.error('Failed to create admin notification:', err);
-      // Don't fail the order if notification creation fails
+      console.error('Failed to notify admin:', err);
     }
 
     res.status(201).json(createdOrder);

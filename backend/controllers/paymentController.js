@@ -1,6 +1,8 @@
 const Razorpay = require('razorpay');
 const crypto = require('crypto');
 const Order = require('../models/Order');
+const Notification = require('../models/Notification');
+const sendEmail = require('../utils/sendEmail');
 
 // Initialize Razorpay
 const razorpay = new Razorpay({
@@ -70,6 +72,34 @@ const verifyPayment = async (req, res) => {
         };
 
         const updatedOrder = await order.save();
+
+        // Notify Admin of Payment Success
+        try {
+          await Notification.create({
+            type: 'NEW_ORDER',
+            title: 'Payment Confirmed',
+            message: `Payment verified for Order #${db_order_id}. Total: ₹${order.totalPrice}`,
+            orderId: db_order_id
+          });
+
+          await sendEmail({
+            email: process.env.EMAIL_USER,
+            subject: `Payment Verified - Order #${db_order_id}`,
+            message: `Payment has been successfully verified for Order #${db_order_id}.\nAmount Paid: ₹${order.totalPrice}\nPayment ID: ${razorpay_payment_id}`,
+            html: `
+              <h1>Payment Confirmation</h1>
+              <p>Payment has been verified for an order on DigiMart.</p>
+              <ul>
+                <li><strong>Order ID:</strong> ${db_order_id}</li>
+                <li><strong>Amount Paid:</strong> ₹${order.totalPrice}</li>
+                <li><strong>Razorpay Payment ID:</strong> ${razorpay_payment_id}</li>
+              </ul>
+            `
+          });
+        } catch (err) {
+          console.error('Admin alert failed after payment:', err);
+        }
+
         res.json({ status: 'ok', order: updatedOrder });
       } else {
         res.status(404).json({ message: 'Order not found' });

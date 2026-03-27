@@ -4,6 +4,7 @@ import { useAuth } from '@/context/AuthContext';
 import { ReactNode, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
+import AdminNotificationBell from '@/components/AdminNotificationBell';
 
 const AUTO_LOGOUT_DURATION = 30 * 60 * 1000; // 30 minutes
 
@@ -95,7 +96,8 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
 
       {/* Main Content Workspace */}
       <main className="flex-1 flex flex-col overflow-hidden relative">
-        <header className="h-20 bg-white/80 backdrop-blur-md border-b border-stone-200 flex flex-shrink-0 items-center justify-end px-10 sticky top-0 z-50">
+        <header className="h-20 bg-white/80 backdrop-blur-md border-b border-stone-200 flex flex-shrink-0 items-center justify-end px-10 sticky top-0 z-50 gap-8">
+          <AdminNotificationBell />
           <button
             onClick={handleLogout}
             className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.15em] text-stone-400 hover:text-red-600 transition-colors duration-200 group"

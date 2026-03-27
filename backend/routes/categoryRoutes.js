@@ -6,11 +6,15 @@ const {
   updateCategory,
   deleteCategory,
   seedCategories,
+  syncFromProducts,
 } = require('../controllers/categoryController');
 const { protect, admin } = require('../middleware/authMiddleware');
 
 router.route('/seed')
   .post(protect, admin, seedCategories);
+
+router.route('/sync')
+  .post(protect, admin, syncFromProducts);
 
 router.route('/')
   .get(getCategories)

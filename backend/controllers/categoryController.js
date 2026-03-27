@@ -1,16 +1,52 @@
 const Category = require('../models/Category');
+const Product = require('../models/Product');
 
-// @desc    Get all categories
-// @route   GET /api/categories
-// @access  Public
-exports.getCategories = async (req, res) => {
+// @desc    Sync categories from products
+// @route   POST /api/categories/sync
+// @access  Private/Admin
+exports.syncFromProducts = async (req, res) => {
   try {
-    const categories = await Category.find();
-    res.json(categories);
+    const products = await Product.find({}, 'gender category');
+    const existingCats = await Category.find({});
+    
+    // Create a map of existing normalized names
+    const existingMap = new Set();
+    existingCats.forEach(c => {
+      existingMap.add(`${c.gender.toLowerCase()}:::${c.group.toLowerCase().trim()}`);
+      if (c.items) {
+        c.items.forEach(item => existingMap.add(`${c.gender.toLowerCase()}:::${item.toLowerCase().trim()}`));
+      }
+    });
+
+    let addedCount = 0;
+    for (const p of products) {
+      if (!p.gender || !p.category) continue;
+      
+      const gender = p.gender.toLowerCase();
+      const catNameRaw = p.category.toLowerCase().trim();
+      const key = `${gender}:::${catNameRaw}`;
+      
+      if (!existingMap.has(key)) {
+        const displayGroup = catNameRaw.charAt(0).toUpperCase() + catNameRaw.slice(1);
+        const newCat = new Category({
+          gender,
+          group: displayGroup,
+          items: [displayGroup]
+        });
+        await newCat.save();
+        addedCount++;
+        existingMap.add(key);
+      }
+    }
+
+    res.json({ message: 'Sync complete', addedCount });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+
+// @desc    Get all categories
+//...
 
 // @desc    Create a category group
 // @route   POST /api/categories

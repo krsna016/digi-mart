@@ -48,9 +48,21 @@ export default function Navbar() {
   const [isCatLoading, setIsCatLoading] = useState(true);
   
   const DEFAULT_CATEGORIES = {
-    men: { 'Essentials': ['T-Shirts', 'Hoodies', 'Jeans'], 'Formal': ['Blazers', 'Shirts'] },
-    women: { 'Dresses': ['Midi', 'Maxi'], 'Tops': ['Blouses', 'Shirts'], 'Bottoms': ['Jeans', 'Skirts'] },
-    kids: { 'Essentials': ['T-Shirts', 'Bodysuits'], 'Outfits': ['Sets', 'Dresses'] }
+    men: { 
+      'Tops': ['Casual Shirts', 'T-Shirts', 'Hoodies & Sweatshirts', 'Polo Shirts'],
+      'Bottoms': ['Chinos', 'Jeans', 'Shorts', 'Trousers'],
+      'Outerwear': ['Blazers', 'Jackets', 'Coats', 'Overshirts']
+    },
+    women: { 
+      'Dresses': ['Midi Dresses', 'Maxi Dresses', 'Evening Gowns', 'Cocktail Dresses'], 
+      'Tops': ['Blouses & Shirts', 'Knitwear', 'T-Shirts', 'Tanks'], 
+      'Bottoms': ['Jeans', 'Skirts', 'Trousers', 'Shorts'],
+      'Outerwear': ['Coats', 'Jackets', 'Cardigans', 'Blazers']
+    },
+    kids: { 
+      'Essentials': ['T-Shirts', 'Bodysuits', 'Leggings', 'Pyjamas'], 
+      'Outfits': ['Dresses', 'Sets', 'Outerwear', 'Swimwear'] 
+    }
   };
 
   useEffect(() => {

@@ -21,8 +21,13 @@ const PORT = process.env.PORT || 5000;
 // Trust proxy for Render/Vercel (needed for secure cookies, rate limiting, etc.)
 app.set('trust proxy', 1);
 
-// Enable CORS
-app.use(cors());
+// Enable CORS with credentials for cross-site cookies (Vercel -> Render)
+app.use(cors({
+  origin: true, // In production, you might want to specify the exact Vercel URL
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 // Use JSON middleware
 app.use(express.json());

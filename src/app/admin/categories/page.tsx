@@ -15,9 +15,14 @@ export default function CategoriesPage() {
   const fetchCategories = async () => {
     try {
       setIsLoading(true);
+      const { BASE_URL } = await import('@/utils/config');
+      console.log(`[Diagnostic] Admin Categories fetching from: ${BASE_URL}/categories`);
+      
       const data = await api.get('/categories');
+      console.log(`[Diagnostic] Received ${data?.length || 0} categories`);
       setCategories(data);
     } catch (err) {
+      console.error('[Diagnostic] Admin Categories fetch failed:', err);
       showToast('Failed to fetch categories', 'error');
     } finally {
       setIsLoading(false);

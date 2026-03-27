@@ -13,7 +13,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   const { user, isAdmin, isAuthenticated, isLoading } = useAuth();
 
   const handleLogout = () => {
-    document.cookie = 'admin_token=; path=/; max-age=0; SameSite=Strict';
+    document.cookie = 'admin_token=; path=/; max-age=0; SameSite=None; Secure';
     router.push('/login');
   };
 
@@ -22,7 +22,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
     if (!isLoading && isAuthenticated && isAdmin && user?.token) {
       const hasCookie = document.cookie.includes('admin_token=');
       if (!hasCookie) {
-        document.cookie = `admin_token=${user.token}; path=/; max-age=86400; SameSite=Strict`;
+        document.cookie = `admin_token=${user.token}; path=/; max-age=86400; SameSite=None; Secure`;
       }
     }
   }, [isAuthenticated, isAdmin, user, isLoading]);
@@ -34,7 +34,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
     const resetTimer = () => {
       clearTimeout(logoutTimer);
       logoutTimer = setTimeout(() => {
-        document.cookie = 'admin_token=; path=/; max-age=0; SameSite=Strict';
+        document.cookie = 'admin_token=; path=/; max-age=0; SameSite=None; Secure';
         router.push('/login');
       }, AUTO_LOGOUT_DURATION);
     };

@@ -60,7 +60,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (parsedUser.role === 'admin' && parsedUser.token) {
           const hasCookie = document.cookie.includes('admin_token=');
           if (!hasCookie) {
-            document.cookie = `admin_token=${parsedUser.token}; path=/; max-age=86400; SameSite=Strict`;
+            document.cookie = `admin_token=${parsedUser.token}; path=/; max-age=86400; SameSite=None; Secure`;
           }
         }
       } catch (e) {
@@ -90,7 +90,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       // Set admin cookie if user is admin for middleware protection
       if (data.role === 'admin') {
-        document.cookie = `admin_token=${data.token}; path=/; max-age=86400; SameSite=Strict`;
+        document.cookie = `admin_token=${data.token}; path=/; max-age=86400; SameSite=None; Secure`;
       }
     } catch (err: any) {
       setError(err.message);
@@ -104,7 +104,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(null);
     localStorage.removeItem('digimart_user');
     // Clear admin cookie
-    document.cookie = 'admin_token=; path=/; max-age=0; SameSite=Strict';
+    document.cookie = 'admin_token=; path=/; max-age=0; SameSite=None; Secure';
   };
 
   const register = async (name: string, email: string, password: string) => {

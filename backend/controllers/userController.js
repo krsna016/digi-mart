@@ -40,7 +40,13 @@ const registerUser = async (req, res) => {
 
       // Send verification email
       const isProduction = process.env.NODE_ENV === 'production' || process.env.RENDER === 'true';
-      const frontendUrl = process.env.FRONTEND_URL || (isProduction ? 'https://digi-mart-uppt.vercel.app' : 'http://localhost:3000');
+      let frontendUrl = process.env.FRONTEND_URL || (isProduction ? 'https://digi-mart-uppt.vercel.app' : 'http://localhost:3000');
+      
+      // Clean trailing slash
+      if (frontendUrl.endsWith('/')) {
+        frontendUrl = frontendUrl.slice(0, -1);
+      }
+      
       const verifyUrl = `${frontendUrl}/verify-email?token=${verificationToken}`;
       
       const message = `

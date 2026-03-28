@@ -8,8 +8,7 @@ import { api } from '@/utils/api';
 import { RAZORPAY_KEY_ID } from '@/utils/config';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { MapPin, Plus, CheckCircle2, AlertTriangle, ShieldAlert } from 'lucide-react';
-import Script from 'next/script';
+import { MapPin, Plus, CheckCircle2 } from 'lucide-react';
 
 export default function CheckoutPage() {
   const { cart, cartTotal, clearCart } = useCart();
@@ -21,8 +20,6 @@ export default function CheckoutPage() {
   const [loading, setLoading] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
   const [scriptLoaded, setScriptLoaded] = useState(false);
-  const [scriptError, setScriptError] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState<'Razorpay' | 'COD'>('Razorpay');
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -52,6 +49,23 @@ export default function CheckoutPage() {
     fetchAddresses();
   }, [isAuthenticated, getAddresses, router]);
 
+  useEffect(() => {
+    // Load Razorpay script
+    const script = document.createElement('script');
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.async = true;
+    script.onload = () => setScriptLoaded(true);
+    script.onerror = () => {
+      console.error('Razorpay SDK failed to load. Ad-blocker might be active.');
+      setScriptLoaded(false);
+    };
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
   const handlePayment = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isAuthenticated || !selectedAddress) return;
@@ -62,8 +76,7 @@ export default function CheckoutPage() {
     try {
       // 0. Check if script is loaded
       if (!scriptLoaded || !(window as any).Razorpay) {
-        setScriptError(true);
-        throw new Error('Payment gateway is blocked. Please disable Ad-Blocker/Brave Shields and refresh the page to continue.');
+        throw new Error('Payment gateway (Razorpay) failed to initialize. Please disable your ad-blocker and refresh the page.');
       }
 
       // 1. Create Order in DB
@@ -85,7 +98,7 @@ export default function CheckoutPage() {
           postalCode: selectedAddress.pincode, 
           country: selectedAddress.country 
         },
-        paymentMethod: paymentMethod === 'Razorpay' ? 'Razorpay' : 'Cash on Delivery',
+        paymentMethod: 'Razorpay',
         itemsPrice: cartTotal,
         shippingPrice: 0,
         taxPrice: 0,
@@ -95,15 +108,7 @@ export default function CheckoutPage() {
       const dbOrder = await api.post('/orders', orderData);
       console.log('[Checkout] DB Order Created:', dbOrder._id);
 
-      // 2. Handle based on Payment Method
-      if (paymentMethod === 'COD') {
-        console.log('[Checkout] COD Order completed');
-        clearCart();
-        router.push(`/orders?success=true&method=cod`);
-        return;
-      }
-
-      // 3. Create Razorpay Order in Backend
+      // 2. Create Razorpay Order in Backend
       console.log('[Checkout] Creating Razorpay order...');
       const razorpayOrder = await api.post('/payment/order', {
         amount: cartTotal,
@@ -112,7 +117,7 @@ export default function CheckoutPage() {
       });
       console.log('[Checkout] Razorpay Order ID:', razorpayOrder.id);
 
-      // 4. Open Razorpay Modal
+      // 3. Open Razorpay Modal
       const options = {
         key: RAZORPAY_KEY_ID,
         amount: razorpayOrder.amount,
@@ -231,59 +236,14 @@ export default function CheckoutPage() {
                     ))}
                 </div>
 
-                {/* Payment Method Selection */}
-                <div className="mt-12 space-y-6">
-                    <h2 className="text-xl font-serif text-foreground mb-4">Payment Method</h2>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div 
-                          onClick={() => setPaymentMethod('Razorpay')}
-                          className={`p-6 rounded-[2rem] border-2 transition-all cursor-pointer flex items-center justify-between ${
-                            paymentMethod === 'Razorpay' 
-                              ? 'border-stone-900 bg-background-alt' 
-                              : 'border-stone-200 hover:border-stone-300'
-                          }`}
-                        >
-                            <span className="text-sm font-bold uppercase tracking-widest">Online Payment</span>
-                            {paymentMethod === 'Razorpay' && <CheckCircle2 className="w-5 h-5 text-foreground" />}
-                        </div>
-                        
-                        <div 
-                          onClick={() => setPaymentMethod('COD')}
-                          className={`p-6 rounded-[2rem] border-2 transition-all cursor-pointer flex items-center justify-between ${
-                            paymentMethod === 'COD' 
-                              ? 'border-stone-900 bg-background-alt' 
-                              : 'border-stone-200 hover:border-stone-300'
-                          }`}
-                        >
-                            <span className="text-sm font-bold uppercase tracking-widest">Cash on Delivery</span>
-                            {paymentMethod === 'COD' && <CheckCircle2 className="w-5 h-5 text-foreground" />}
-                        </div>
-                    </div>
-
-                    {/* Razorpay Blocked Warning */}
-                    {scriptError && paymentMethod === 'Razorpay' && (
-                        <div className="bg-red-50 border border-red-200 rounded-[2rem] p-6 flex items-start gap-4">
-                            <ShieldAlert className="w-6 h-6 text-red-600 shrink-0 mt-0.5" />
-                            <div className="space-y-1">
-                                <p className="text-sm font-bold text-red-900 uppercase tracking-tight">Payment Gateway Blocked</p>
-                                <p className="text-[12px] text-red-800 leading-relaxed font-medium">
-                                    Our secure payment gateway (Razorpay) is being blocked by your browser extensions. Please disable **Ad-Blocker**, **uBlock**, or **Brave Shields** and refresh the page, or choose **Cash on Delivery** to proceed.
-                                </p>
-                            </div>
-                        </div>
-                    )}
-                </div>
-
                 <button 
                     onClick={handlePayment}
                     disabled={isProcessing || !selectedAddress || cart.length === 0 || cartTotal < 1}
-                    className="w-full mt-10 bg-primary text-white py-6 rounded-full text-[13px] font-bold uppercase tracking-[0.3em] hover:bg-stone-800 disabled:opacity-50 transition-all shadow-xl shadow-stone-900/10 active:scale-[0.98]"
+                    className="w-full mt-12 bg-primary text-white py-6 rounded-full text-[13px] font-bold uppercase tracking-[0.3em] hover:bg-stone-800 disabled:opacity-50 transition-all shadow-xl shadow-stone-900/10 active:scale-[0.98]"
                 >
                     {isProcessing ? 'Processing Securely...' : 
                      cartTotal < 1 ? 'Minimum Order ₹1.00 Required' :
-                     paymentMethod === 'COD' ? `Place Order (COD) — ₹${cartTotal.toFixed(2)}` :
-                     `Pay Securely — ₹${cartTotal.toFixed(2)}`}
+                     `Proceed to Payment — ₹${cartTotal.toFixed(2)}`}
                 </button>
             </div>
             
@@ -349,23 +309,6 @@ export default function CheckoutPage() {
       </main>
       
       <Footer />
-      
-      {/* Load Razorpay SDK using Next.js Script component */}
-      <Script 
-        id="razorpay-checkout-js"
-        src="https://checkout.razorpay.com/v1/checkout.js"
-        strategy="lazyOnload"
-        onLoad={() => {
-          console.log('[Razorpay] Script loaded successfully');
-          setScriptLoaded(true);
-          setScriptError(false);
-        }}
-        onError={() => {
-          console.error('[Razorpay] Script failed to load. Ad-blocker detected.');
-          setScriptLoaded(false);
-          setScriptError(true);
-        }}
-      />
     </div>
   );
 }

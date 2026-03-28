@@ -39,7 +39,9 @@ const registerUser = async (req, res) => {
       await user.save();
 
       // Send verification email
-      const verifyUrl = `${process.env.FRONTEND_URL}/verify-email?token=${verificationToken}`;
+      const isProduction = process.env.NODE_ENV === 'production' || process.env.RENDER === 'true';
+      const frontendUrl = process.env.FRONTEND_URL || (isProduction ? 'https://digi-mart-uppt.vercel.app' : 'http://localhost:3000');
+      const verifyUrl = `${frontendUrl}/verify-email?token=${verificationToken}`;
       
       const message = `
         <h1>Verify your email</h1>
@@ -60,10 +62,14 @@ const registerUser = async (req, res) => {
           email: user.email
         });
       } catch (err) {
+        console.error('[Signup] Email Service Failed:', err.message);
         user.verificationToken = undefined;
         user.verificationTokenExpires = undefined;
         await user.save();
-        return res.status(500).json({ message: 'Email could not be sent' });
+        return res.status(500).json({ 
+          message: 'Account created, but verification email could not be sent. Please ensure the email service is configured correctly on Render.',
+          error: err.message
+        });
       }
     } else {
       res.status(400).json({ message: 'Invalid user data' });

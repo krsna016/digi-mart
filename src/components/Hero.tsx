@@ -66,7 +66,7 @@ export default function Hero() {
 
 
   return (
-    <section className="relative w-full h-[75vh] min-h-[500px] flex items-center justify-center overflow-hidden rounded-[2.5rem] shadow-premium border border-stone-200/40">
+    <section id="hero-section" className="relative w-full h-[75vh] min-h-[500px] flex items-center justify-center overflow-hidden rounded-[2.5rem] shadow-premium border border-stone-200/40">
       {/* Background Image Setup */}
       <div className="absolute inset-0 z-0">
         <img 

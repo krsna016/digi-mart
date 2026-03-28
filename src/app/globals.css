@@ -63,8 +63,24 @@
   --color-muted: var(--muted);
   --color-border: var(--border);
   
-  --shadow-premium: 0 40px 100px -20px rgba(0, 0, 0, 0.12);
-  --shadow-card: 0 20px 50px -12px rgba(0, 0, 0, 0.08);
+  --shadow-premium: 0 40px 100px -20px rgba(0, 0, 0, 0.18);
+  --shadow-card: 0 30px 60px -15px rgba(0, 0, 0, 0.15);
+  --shadow-hover: 0 50px 80px -20px rgba(0, 0, 0, 0.22);
+}
+
+/* Global Card Hover Effect */
+[class*="shadow-card"], [class*="shadow-premium"], [class*="shadow-lg"] {
+  transition: all 0.5s cubic-bezier(0.2, 0, 0, 1) !important;
+}
+
+[class*="shadow-card"]:hover, [class*="shadow-premium"]:hover, [class*="shadow-lg"]:hover {
+  transform: translateY(-10px) scale(1.01);
+  box-shadow: var(--shadow-hover) !important;
+}
+
+/* Precise Exclusion for Hero Section (No Motion) */
+#hero-section:hover {
+  transform: none !important;
 }
 
 

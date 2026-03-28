@@ -55,11 +55,14 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       {/* Sidebar */}
       <aside className="w-64 bg-background rounded-[2.5rem] border border-stone-300 flex flex-col flex-shrink-0 shadow-sm z-10 overflow-hidden pb-4">
         <div className="h-24 flex items-center px-10 border-b border-stone-200">
-          <Link href="/" className="hover:opacity-70 transition-opacity">
-            <span className="font-serif text-xl tracking-tight font-medium text-foreground">
-              Go to site
+          <div className="flex flex-col">
+            <span className="font-serif text-2xl tracking-tight font-bold text-foreground">
+              Admin
             </span>
-          </Link>
+            <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-stone-400 -mt-1">
+              Dashboard
+            </span>
+          </div>
         </div>
         <nav className="flex-1 py-8 px-6 flex flex-col gap-2">
           <Link 

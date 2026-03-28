@@ -42,7 +42,8 @@ app.use(cors({
     if (isAllowed || isVercelSubdomain || isLocalhost) {
       return callback(null, true);
     } else {
-      console.warn(`[CORS] Rejected Origin: ${origin}`);
+      // Diagnostic log for troubleshooting production connection issues
+      console.warn(`[CORS REJECTED] Origin: ${origin} | Allowed: ${allowedOrigins.join(', ')}`);
       return callback(new Error('The CORS policy for this site does not allow access from the specified Origin.'), false);
     }
   },

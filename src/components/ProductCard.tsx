@@ -39,12 +39,12 @@ export default function ProductCard({ id, name, price, image, category, onSale, 
         <ProductImage 
           src={image} 
           alt={name}
-          className="rounded-md"
+          className="rounded-lg"
         />
         
         {/* Sale Badge */}
         {onSale && (
-          <div className="absolute top-3 left-3 z-10 bg-red-600 text-white text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-sm shadow-sm animate-fade-in">
+          <div className="absolute top-3 left-3 z-10 bg-red-600 text-white text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full shadow-sm animate-fade-in">
             Sale
           </div>
         )}
@@ -61,11 +61,11 @@ export default function ProductCard({ id, name, price, image, category, onSale, 
         </button>
 
         {/* Hover Overlay */}
-        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-500 ease-out rounded-md" />
+        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-500 ease-out rounded-lg" />
         
         {/* Quick View button on hover */}
         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 translate-y-4 opacity-0 transition-all duration-400 ease-out group-hover:translate-y-0 group-hover:opacity-100 hidden sm:block">
-          <div className="bg-white/95 px-6 py-2.5 text-[10px] font-medium uppercase tracking-widest text-stone-900 shadow-sm backdrop-blur-sm whitespace-nowrap rounded-sm">
+          <div className="bg-white/95 px-6 py-2.5 text-[10px] font-medium uppercase tracking-widest text-stone-900 shadow-sm backdrop-blur-sm whitespace-nowrap rounded-full">
             Quick View
           </div>
         </div>

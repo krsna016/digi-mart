@@ -52,7 +52,7 @@ export default function Footer() {
 
             <div className="max-w-sm">
               <h4 className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/70 mb-6">Newsletter</h4>
-              <form onSubmit={handleSubmit} className="relative flex border-b border-stone-800 focus-within:border-white transition-colors pb-3 group">
+              <form onSubmit={handleSubmit} className="relative flex items-center border border-stone-800 rounded-full focus-within:border-white transition-colors py-2 px-4 group">
                 <input
                   type="email"
                   value={email}
@@ -64,7 +64,7 @@ export default function Footer() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="text-[11px] font-bold uppercase tracking-[0.2em] hover:text-white text-stone-500 transition-colors absolute right-0 bottom-3 disabled:opacity-50"
+                  className="text-[11px] font-bold uppercase tracking-[0.2em] hover:text-white text-stone-500 transition-colors disabled:opacity-50 ml-2"
                 >
                   {loading ? '...' : 'Join'}
                 </button>
@@ -80,7 +80,7 @@ export default function Footer() {
           {/* Shop */}
           <div className="lg:col-span-2">
             <h4 className="text-[14px] font-medium uppercase tracking-[0.2em] text-white/70 mb-8">Shop</h4>
-            <ul className="space-y-5 text-[16px] tracking-wide text-stone-200 font-normal">
+            <ul className="space-y-5 text-[15px] tracking-wide text-stone-200 font-normal">
               <li><Link href="/category/men" className="hover:text-white transition-all duration-300">Men</Link></li>
               <li><Link href="/category/women" className="hover:text-white transition-all duration-300">Women</Link></li>
               <li><Link href="/category/kids" className="hover:text-white transition-all duration-300">Kids</Link></li>
@@ -90,7 +90,7 @@ export default function Footer() {
           {/* About */}
           <div className="lg:col-span-2">
             <h4 className="text-[14px] font-medium uppercase tracking-[0.2em] text-white/70 mb-8">About</h4>
-            <ul className="space-y-4 text-[16px] text-stone-200 font-normal">
+            <ul className="space-y-4 text-[15px] text-stone-200 font-normal">
               <li><Link href="/about" className="hover:text-white transition-colors duration-300">Our Story</Link></li>
               <li><Link href="/sustainability" className="hover:text-white transition-colors duration-300">Sustainability</Link></li>
               <li><Link href="/materials" className="hover:text-white transition-colors duration-300">Materials</Link></li>
@@ -101,7 +101,7 @@ export default function Footer() {
           {/* Support */}
           <div className="lg:col-span-2">
             <h4 className="text-[14px] font-medium uppercase tracking-[0.2em] text-white/70 mb-8">Support</h4>
-            <ul className="space-y-4 text-[16px] text-stone-200 font-normal">
+            <ul className="space-y-4 text-[15px] text-stone-200 font-normal">
               <li><Link href="/contact" className="hover:text-white transition-colors duration-300">Contact</Link></li>
               <li><Link href="/faqs" className="hover:text-white transition-colors duration-300">FAQs</Link></li>
             </ul>
@@ -110,7 +110,7 @@ export default function Footer() {
           {/* Legal */}
           <div className="lg:col-span-2">
             <h4 className="text-[14px] font-medium uppercase tracking-[0.2em] text-white/70 mb-8">Legal</h4>
-            <ul className="space-y-4 text-[16px] text-stone-200 font-normal">
+            <ul className="space-y-4 text-[15px] text-stone-200 font-normal">
               <li><Link href="/privacy-policy" className="hover:text-white transition-colors duration-300">Privacy Policy</Link></li>
               <li><Link href="/terms" className="hover:text-white transition-colors duration-300">Terms &amp; Conditions</Link></li>
             </ul>

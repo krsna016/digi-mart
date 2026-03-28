@@ -15,19 +15,19 @@ const HERO_CONTENT = [
     label: "Spring Drop",
     description: "Experience the perfect blend of timeless design and modern functionality in our new arrivals.",
     cta: "Explore Now",
-    path: "/new"
+    path: "/collection"
   },
   {
     label: "Seasonal Event",
     description: "Elevate your rituals with our ethically sourced materials, now at specialized value.",
     cta: "Explore Now",
-    path: "/sale"
+    path: "/collection"
   },
   {
     label: "Sustainable Style",
     description: "Meticulously engineered for longevity, helping you build a more intentional wardrobe.",
     cta: "Explore Now",
-    path: "/about"
+    path: "/collection"
   }
 ];
 
@@ -66,9 +66,20 @@ export default function Hero() {
 
 
   return (
-    <section className="relative w-full min-h-[85vh] overflow-hidden bg-[#F2F0E9] flex items-center justify-center border-b border-stone-200">
+    <section className="relative w-full h-[85vh] min-h-[600px] flex items-center justify-center overflow-hidden rounded-lg mt-2 lg:mt-4">
+      {/* Background Image Setup */}
+      <div className="absolute inset-0 z-0">
+        <img 
+          src="/images/home_hero_bg.png" 
+          alt="Luxury Fashion" 
+          className="w-full h-full object-cover opacity-80"
+        />
+        {/* Subtle gradient overlay to ensure text readability */}
+        <div className="absolute inset-0 bg-gradient-to-t from-stone-900/80 via-stone-900/20 to-stone-900/40" />
+      </div>
+
       <motion.div
-        className="mx-auto max-w-7xl px-6 lg:px-8 text-center relative z-10 flex flex-col items-center"
+        className="mx-auto max-w-7xl px-6 lg:px-8 text-center relative z-10 flex flex-col items-center mt-16"
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"
@@ -82,7 +93,7 @@ export default function Hero() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.5, ease: "easeInOut" }}
-              className="block text-[14px] font-medium uppercase tracking-[0.3em] text-stone-700"
+              className="block text-[14px] font-bold uppercase tracking-[0.4em] text-stone-200"
             >
               {HERO_CONTENT[textIndex].label}
             </motion.span>
@@ -90,7 +101,7 @@ export default function Hero() {
         </motion.div>
 
         <motion.h1
-          className="max-w-5xl text-6xl font-serif font-normal sm:text-7xl md:text-8xl lg:text-[7.5rem] leading-[1.1] tracking-[-0.02em] text-stone-900 mb-8"
+          className="max-w-5xl text-6xl font-serif font-normal sm:text-7xl md:text-8xl lg:text-[7.5rem] leading-[1.05] tracking-tight text-white mb-8 drop-shadow-sm"
           variants={itemVariants}
         >
           Elevate Your Everyday.
@@ -104,7 +115,7 @@ export default function Hero() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.6, ease: [0.2, 0, 0, 1] }}
-              className="max-w-xl text-[13px] font-medium uppercase tracking-[0.2em] text-stone-700 leading-relaxed"
+              className="max-w-xl text-[13px] font-medium uppercase tracking-[0.2em] text-stone-300 leading-relaxed"
             >
               {HERO_CONTENT[textIndex].description}
             </motion.p>
@@ -114,10 +125,10 @@ export default function Hero() {
         <motion.div variants={itemVariants}>
           <Link 
             href={HERO_CONTENT[textIndex].path}
-            className="group relative inline-block overflow-hidden bg-stone-900 text-white px-10 py-4 text-[11px] font-medium uppercase tracking-[0.2em] transition-transform duration-300 hover:scale-105"
+            className="group relative inline-block overflow-hidden rounded-full bg-white text-stone-900 px-12 py-5 text-[11px] font-bold uppercase tracking-[0.3em] transition-transform duration-300 hover:scale-105"
           >
             <span className="relative z-10">{HERO_CONTENT[textIndex].cta}</span>
-            <div className="absolute inset-0 bg-stone-800 transform translate-y-full transition-transform duration-500 ease-in-out group-hover:translate-y-0"></div>
+            <div className="absolute inset-0 bg-stone-100 transform translate-y-full transition-transform duration-500 ease-in-out group-hover:translate-y-0"></div>
           </Link>
         </motion.div>
       </motion.div>

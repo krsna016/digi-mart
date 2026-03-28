@@ -12,6 +12,20 @@ export default function ProductImage({ src, alt, className = "" }: ProductImageP
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
 
+  if (!src) {
+    return (
+      <div className={`relative overflow-hidden bg-stone-100 w-full h-full ${className}`}>
+        <img 
+          src="/images/fallback.png" 
+          alt={alt}
+          className="w-full h-full object-cover grayscale opacity-60"
+        />
+        <div className="absolute inset-0 flex items-center justify-center">
+           <span className="text-[10px] uppercase tracking-widest font-medium text-stone-900/40 bg-white/40 backdrop-blur-sm px-3 py-1.5 rounded-full">No Image available</span>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className={`relative overflow-hidden bg-stone-100 w-full h-full ${className}`}>
       {/* Shimmer Effect */}

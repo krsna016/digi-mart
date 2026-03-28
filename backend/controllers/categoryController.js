@@ -121,15 +121,15 @@ exports.deleteCategory = async (req, res) => {
 // @access  Private/Admin
 exports.seedCategories = async (req, res) => {
   const defaultCategories = [
-    { gender: 'women', group: 'Dresses', items: ['Midi Dresses', 'Maxi Dresses', 'Evening Gowns', 'Cocktail Dresses'] },
-    { gender: 'women', group: 'Tops', items: ['Blouses & Shirts', 'Knitwear', 'T-Shirts', 'Tanks'] },
-    { gender: 'women', group: 'Bottoms', items: ['Jeans', 'Skirts', 'Trousers', 'Shorts'] },
-    { gender: 'women', group: 'Outerwear', items: ['Coats', 'Jackets', 'Cardigans', 'Blazers'] },
-    { gender: 'men', group: 'Tops', items: ['Casual Shirts', 'T-Shirts', 'Hoodies & Sweatshirts', 'Polo Shirts'] },
-    { gender: 'men', group: 'Bottoms', items: ['Chinos', 'Jeans', 'Shorts', 'Trousers'] },
-    { gender: 'men', group: 'Outerwear', items: ['Blazers', 'Jackets', 'Coats', 'Overshirts'] },
-    { gender: 'kids', group: 'Essentials', items: ['T-Shirts', 'Bodysuits', 'Leggings', 'Pyjamas'] },
-    { gender: 'kids', group: 'Outfits', items: ['Dresses', 'Sets', 'Outerwear', 'Swimwear'] }
+    { gender: 'women', group: 'Ethnic Wear', items: ['Sarees', 'Kurtas & Kurtis', 'Lehengas', 'Salwar Suits', 'Ethnic Dresses'] },
+    { gender: 'women', group: 'Western Wear', items: ['Tops & Shirts', 'Dresses', 'Jeans', 'Trousers'] },
+    { gender: 'women', group: 'Accessories', items: ['Jewellery', 'Handbags', 'Footwear'] },
+    { gender: 'men', group: 'Ethnic Wear', items: ['Kurtas', 'Sherwanis', 'Nehru Jackets', 'Dhotis & Pyjamas'] },
+    { gender: 'men', group: 'Casual Wear', items: ['Shirts', 'T-Shirts', 'Jeans', 'Trousers'] },
+    { gender: 'men', group: 'Footwear', items: ['Mojaris', 'Formal Shoes', 'Casual Shoes'] },
+    { gender: 'kids', group: 'Girls Ethnic', items: ['Lehenga Choli', 'Anarkali Suits', 'Pattu Pavadai'] },
+    { gender: 'kids', group: 'Boys Ethnic', items: ['Dhoti Kurta Set', 'Kurta Pyjama', 'Sherwanis'] },
+    { gender: 'kids', group: 'Daily Wear', items: ['T-Shirts', 'Dresses', 'Sets'] }
   ];
 
   try {

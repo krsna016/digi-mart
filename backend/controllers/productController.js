@@ -48,8 +48,8 @@ const createProduct = async (req, res) => {
   try {
     const { name, price, description, image, gender, category, onSale, discountPrice, stock } = req.body;
 
-    if (!name || !price || !description || !image || !gender || !category) {
-      return res.status(400).json({ message: 'Please provide all required fields (name, price, description, image, gender, category).' });
+    if (!name || !price || !description || !gender || !category) {
+      return res.status(400).json({ message: 'Please provide all required fields (name, price, description, gender, category).' });
     }
 
     const product = new Product({
@@ -84,7 +84,7 @@ const updateProduct = async (req, res) => {
       product.name = name || product.name;
       product.price = price !== undefined ? Number(price) : product.price;
       product.description = description || product.description;
-      product.image = image || product.image;
+      product.image = image !== undefined ? image : product.image;
       product.gender = gender || product.gender;
       product.category = category || product.category;
       product.onSale = onSale !== undefined ? (onSale === true || onSale === 'true') : product.onSale;

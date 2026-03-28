@@ -7,9 +7,9 @@ import { ArrowRight } from 'lucide-react';
 const PROMOS = [
   {
     title: "New Arrivals",
-    subtitle: "The Season's Best",
-    description: "Explore our latest drops and architectural silhouettes.",
-    image: "https://images.unsplash.com/photo-1445205170230-053b830c6050?auto=format&fit=crop&q=80&w=1200",
+    subtitle: "Modern Indian Collection",
+    description: "Discover our newly added handcrafted ethnic pieces.",
+    image: "/images/indian_new_arrivals_bg.png",
     link: "/new",
     cta: "Shop New"
   },
@@ -37,21 +37,28 @@ export default function PromoGrid() {
             transition={{ duration: 0.8, delay: idx * 0.2, ease: [0.2, 0, 0, 1] }}
             className="group relative aspect-[4/5] overflow-hidden rounded-3xl bg-stone-100"
           >
-            <img 
-              src={promo.image} 
-              alt={promo.title}
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-[2s] ease-out group-hover:scale-110"
-            />
-            <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors duration-700" />
+            {promo.image && (
+              <>
+                <img 
+                  src={promo.image} 
+                  alt={promo.title}
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-[2s] ease-out group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors duration-700" />
+              </>
+            )}
+            {!promo.image && (
+              <div className="absolute inset-0 bg-stone-50 border border-stone-100 group-hover:bg-stone-100 transition-colors duration-700" />
+            )}
             
             <div className="absolute inset-0 p-10 lg:p-16 flex flex-col justify-end">
               <span className={`text-[10px] font-bold uppercase tracking-[0.4em] mb-4 drop-shadow-sm ${promo.isSale ? 'text-red-400' : 'text-stone-300'}`}>
                 {promo.subtitle}
               </span>
-              <h3 className="text-4xl lg:text-5xl font-serif text-white mb-6 tracking-tight drop-shadow-md">
+              <h3 className={`text-4xl lg:text-5xl font-serif mb-6 tracking-tight drop-shadow-md ${promo.image ? 'text-white' : 'text-stone-900'}`}>
                 {promo.title}
               </h3>
-              <p className="text-sm text-stone-200/90 max-w-xs mb-10 leading-relaxed drop-shadow-sm">
+              <p className={`text-sm max-w-xs mb-10 leading-relaxed drop-shadow-sm ${promo.image ? 'text-stone-200/90' : 'text-stone-500'}`}>
                 {promo.description}
               </p>
               

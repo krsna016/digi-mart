@@ -59,17 +59,17 @@ function NewArrivalsContent() {
       <div className="relative h-[40vh] min-h-[400px] flex items-center justify-center text-white overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
-            src="/images/new-arrivals.png" 
+            src="/images/indian_new_arrivals_bg.png" 
             alt="New Arrivals" 
             className="w-full h-full object-cover transition-transform duration-1000 scale-105"
           />
-          <div className="absolute inset-0 bg-stone-900/40 backdrop-blur-[2px]" />
-          <div className="absolute inset-0 bg-gradient-to-t from-stone-900/80 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-stone-900/10 backdrop-blur-[0.5px]" />
+          <div className="absolute inset-0 bg-gradient-to-t from-stone-900/60 via-transparent to-transparent" />
         </div>
-        <div className="relative z-10">
-          <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-stone-400 mb-4 animate-fade-up">Latest Collection</p>
-          <h1 className="text-5xl md:text-6xl font-serif mb-6 animate-fade-up">New Arrivals</h1>
-          <p className="text-sm font-light text-stone-300 max-w-xl mx-auto px-6 animate-fade-up">
+        <div className="relative z-10 text-center">
+          <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-stone-200 mb-4 animate-fade-up">Latest Collection</p>
+          <h1 className="text-5xl md:text-6xl font-serif mb-6 animate-fade-up drop-shadow-md">New Arrivals</h1>
+          <p className="text-sm font-light text-stone-100 max-w-xl mx-auto px-6 animate-fade-up drop-shadow-sm">
             Explore our latest drops and seasonal essentials designed for modern living.
           </p>
         </div>

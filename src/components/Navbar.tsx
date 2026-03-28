@@ -142,7 +142,7 @@ export default function Navbar() {
                     value={searchQuery}
                     onChange={e => setSearchQuery(e.target.value)}
                     placeholder="Search"
-                    className="w-48 xl:w-64 bg-stone-100/60 hover:bg-stone-100 focus:bg-white border border-transparent focus:border-stone-200 rounded-md px-9 py-1.5 text-[13px] text-stone-900 placeholder:text-stone-600 transition-all duration-300 outline-none"
+                    className="w-48 xl:w-64 bg-stone-100/60 hover:bg-stone-100 focus:bg-white border border-transparent focus:border-stone-200 rounded-full px-9 py-1.5 text-[13px] text-stone-900 placeholder:text-stone-600 transition-all duration-300 outline-none"
                   />
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-stone-600 group-focus-within:text-stone-900 transition-colors" strokeWidth={1.2} />
                 </form>
@@ -171,7 +171,7 @@ export default function Navbar() {
                   )}
                 </button>
 
-                <div className={`absolute top-full right-0 mt-3 w-56 bg-white border border-stone-100 rounded-md shadow-lg transition-all duration-300 transform origin-top-right overflow-hidden z-50 ${isAccountOpen && isAuthenticated ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 -translate-y-2 pointer-events-none'}`}>
+                <div className={`absolute top-full right-0 mt-3 w-56 bg-white border border-stone-100 rounded-3xl shadow-lg transition-all duration-300 transform origin-top-right overflow-hidden z-50 ${isAccountOpen && isAuthenticated ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 -translate-y-2 pointer-events-none'}`}>
                   {mounted && isAuthenticated && (
                     <div className="py-2">
                       <div className="px-6 py-4 border-b border-stone-50">
@@ -251,7 +251,7 @@ export default function Navbar() {
                             <div className="absolute inset-0 flex flex-col items-center justify-end p-8 pb-10 text-center">
                               <p className="text-[9px] font-bold uppercase tracking-[0.4em] text-white/90 mb-3 drop-shadow-sm">Seasonal Choice</p>
                               <h4 className="text-xl font-serif text-white mb-8 leading-tight drop-shadow-md">{categoryBanners[mainCat as keyof typeof categoryBanners]?.title}</h4>
-                              <Link href={categoryBanners[mainCat as keyof typeof categoryBanners]?.path} className="w-full py-4 bg-white/95 backdrop-blur-sm text-stone-900 text-[10px] font-bold uppercase tracking-[0.25em] rounded-sm hover:bg-white transition-all shadow-xl active:scale-[0.98]" onClick={() => setHoveredCategory(null)}>{categoryBanners[mainCat as keyof typeof categoryBanners]?.cta} →</Link>
+                              <Link href={categoryBanners[mainCat as keyof typeof categoryBanners]?.path} className="w-full py-4 bg-white/95 backdrop-blur-sm text-stone-900 text-[10px] font-bold uppercase tracking-[0.25em] rounded-full hover:bg-white transition-all shadow-xl active:scale-[0.98]" onClick={() => setHoveredCategory(null)}>{categoryBanners[mainCat as keyof typeof categoryBanners]?.cta} →</Link>
                             </div>
                           </div>
                         </div>
@@ -288,7 +288,7 @@ export default function Navbar() {
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
                   placeholder="Search"
-                  className="w-full bg-stone-100 px-10 py-4 text-sm rounded-xl outline-none"
+                  className="w-full bg-stone-100 px-10 py-4 text-sm rounded-full outline-none"
                 />
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" strokeWidth={1.5} />
               </form>

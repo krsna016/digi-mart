@@ -1,6 +1,13 @@
 const Order = require('../models/Order');
 const Notification = require('../models/Notification');
 const sendEmail = require('../utils/sendEmail');
+const Razorpay = require('razorpay');
+
+// Initialize Razorpay
+const razorpay = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_KEY_SECRET,
+});
 
 // @desc    Create new order
 // @route   POST /api/orders
@@ -43,6 +50,14 @@ const addOrderItems = async (req, res) => {
           orderId: createdOrder._id
         });
         
+        const isProduction = process.env.NODE_ENV === 'production' || process.env.RENDER === 'true';
+        let dashboardUrl = process.env.FRONTEND_URL;
+        if (isProduction && (!dashboardUrl || dashboardUrl.includes('localhost'))) {
+          dashboardUrl = 'https://digi-mart-uppt.vercel.app';
+        } else if (!dashboardUrl) {
+          dashboardUrl = 'http://localhost:3000';
+        }
+
         await sendEmail({
           email: process.env.EMAIL_USER,
           subject: `New Order Received - DigiMart #${createdOrder._id}`,
@@ -55,7 +70,7 @@ const addOrderItems = async (req, res) => {
               <li><strong>Total Amount:</strong> ₹${createdOrder.totalPrice}</li>
               <li><strong>Customer:</strong> ${req.user.name} (${req.user.email})</li>
             </ul>
-            <p><a href="${process.env.FRONTEND_URL}/admin">View in Dashboard</a></p>
+            <p><a href="${dashboardUrl}/admin/orders/${createdOrder._id}" style="background: #1C1917; color: white; padding: 10px 20px; text-decoration: none; border-radius: 30px; display: inline-block;">View Order in Dashboard</a></p>
           `
         });
         console.log('[Background] Admin notified of new order');
@@ -66,6 +81,34 @@ const addOrderItems = async (req, res) => {
 
     // Trigger notification in background
     notifyAdmin();
+
+    // OPTIMIZATION: If payment method is Razorpay, create the payment order immediately
+    // to save the frontend from making another round-trip.
+    if (paymentMethod === 'Razorpay') {
+      try {
+        const amountInPaise = Math.round(createdOrder.totalPrice * 100);
+        const options = {
+          amount: amountInPaise,
+          currency: 'INR',
+          receipt: createdOrder._id.toString(),
+        };
+
+        const razorpayOrder = await razorpay.orders.create(options);
+        
+        // Return both the DB order and the Razorpay order
+        return res.status(201).json({
+          ...createdOrder._doc,
+          razorpayOrder
+        });
+      } catch (error) {
+        console.error('[OrderController] Razorpay initialization failed:', error.message);
+        // We still return the created order, but include an error flag
+        return res.status(201).json({
+          ...createdOrder._doc,
+          razorpayError: 'Failed to initialize payment gateway'
+        });
+      }
+    }
 
     res.status(201).json(createdOrder);
   }

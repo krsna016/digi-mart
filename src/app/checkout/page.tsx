@@ -112,14 +112,19 @@ export default function CheckoutPage() {
       const dbOrder = await api.post('/orders', orderData);
       console.log('[Checkout] DB Order Created:', dbOrder._id);
 
-      // 2. Create Razorpay Order in Backend
-      setStatusMessage('Preparing secure payment gateway...');
-      console.log('[Checkout] Creating Razorpay order...');
-      const razorpayOrder = await api.post('/payment/order', {
-        amount: cartTotal,
-        currency: 'INR',
-        receipt: dbOrder._id
-      });
+      // 2. Extract Razorpay Order (now returned directly from /orders for speed)
+      let razorpayOrder = dbOrder.razorpayOrder;
+      
+      if (!razorpayOrder) {
+        console.warn('[Checkout] Backend did not return razorpayOrder in /orders. Falling back to sequential call...');
+        setStatusMessage('Preparing secure payment gateway...');
+        razorpayOrder = await api.post('/payment/order', {
+          amount: cartTotal,
+          currency: 'INR',
+          receipt: dbOrder._id
+        });
+      }
+      
       console.log('[Checkout] Razorpay Order ID:', razorpayOrder.id);
       
       setStatusMessage('Opening Payment Window...');

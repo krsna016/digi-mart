@@ -35,7 +35,15 @@ export const apiRequest = async (endpoint: string, options: RequestOptions = {})
     config.body = JSON.stringify(options.body);
   }
 
+  const startTime = Date.now();
   const response = await fetch(`${BASE_URL}${endpoint}`, config);
+  const duration = Date.now() - startTime;
+  
+  if (duration > 1000) {
+    console.warn(`[API] SLOW RESPONSE: ${options.method || 'GET'} ${endpoint} took ${duration}ms`);
+  } else {
+    console.log(`[API] ${options.method || 'GET'} ${endpoint} took ${duration}ms`);
+  }
   
   // Check if response is JSON
   const contentType = response.headers.get('content-type');

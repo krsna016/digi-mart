@@ -54,9 +54,12 @@ export default function CheckoutPage() {
     const script = document.createElement('script');
     script.src = 'https://checkout.razorpay.com/v1/checkout.js';
     script.async = true;
-    script.onload = () => setScriptLoaded(true);
+    script.onload = () => {
+      console.log('[Checkout] Razorpay SDK loaded successfully');
+      setScriptLoaded(true);
+    };
     script.onerror = () => {
-      console.error('Razorpay SDK failed to load. Ad-blocker might be active.');
+      console.error('[Checkout] Razorpay SDK failed to load. Ad-blocker might be active.');
       setScriptLoaded(false);
     };
     document.body.appendChild(script);
@@ -163,10 +166,26 @@ export default function CheckoutPage() {
       };
 
       const rzp = new (window as any).Razorpay(options);
-      rzp.open();
+      
+      // Explicitly catch open() failures (unusual but possible if script is partially blocked)
+      try {
+        rzp.open();
+      } catch (openError: any) {
+        console.error('[Checkout] rzp.open() failed:', openError);
+        throw new Error('Could not open the payment window. This is usually caused by an ad-blocker or tracker-blocker (uBlock, etc.). Please disable it and try again.');
+      }
+
     } catch (error: any) {
       console.error('[Checkout] Error during sequence:', error);
-      alert(error.message || 'Something went wrong during checkout. Check your connection or ad-blocker settings.');
+      const isAdblockError = error.message?.toLowerCase().includes('ad-blocker') || 
+                            error.message?.toLowerCase().includes('gateway') ||
+                            error.message?.toLowerCase().includes('load');
+      
+      if (isAdblockError) {
+        alert('PAYMENT BLOCKED: Your browser or an extension is blocking the payment gateway (Razorpay). Please disable your Ad-Blocker/Tracker-Blocker and refresh the page to continue.');
+      } else {
+        alert(error.message || 'Something went wrong during checkout. Check your connection or payment settings.');
+      }
     } finally {
       setIsProcessing(false);
     }

@@ -75,7 +75,7 @@ export default function CheckoutPage() {
           return {
             name: item.name,
             qty: item.quantity,
-            image: item.image,
+            image: item.image || '/images/fallback.png',
             price: effectivePrice,
             product: item.id
           };
@@ -190,7 +190,7 @@ export default function CheckoutPage() {
                         <div 
                           key={addr._id}
                           onClick={() => setSelectedAddress(addr)}
-                          className={`relative p-6 rounded-3xl border-2 transition-all cursor-pointer group hover:shadow-md ${
+                          className={`relative p-6 rounded-[2.5rem] border-2 transition-all cursor-pointer group hover:shadow-md ${
                             selectedAddress?._id === addr._id 
                               ? 'border-stone-900 bg-stone-50' 
                               : 'border-stone-100 hover:border-stone-200'
@@ -240,7 +240,7 @@ export default function CheckoutPage() {
                     {cart.map(item => (
                         <div key={item.id} className="flex gap-6 group">
                             <div className="w-24 h-32 bg-white border border-stone-200 rounded-2xl overflow-hidden shrink-0 shadow-sm group-hover:shadow-md transition-shadow">
-                                <img src={item.image} alt={item.name} className="w-full h-full object-cover scale-110 group-hover:scale-100 transition-transform duration-700" />
+                                <img src={item.image || '/images/fallback.png'} alt={item.name} className="w-full h-full object-cover scale-110 group-hover:scale-100 transition-transform duration-700" />
                             </div>
                             <div className="flex flex-col justify-between py-2 flex-1">
                                 <div>

@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function FullWidthBanner() {
   return (
-    <section className="relative w-full h-[70vh] min-h-[500px] flex items-center justify-center overflow-hidden rounded-lg">
+    <section className="relative w-full h-[70vh] min-h-[500px] flex items-center justify-center overflow-hidden rounded-[2.5rem]">
       <div className="absolute inset-0 z-0">
         <img 
           src="/images/home_full_width_banner.png" 

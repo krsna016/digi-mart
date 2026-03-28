@@ -1,77 +1,33 @@
 "use client";
 
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import ProductCard from './ProductCard';
-import { BASE_URL } from '@/utils/config';
 
-export default function ProductGrid({ title = "Quiet Luxury line", subtitle = "Latest Additions" }: { title?: string, subtitle?: string }) {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+export default function ProductGrid({ 
+  title = "Quiet Luxury line", 
+  subtitle = "Latest Additions",
+  products = []
+}: { 
+  title?: string, 
+  subtitle?: string,
+  products?: any[]
+}) {
 
-  useEffect(() => {
-    async function fetchProducts() {
-      try {
-        const res = await fetch(`${BASE_URL}/products`);
-        if (!res.ok) throw new Error('Failed to load products from server');
-        const data = await res.json();
-        
-        // For variety if "Trending Now" or "Best Sellers" is passed, we can shuffle or sort differently, 
-        // but for now we'll just use the fetched list or reverse it conceptually (we just reverse it based on title as a simple hack for variety)
-        if (title === 'Trending Now') {
-             setProducts(data.reverse());
-        } else if (title === 'Best Sellers') {
-             // sort by price desc just for variety in demo
-             setProducts(data.sort((a:any, b:any) => b.price - a.price));
-        } else {
-             setProducts(data);
-        }
-      } catch (err: any) {
-        setError(err.message || 'An error occurred while fetching products.');
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchProducts();
-  }, [title]);
-
-  if (loading) {
-    return (
-      <section className="mx-auto max-w-[1400px] w-full px-4 text-center min-h-[50vh] flex flex-col justify-center">
-        <h2 className="text-2xl font-serif text-stone-900 animate-pulse tracking-wide">Loading collection...</h2>
-      </section>
-    );
-  }
-
-  if (error) {
+  if (!products || products.length === 0) {
     return (
       <section className="mx-auto max-w-[1400px] w-full px-4 text-center min-h-[50vh] flex flex-col justify-center animate-fade-in">
-        <div className="bg-red-50/50 border border-red-100 rounded-lg p-12 max-w-2xl mx-auto shadow-sm">
-          <h2 className="text-2xl font-serif text-red-700 mb-6">Database Connectivity Issue</h2>
-          <div className="space-y-4 mb-8">
-            <p className="text-stone-600 text-sm leading-relaxed">
-              The frontend was unable to load products from your server at:
-            </p>
-            <code className="block bg-white px-4 py-3 rounded-xl border border-red-100 text-red-600 font-mono text-[13px] break-all">
-              {BASE_URL}
-            </code>
-          </div>
-          <div className="text-left space-y-4 text-xs text-stone-500 font-normal border-t border-red-100 pt-8">
-            <p className="font-bold text-stone-700 uppercase tracking-widest text-[10px]">How to fix this:</p>
-            <ul className="list-disc pl-5 space-y-2">
-              <li>If testing <strong>locally</strong>: Ensure your backend is running on port 5001.</li>
-              <li>If on <strong>Vercel</strong>: Change your <code>NEXT_PUBLIC_API_URL</code> to your Render URL (<code>https://...onrender.com/api</code>).</li>
-            </ul>
-          </div>
+        <div className="bg-stone-50 border border-stone-100 rounded-[2.5rem] p-12 max-w-2xl mx-auto shadow-sm">
+          <h2 className="text-2xl font-serif text-stone-900 mb-6">No Products Available</h2>
+          <p className="text-stone-600 text-sm leading-relaxed">
+            We couldn't load any products right now. Please check back later.
+          </p>
         </div>
       </section>
     );
   }
 
   return (
-    <section id="products-grid" className="w-full bg-white py-4 rounded-lg">
+    <section id="products-grid" className="w-full bg-white py-4 rounded-[2.5rem]">
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
         <div className="max-w-xl">
           <span className="block text-[11px] font-bold uppercase tracking-[0.3em] text-stone-400 mb-4">{subtitle}</span>

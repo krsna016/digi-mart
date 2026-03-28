@@ -153,7 +153,7 @@ function OrdersContent() {
               <div className="w-6 h-6 border border-stone-200 border-t-stone-900 rounded-full animate-spin" />
             </div>
           ) : orders.length === 0 ? (
-            <div className="bg-white border border-stone-100 rounded-3xl p-16 text-center flex flex-col items-center gap-6">
+            <div className="bg-white border border-stone-100 rounded-[2.5rem] p-16 text-center flex flex-col items-center gap-6">
               <div className="w-16 h-16 bg-stone-50 rounded-full flex items-center justify-center">
                 <Package className="w-8 h-8 text-stone-300" strokeWidth={1} />
               </div>

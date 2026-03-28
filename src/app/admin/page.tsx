@@ -60,17 +60,17 @@ export default async function AdminDashboard() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-        <div className="bg-white p-6 rounded-xl border border-stone-200/60 shadow-[0_2px_8px_-4px_rgba(0,0,0,0.05)]">
+        <div className="bg-white p-6 rounded-[2.5rem] border border-stone-200/60 shadow-[0_2px_8px_-4px_rgba(0,0,0,0.05)]">
           <div className="text-[10px] font-medium uppercase tracking-[0.2em] text-stone-400 mb-3">Total Products</div>
           <div className="text-4xl font-normal text-stone-900 tracking-tight">{totalProducts}</div>
         </div>
         
-        <div className="bg-white p-6 rounded-xl border border-stone-200/60 shadow-[0_2px_8px_-4px_rgba(0,0,0,0.05)]">
+        <div className="bg-white p-6 rounded-[2.5rem] border border-stone-200/60 shadow-[0_2px_8px_-4px_rgba(0,0,0,0.05)]">
           <div className="text-[10px] font-medium uppercase tracking-[0.2em] text-stone-400 mb-3">Total Stock Units</div>
           <div className="text-4xl font-normal text-stone-900 tracking-tight">{totalStock}</div>
         </div>
         
-        <div className="bg-white p-6 rounded-xl border border-stone-200/60 shadow-[0_2px_8px_-4px_rgba(0,0,0,0.05)]">
+        <div className="bg-white p-6 rounded-[2.5rem] border border-stone-200/60 shadow-[0_2px_8px_-4px_rgba(0,0,0,0.05)]">
           <div className="text-[10px] font-medium uppercase tracking-[0.2em] text-stone-400 mb-3">Pending Alerts</div>
           <div className="text-4xl font-normal text-stone-900 tracking-tight">{unreadCount}</div>
         </div>
@@ -79,7 +79,7 @@ export default async function AdminDashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
         {/* Notifications Section */}
         <div className="lg:col-span-4 flex flex-col gap-6">
-          <div className="bg-white rounded-xl border border-stone-200/60 shadow-[0_2px_8px_-4px_rgba(0,0,0,0.05)] overflow-hidden h-full">
+          <div className="bg-white rounded-[2.5rem] border border-stone-200/60 shadow-[0_2px_8px_-4px_rgba(0,0,0,0.05)] overflow-hidden h-full">
             <div className="px-6 py-4 border-b border-stone-100 flex justify-between items-center bg-stone-50/30">
               <h2 className="text-sm font-medium text-stone-900 tracking-wide flex items-center gap-2">
                 <Bell className="w-4 h-4 text-stone-400" />
@@ -122,7 +122,7 @@ export default async function AdminDashboard() {
         </div>
 
         <div className="lg:col-span-8">
-          <div className="bg-white rounded-xl border border-stone-200/60 shadow-[0_2px_8px_-4px_rgba(0,0,0,0.05)] overflow-hidden">
+          <div className="bg-white rounded-[2.5rem] border border-stone-200/60 shadow-[0_2px_8px_-4px_rgba(0,0,0,0.05)] overflow-hidden">
             <div className="px-8 py-6 border-b border-stone-100 flex justify-between items-center">
               <h2 className="text-sm font-medium text-stone-900 tracking-wide">Recent Products</h2>
               <a href="/admin/products" className="text-xs uppercase tracking-widest text-stone-400 hover:text-stone-900 transition-colors font-medium">View All</a>

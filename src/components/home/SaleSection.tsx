@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function SaleSection() {
   return (
-    <section className="relative w-full py-16 md:py-24 flex items-center justify-center overflow-hidden rounded-lg">
+    <section className="relative w-full py-16 md:py-24 flex items-center justify-center overflow-hidden rounded-[2.5rem]">
       <div className="absolute inset-0 z-0">
         <img 
           src="/images/home_sale_bg.png" 

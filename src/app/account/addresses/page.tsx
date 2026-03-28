@@ -239,7 +239,7 @@ function AddressesContent() {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {addresses.map((address) => (
-                  <div key={address._id} className={`bg-white border ${address.isDefault ? 'border-stone-900 shadow-xl' : 'border-stone-200/50 shadow-sm'} p-8 rounded-3xl transition-all duration-500 flex flex-col justify-between group`}>
+                  <div key={address._id} className={`bg-white border ${address.isDefault ? 'border-stone-900 shadow-xl' : 'border-stone-200/50 shadow-sm'} p-8 rounded-[2.5rem] transition-all duration-500 flex flex-col justify-between group`}>
                     <div className="flex flex-col gap-6">
                       <div className="flex justify-between items-start">
                         <div className="flex flex-col gap-1">

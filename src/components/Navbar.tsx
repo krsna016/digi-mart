@@ -113,8 +113,8 @@ export default function Navbar() {
   };
 
   return (
-    <div className="sticky top-0 z-50 w-full px-4 lg:px-6 pt-4 lg:pt-6 bg-white">
-      <header className={`w-full bg-[#FCFBF8] rounded-lg border border-stone-200/50 transition-all duration-300 ${scrolled ? 'shadow-[0_4px_25px_-12px_rgba(0,0,0,0.08)]' : ''}`}>
+    <div className="sticky top-0 z-[100] w-full px-4 lg:px-6 pt-4 lg:pt-6 pointer-events-none">
+      <header className={`pointer-events-auto w-full rounded-[2.5rem] transition-all duration-500 ${scrolled ? 'bg-white/75 backdrop-blur-xl border border-white/50 shadow-[0_8px_30px_-12px_rgba(0,0,0,0.12)]' : 'bg-[#FCFBF8]/90 backdrop-blur-sm border border-stone-200/50'}`}>
         <div className="relative mx-auto max-w-[1440px] px-8 lg:px-12">
           <div className="absolute left-1/2 -translate-x-1/2 top-5 lg:top-7 z-50 text-center pointer-events-none">
             <Link 

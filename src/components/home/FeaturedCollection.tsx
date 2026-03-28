@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function FeaturedCollection() {
   return (
-    <section className="w-full bg-[#FCFBF8] py-8 rounded-lg">
+    <section className="w-full bg-[#FCFBF8] py-8 rounded-[2.5rem]">
       <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
           
@@ -26,7 +26,7 @@ export default function FeaturedCollection() {
           </div>
 
           <div className="order-1 lg:order-2 grid grid-cols-2 gap-4 h-[600px] sm:h-[700px]">
-            <div className="col-span-1 h-full overflow-hidden rounded-lg bg-stone-100">
+            <div className="col-span-1 h-full overflow-hidden rounded-[2.5rem] bg-stone-100">
               <img 
                 src="/images/home_feature_main.png" 
                 alt="Main Feature" 
@@ -34,14 +34,14 @@ export default function FeaturedCollection() {
               />
             </div>
             <div className="col-span-1 grid grid-rows-2 gap-4 h-full">
-              <div className="row-span-1 overflow-hidden rounded-lg bg-stone-100">
+              <div className="row-span-1 overflow-hidden rounded-[2.5rem] bg-stone-100">
                 <img 
                   src="/images/home_feature_sub1.png" 
                   alt="Feature detail 1" 
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div className="row-span-1 overflow-hidden rounded-lg bg-stone-100">
+              <div className="row-span-1 overflow-hidden rounded-[2.5rem] bg-stone-100">
                 <img 
                   src="/images/home_feature_sub2.png" 
                   alt="Feature detail 2" 

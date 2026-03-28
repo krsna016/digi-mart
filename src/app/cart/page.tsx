@@ -37,7 +37,7 @@ export default function CartPage() {
         </p>
 
         {cart.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-24 bg-white border border-stone-200/60 rounded-2xl shadow-sm text-center px-4">
+          <div className="flex flex-col items-center justify-center py-24 bg-white border border-stone-200/60 rounded-[2.5rem] shadow-sm text-center px-4">
             <svg className="w-16 h-16 text-stone-200 mb-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
             </svg>
@@ -55,7 +55,7 @@ export default function CartPage() {
             {/* Cart Items List */}
             <div className="w-full lg:w-2/3 space-y-6">
               {cart.map(item => (
-                <div key={item.id} className="flex gap-6 p-6 bg-white border border-stone-200/80 rounded-2xl shadow-sm group transition-all hover:shadow-md">
+                <div key={item.id} className="flex gap-6 p-6 bg-white border border-stone-200/80 rounded-[2.5rem] shadow-sm group transition-all hover:shadow-md">
                   <Link href={`/product/${item.id}`} className="block w-24 h-24 sm:w-32 sm:h-32 rounded-xl bg-stone-100 overflow-hidden flex-shrink-0 border border-stone-200">
                     {item.image ? (
                         <img src={item.image} alt={item.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" onError={(e) => (e.currentTarget.style.display = 'none')} />
@@ -123,7 +123,7 @@ export default function CartPage() {
             </div>
             
             {/* Order Summary */}
-            <div className="w-full lg:w-1/3 sticky top-28 bg-white border border-stone-200/80 rounded-2xl p-8 shadow-sm">
+            <div className="w-full lg:w-1/3 sticky top-28 bg-white border border-stone-200/80 rounded-[2.5rem] p-8 shadow-sm">
               <h2 className="text-xl font-serif text-stone-900 mb-6">Order Summary</h2>
               
               <div className="space-y-4 text-sm font-normal text-stone-600 border-b border-stone-100 pb-6 mb-6">

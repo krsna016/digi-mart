@@ -1,34 +1,18 @@
 "use client";
 
-import { useEffect, useState, useRef } from 'react';
-import Link from 'next/link';
+import { useRef } from 'react';
 import ProductCard from '@/components/ProductCard';
-import { BASE_URL } from '@/utils/config';
 
-export default function ProductCarousel({ title, subtitle }: { title: string, subtitle: string }) {
-  const [products, setProducts] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+export default function ProductCarousel({ 
+  title, 
+  subtitle,
+  products = []
+}: { 
+  title: string, 
+  subtitle: string,
+  products?: any[]
+}) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    async function fetchProducts() {
-      try {
-        const res = await fetch(`${BASE_URL}/products`);
-        if (!res.ok) throw new Error('Failed to load products');
-        const data = await res.json();
-        // Sort newest first
-        const sorted = data.sort((a: any, b: any) => 
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
-        setProducts(sorted.slice(0, 8)); // Grab first 8
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchProducts();
-  }, []);
 
   const scroll = (direction: 'left' | 'right') => {
     if (scrollContainerRef.current) {
@@ -37,12 +21,10 @@ export default function ProductCarousel({ title, subtitle }: { title: string, su
     }
   };
 
-  if (loading) return (
-    <div className="py-32 flex justify-center"><div className="w-8 h-8 rounded-full border-2 border-stone-200 border-t-stone-900 animate-spin" /></div>
-  );
+  if (!products || products.length === 0) return null;
 
   return (
-    <section className="w-full py-4 bg-white overflow-hidden rounded-lg">
+    <section className="w-full py-4 bg-white overflow-hidden rounded-[2.5rem]">
       <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
         <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
           <div>

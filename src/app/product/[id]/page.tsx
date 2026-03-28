@@ -76,7 +76,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
       <main className="flex-1 max-w-[1400px] w-full mx-auto px-6 lg:px-12 py-24 sm:py-32">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16 lg:gap-24 items-center">
           {/* Image Gallery Column */}
-          <div className="w-full aspect-[3/4] relative rounded-2xl overflow-hidden animate-fade-in group">
+          <div className="w-full aspect-[3/4] relative rounded-[2.5rem] overflow-hidden animate-fade-in group">
             <ProductImage 
               src={product.image} 
               alt={product.name}

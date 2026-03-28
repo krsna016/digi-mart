@@ -39,7 +39,7 @@ export default function CategorySection() {
             <Link 
               key={idx} 
               href={cat.link}
-              className="group relative block w-full aspect-[4/5] overflow-hidden rounded-lg bg-stone-100"
+              className="group relative block w-full aspect-[4/5] overflow-hidden rounded-[2.5rem] bg-stone-100"
             >
               <img 
                 src={cat.image} 
@@ -49,7 +49,7 @@ export default function CategorySection() {
               <div className="absolute inset-0 bg-stone-900/10 transition-opacity duration-500 group-hover:bg-stone-900/40" />
               
               <div className="absolute inset-0 p-8 flex flex-col justify-end">
-                <div className="bg-white/95 backdrop-blur-sm p-6 rounded-lg transform translate-y-4 opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
+                <div className="bg-white/95 backdrop-blur-sm p-6 rounded-[2.5rem] transform translate-y-4 opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
                   <h3 className="text-xl font-serif text-stone-900 mb-2">{cat.title}</h3>
                   <span className="text-[10px] font-bold uppercase tracking-widest text-stone-500 flex items-center gap-2">
                     Explore 

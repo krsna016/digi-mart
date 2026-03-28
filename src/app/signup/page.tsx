@@ -106,7 +106,7 @@ export default function SignupPage() {
           </div>
 
           {/* Form */}
-          <div className="bg-white p-8 lg:p-10 rounded-2xl shadow-[0_20px_50px_-12px_rgba(0,0,0,0.06)] border border-stone-100">
+          <div className="bg-white p-8 lg:p-10 rounded-[2.5rem] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.06)] border border-stone-100">
             <form onSubmit={handleSubmit} className="space-y-6">
               {error && (
                 <div className="p-3 bg-red-50 text-red-500 text-[11px] font-bold uppercase tracking-widest text-center rounded-lg border border-red-100">

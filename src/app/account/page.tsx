@@ -132,7 +132,7 @@ export default function AccountPage() {
             
             {/* Quick Stats */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-white border border-stone-200/50 p-8 rounded-2xl shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] flex flex-col gap-4">
+              <div className="bg-white border border-stone-200/50 p-8 rounded-[2.5rem] shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] flex flex-col gap-4">
                 <p className="text-[12px] font-bold uppercase tracking-[0.3em] text-stone-600">Total Orders</p>
                 <div className="flex items-end justify-between">
                   <span className="text-3xl font-serif text-stone-900">0</span>
@@ -156,7 +156,7 @@ export default function AccountPage() {
             </div>
 
             {/* Profile Section */}
-            <section className="bg-white border border-stone-200/50 p-10 lg:p-12 rounded-3xl shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] flex flex-col gap-12">
+            <section className="bg-white border border-stone-200/50 p-10 lg:p-12 rounded-[2.5rem] shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] flex flex-col gap-12">
               <div className="flex justify-between items-center">
                 <div className="flex flex-col gap-1">
                   <h2 className="text-xl font-serif text-stone-900">Profile Information</h2>

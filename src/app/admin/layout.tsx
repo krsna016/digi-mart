@@ -51,52 +51,52 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   }, [router]);
 
   return (
-    <div className="flex h-screen bg-[#FBFBFB] font-sans text-stone-900">
+    <div className="flex h-screen bg-[#FBFBFB] font-sans text-stone-900 p-4 lg:p-6 gap-6">
       {/* Sidebar */}
-      <aside className="w-64 bg-white border-r border-stone-200 flex flex-col flex-shrink-0 shadow-sm z-10">
-        <div className="h-20 flex items-center px-8 border-b border-stone-200">
+      <aside className="w-64 bg-white rounded-[2.5rem] border border-stone-200 flex flex-col flex-shrink-0 shadow-sm z-10 overflow-hidden pb-4">
+        <div className="h-24 flex items-center px-10 border-b border-stone-100">
           <Link href="/" className="hover:opacity-70 transition-opacity">
             <span className="font-serif text-xl tracking-tight font-medium text-stone-900">
               Go to site
             </span>
           </Link>
         </div>
-        <nav className="flex-1 py-8 px-4 flex flex-col gap-2">
+        <nav className="flex-1 py-8 px-6 flex flex-col gap-2">
           <Link 
             href="/admin" 
-            className={`px-4 py-3 text-sm font-medium rounded-md transition-colors ${pathname === '/admin' ? 'bg-stone-100 text-stone-900' : 'text-stone-500 hover:bg-stone-100 hover:text-stone-900'}`}
+            className={`px-5 py-3.5 text-sm font-medium rounded-full transition-all ${pathname === '/admin' ? 'bg-stone-900 text-white shadow-md' : 'text-stone-500 hover:bg-stone-50 hover:text-stone-900'}`}
           >
             Dashboard
           </Link>
           <Link 
             href="/admin/products" 
-            className={`px-4 py-3 text-sm font-medium rounded-md transition-colors ${pathname.startsWith('/admin/products') ? 'bg-stone-100 text-stone-900' : 'text-stone-500 hover:bg-stone-100 hover:text-stone-900'}`}
+            className={`px-5 py-3.5 text-sm font-medium rounded-full transition-all ${pathname.startsWith('/admin/products') && pathname !== '/admin/add-product' ? 'bg-stone-900 text-white shadow-md' : 'text-stone-500 hover:bg-stone-50 hover:text-stone-900'}`}
           >
             Products
           </Link>
           <Link 
             href="/admin/add-product" 
-            className={`px-4 py-3 text-sm font-medium rounded-md transition-colors ${pathname === '/admin/add-product' ? 'bg-stone-100 text-stone-900' : 'text-stone-500 hover:bg-stone-100 hover:text-stone-900'}`}
+            className={`px-5 py-3.5 text-sm font-medium rounded-full transition-all ${pathname === '/admin/add-product' ? 'bg-stone-900 text-white shadow-md' : 'text-stone-500 hover:bg-stone-50 hover:text-stone-900'}`}
           >
             Add Product
           </Link>
           <Link 
             href="/admin/categories" 
-            className={`px-4 py-3 text-sm font-medium rounded-md transition-colors ${pathname === '/admin/categories' ? 'bg-stone-100 text-stone-900' : 'text-stone-500 hover:bg-stone-100 hover:text-stone-900'}`}
+            className={`px-5 py-3.5 text-sm font-medium rounded-full transition-all ${pathname === '/admin/categories' ? 'bg-stone-900 text-white shadow-md' : 'text-stone-500 hover:bg-stone-50 hover:text-stone-900'}`}
           >
             Categories
           </Link>
         </nav>
-        <div className="p-6 border-t border-stone-200 flex flex-col gap-3">
-          <Link href="/" className="px-4 py-2 block text-xs uppercase tracking-widest font-medium text-stone-400 hover:text-stone-900 transition-colors">
+        <div className="p-8 border-t border-stone-100 flex flex-col">
+          <Link href="/" className="px-2 py-2 flex items-center gap-2 text-xs uppercase tracking-widest font-bold text-stone-400 hover:text-stone-900 transition-colors">
             &larr; Back to Store
           </Link>
         </div>
       </aside>
 
       {/* Main Content Workspace */}
-      <main className="flex-1 flex flex-col overflow-hidden relative">
-        <header className="h-20 bg-white/80 backdrop-blur-md border-b border-stone-200 flex flex-shrink-0 items-center justify-end px-10 sticky top-0 z-50 gap-8">
+      <main className="flex-1 flex flex-col bg-white rounded-[2.5rem] border border-stone-200 shadow-sm overflow-hidden relative">
+        <header className="h-24 bg-white/80 backdrop-blur-md border-b border-stone-100 flex flex-shrink-0 items-center justify-end px-10 sticky top-0 z-50 gap-8">
           <AdminNotificationBell />
           <button
             onClick={handleLogout}

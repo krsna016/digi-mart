@@ -12,7 +12,7 @@ export default function NewsletterSection() {
   };
 
   return (
-    <section className="w-full bg-stone-50 py-16 flex items-center justify-center rounded-lg">
+    <section className="w-full bg-stone-50 py-16 flex items-center justify-center rounded-[2.5rem]">
       <div className="max-w-2xl mx-auto px-6 text-center">
         <span className="block text-[11px] font-bold uppercase tracking-[0.3em] text-stone-900 mb-6">Join The Journal</span>
         <h2 className="text-3xl md:text-4xl font-serif text-stone-900 tracking-tight leading-tight mb-6">
@@ -23,7 +23,7 @@ export default function NewsletterSection() {
         </p>
 
         {subscribed ? (
-          <div className="p-8 border rounded-lg font-serif text-xl border-stone-200 bg-white text-stone-900 animate-fade-up">
+          <div className="p-8 border rounded-[2.5rem] font-serif text-xl border-stone-200 bg-white text-stone-900 animate-fade-up">
             Thank you for subscribing.
           </div>
         ) : (

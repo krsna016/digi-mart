@@ -19,6 +19,7 @@ export default function CheckoutPage() {
   const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
   const [loading, setLoading] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [statusMessage, setStatusMessage] = useState('');
   const [scriptLoaded, setScriptLoaded] = useState(false);
 
   useEffect(() => {
@@ -112,6 +113,7 @@ export default function CheckoutPage() {
       console.log('[Checkout] DB Order Created:', dbOrder._id);
 
       // 2. Create Razorpay Order in Backend
+      setStatusMessage('Preparing secure payment gateway...');
       console.log('[Checkout] Creating Razorpay order...');
       const razorpayOrder = await api.post('/payment/order', {
         amount: cartTotal,
@@ -119,6 +121,8 @@ export default function CheckoutPage() {
         receipt: dbOrder._id
       });
       console.log('[Checkout] Razorpay Order ID:', razorpayOrder.id);
+      
+      setStatusMessage('Opening Payment Window...');
 
       // 3. Open Razorpay Modal
       const options = {
@@ -186,6 +190,7 @@ export default function CheckoutPage() {
       } else {
         alert(error.message || 'Something went wrong during checkout. Check your connection or payment settings.');
       }
+      setStatusMessage('');
     } finally {
       setIsProcessing(false);
     }

@@ -33,36 +33,39 @@ const addOrderItems = async (req, res) => {
 
     const createdOrder = await order.save();
 
-    // Create Admin Notification
-    try {
-      const notification = await Notification.create({
-        type: 'NEW_ORDER',
-        title: 'New Order Received',
-        message: `Order #${createdOrder._id} for ₹${createdOrder.totalPrice} has been placed.`,
-        orderId: createdOrder._id
-      });
-      console.log('Admin notification created successfully:', notification._id);
+    // Create Admin Notification & Email (Non-blocking)
+    const notifyAdmin = async () => {
+      try {
+        await Notification.create({
+          type: 'NEW_ORDER',
+          title: 'New Order Received',
+          message: `Order #${createdOrder._id} for ₹${createdOrder.totalPrice} has been placed.`,
+          orderId: createdOrder._id
+        });
+        
+        await sendEmail({
+          email: process.env.EMAIL_USER,
+          subject: `New Order Received - DigiMart #${createdOrder._id}`,
+          message: `A new order has been placed.\nOrder ID: ${createdOrder._id}\nTotal: ₹${createdOrder.totalPrice}\nCustomer: ${req.user.name} (${req.user.email})`,
+          html: `
+            <h1>New Order Alert</h1>
+            <p>A new order has been placed on DigiMart.</p>
+            <ul>
+              <li><strong>Order ID:</strong> ${createdOrder._id}</li>
+              <li><strong>Total Amount:</strong> ₹${createdOrder.totalPrice}</li>
+              <li><strong>Customer:</strong> ${req.user.name} (${req.user.email})</li>
+            </ul>
+            <p><a href="${process.env.FRONTEND_URL}/admin">View in Dashboard</a></p>
+          `
+        });
+        console.log('[Background] Admin notified of new order');
+      } catch (err) {
+        console.error('[Background] Failed to notify admin:', err.message);
+      }
+    };
 
-      // Send Email Alert to Admin
-      await sendEmail({
-        email: process.env.EMAIL_USER,
-        subject: `New Order Received - DigiMart #${createdOrder._id}`,
-        message: `A new order has been placed.\nOrder ID: ${createdOrder._id}\nTotal: ₹${createdOrder.totalPrice}\nCustomer: ${req.user.name} (${req.user.email})`,
-        html: `
-          <h1>New Order Alert</h1>
-          <p>A new order has been placed on DigiMart.</p>
-          <ul>
-            <li><strong>Order ID:</strong> ${createdOrder._id}</li>
-            <li><strong>Total Amount:</strong> ₹${createdOrder.totalPrice}</li>
-            <li><strong>Customer:</strong> ${req.user.name} (${req.user.email})</li>
-          </ul>
-          <p><a href="${process.env.FRONTEND_URL}/admin">View in Dashboard</a></p>
-        `
-      });
-      console.log('Admin email alert sent');
-    } catch (err) {
-      console.error('Failed to notify admin:', err);
-    }
+    // Trigger notification in background
+    notifyAdmin();
 
     res.status(201).json(createdOrder);
   }

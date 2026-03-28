@@ -56,27 +56,21 @@ const registerUser = async (req, res) => {
         <p>This link will expire in 24 hours.</p>
       `;
 
-      try {
-        await sendEmail({
-          email: user.email,
-          subject: 'Email Verification - DigiMart',
-          html: message,
-        });
+      // Non-blocking email send
+      sendEmail({
+        email: user.email,
+        subject: 'Email Verification - DigiMart',
+        html: message,
+      }).then(() => {
+        console.log('[Background] Verification email sent successfully');
+      }).catch((err) => {
+        console.error('[Background] Email Service Failed:', err.message);
+      });
 
-        res.status(201).json({
-          message: 'Verification email sent. Please check your inbox.',
-          email: user.email
-        });
-      } catch (err) {
-        console.error('[Signup] Email Service Failed:', err.message);
-        user.verificationToken = undefined;
-        user.verificationTokenExpires = undefined;
-        await user.save();
-        return res.status(500).json({ 
-          message: 'Account created, but verification email could not be sent. Please ensure the email service is configured correctly on Render.',
-          error: err.message
-        });
-      }
+      res.status(201).json({
+        message: 'Verification email initiated. Please check your inbox.',
+        email: user.email
+      });
     } else {
       res.status(400).json({ message: 'Invalid user data' });
     }

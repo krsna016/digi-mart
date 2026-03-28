@@ -19,6 +19,7 @@ export default function CheckoutPage() {
   const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
   const [loading, setLoading] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [scriptLoaded, setScriptLoaded] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -53,6 +54,11 @@ export default function CheckoutPage() {
     const script = document.createElement('script');
     script.src = 'https://checkout.razorpay.com/v1/checkout.js';
     script.async = true;
+    script.onload = () => setScriptLoaded(true);
+    script.onerror = () => {
+      console.error('Razorpay SDK failed to load. Ad-blocker might be active.');
+      setScriptLoaded(false);
+    };
     document.body.appendChild(script);
 
     return () => {
@@ -68,7 +74,13 @@ export default function CheckoutPage() {
     setIsProcessing(true);
 
     try {
+      // 0. Check if script is loaded
+      if (!scriptLoaded || !(window as any).Razorpay) {
+        throw new Error('Payment gateway (Razorpay) failed to initialize. Please disable your ad-blocker and refresh the page.');
+      }
+
       // 1. Create Order in DB
+      console.log('[Checkout] Creating order in database...');
       const orderData = {
         orderItems: cart.map(item => {
           const effectivePrice = item.onSale && item.discountPrice ? item.discountPrice : item.price;
@@ -94,13 +106,16 @@ export default function CheckoutPage() {
       };
 
       const dbOrder = await api.post('/orders', orderData);
+      console.log('[Checkout] DB Order Created:', dbOrder._id);
 
       // 2. Create Razorpay Order in Backend
+      console.log('[Checkout] Creating Razorpay order...');
       const razorpayOrder = await api.post('/payment/order', {
         amount: cartTotal,
         currency: 'INR',
         receipt: dbOrder._id
       });
+      console.log('[Checkout] Razorpay Order ID:', razorpayOrder.id);
 
       // 3. Open Razorpay Modal
       const options = {
@@ -111,6 +126,7 @@ export default function CheckoutPage() {
         description: 'Premium Collection Purchase',
         order_id: razorpayOrder.id,
         handler: async function (response: any) {
+          console.log('[Checkout] Payment Success Modal Closed, verifying...');
           try {
             // 4. Verify Payment after success
             const verifyData = {
@@ -121,12 +137,19 @@ export default function CheckoutPage() {
             };
 
             await api.post('/payment/verify', verifyData);
+            console.log('[Checkout] Payment Verified Successfully');
             
             clearCart();
             router.push(`/orders?success=true`);
           } catch (err) {
-            console.error('Verification failed', err);
+            console.error('[Checkout] Verification failed', err);
             alert('Payment verification failed. Please contact support.');
+          }
+        },
+        modal: {
+          ondismiss: function() {
+            setIsProcessing(false);
+            console.log('[Checkout] Payment modal dismissed by user');
           }
         },
         prefill: {
@@ -142,8 +165,8 @@ export default function CheckoutPage() {
       const rzp = new (window as any).Razorpay(options);
       rzp.open();
     } catch (error: any) {
-      console.error('Checkout error:', error);
-      alert(error.message || 'Something went wrong during checkout');
+      console.error('[Checkout] Error during sequence:', error);
+      alert(error.message || 'Something went wrong during checkout. Check your connection or ad-blocker settings.');
     } finally {
       setIsProcessing(false);
     }

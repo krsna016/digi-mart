@@ -28,4 +28,4 @@ const getBaseUrl = () => {
 };
 
 export const BASE_URL = getBaseUrl();
-export const RAZORPAY_KEY_ID = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || '';
+export const RAZORPAY_KEY_ID = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || 'rzp_live_SVSX92P5PDLcra';

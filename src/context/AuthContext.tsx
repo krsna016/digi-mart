@@ -85,7 +85,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsLoading(true);
     setError(null);
     try {
+      console.log(`[Auth] Attempting login for: ${email}`);
       const data = await api.post('/auth/login', { email, password });
+      console.log('[Auth] Login successful');
       setUser(data);
       
       // Set admin cookie if user is admin for middleware protection
@@ -93,6 +95,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         document.cookie = `admin_token=${data.token}; path=/; max-age=86400; SameSite=None; Secure`;
       }
     } catch (err: any) {
+      console.error('[Auth] Login failed:', err.message);
       setError(err.message);
       throw err;
     } finally {

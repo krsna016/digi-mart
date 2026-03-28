@@ -67,6 +67,51 @@
   --shadow-card: 0 20px 50px -12px rgba(0, 0, 0, 0.08);
 }
 
+
+body, 
+button, 
+input, 
+textarea, 
+select,
+span,
+div,
+p,
+a,
+label,
+h1, h2, h3, h4, h5, h6 {
+  text-transform: uppercase !important;
+  letter-spacing: 0.025em;
+}
+
+/* Premium Heading Underlines */
+h1, h2 {
+  position: relative;
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+h1::after, h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 2.5rem;
+  height: 2px;
+  background-color: var(--primary);
+  opacity: 0.6;
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+/* Centered support for sections using text-center */
+.text-center > h1::after,
+.text-center > h2::after,
+[class*="text-center"] > h1::after,
+[class*="text-center"] > h2::after {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
 body {
   background-color: var(--background);
   color: var(--foreground);

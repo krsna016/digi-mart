@@ -71,7 +71,7 @@ export default function ProductCard({ id, name, price, image, category, onSale, 
         </div>
       </div>
       <div className="flex flex-col gap-1 px-0.5">
-        <h3 className="text-[16px] text-foreground tracking-wide font-medium leading-snug truncate">{name}</h3>
+        <h3 className="text-[14px] text-foreground tracking-wide font-medium leading-snug truncate">{name}</h3>
         <div className="flex items-center gap-2">
           {onSale && discountPrice ? (
             <>

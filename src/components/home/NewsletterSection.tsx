@@ -15,10 +15,10 @@ export default function NewsletterSection() {
     <section className="w-full bg-background-alt py-16 flex items-center justify-center rounded-[2.5rem] shadow-premium border border-stone-200/40">
       <div className="max-w-2xl mx-auto px-6 text-center">
         <span className="block text-[11px] font-bold uppercase tracking-[0.3em] text-foreground mb-6">Join The Journal</span>
-        <h2 className="text-3xl md:text-4xl font-serif text-foreground tracking-tight leading-tight mb-6">
+        <h2 className="text-3xl md:text-3xl font-serif text-foreground tracking-tight leading-tight mb-6">
           Intelligence for a curated life.
         </h2>
-        <p className="text-stone-500 font-light text-sm mb-12 max-w-md mx-auto">
+        <p className="text-stone-500 font-light text-sm mb-10 max-w-md mx-auto">
           Subscribe to receive exclusive access to early product releases, private events, and our editorial journal.
         </p>
 

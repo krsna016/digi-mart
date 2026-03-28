@@ -5,15 +5,25 @@ interface RequestOptions extends RequestInit {
 }
 
 export const apiRequest = async (endpoint: string, options: RequestOptions = {}) => {
-  const token = localStorage.getItem('digimart_user') 
-    ? JSON.parse(localStorage.getItem('digimart_user')!).token 
-    : null;
-
+  let token = null;
+  const savedUser = typeof window !== 'undefined' ? localStorage.getItem('digimart_user') : null;
+  
+  if (savedUser) {
+    try {
+      token = JSON.parse(savedUser).token;
+    } catch (e) {
+      console.error('[API] Failed to parse user token from localStorage');
+    }
+  }
+  
   const headers = new Headers(options.headers || {});
   headers.set('Content-Type', 'application/json');
   
   if (token) {
     headers.set('Authorization', `Bearer ${token}`);
+    console.log(`[API] ${options.method || 'GET'} ${endpoint} - Sending with token`);
+  } else {
+    console.warn(`[API] ${options.method || 'GET'} ${endpoint} - Sending WITHOUT token (User might be logged out)`);
   }
 
   const config: RequestInit = {

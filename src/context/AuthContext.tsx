@@ -74,9 +74,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (isLoaded) {
       if (user) {
+        console.log(`[Auth] Persisting user to storage: ${user.email}`);
         localStorage.setItem('digimart_user', JSON.stringify(user));
-      } else {
-        localStorage.removeItem('digimart_user');
+      } else if (isLoaded && !user) {
+        // Only remove if we are sure the user is explicitly logged out
+        // and we are not in a loading/initializing state
+        console.warn('[Auth] No user in state, storage remains as-is unless explicitly cleared');
       }
     }
   }, [user, isLoaded]);

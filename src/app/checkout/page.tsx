@@ -151,7 +151,7 @@ export default function CheckoutPage() {
 
   if (authLoading || loading || (!isAuthenticated && !authLoading)) {
     return (
-      <div className="flex flex-col min-h-screen bg-[#FCFBF8]">
+      <div className="flex flex-col min-h-screen bg-background">
         <Navbar />
         <main className="flex-1 flex items-center justify-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-stone-900"></div>
@@ -162,26 +162,26 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#FCFBF8]">
+    <div className="flex flex-col min-h-screen bg-background">
       <Navbar />
       
       <main className="flex-1 max-w-[1440px] mx-auto w-full px-8 lg:px-12 py-12 lg:py-20">
-        <h1 className="text-4xl font-serif text-stone-900 mb-12 text-center uppercase tracking-tight">Checkout</h1>
+        <h1 className="text-4xl font-serif text-foreground mb-12 text-center uppercase tracking-tight">Checkout</h1>
         
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
           {/* Shipping Form */}
           <div className="lg:col-span-7 space-y-12">
-            <div className="bg-white p-10 lg:p-12 rounded-[2.5rem] border border-stone-200 shadow-sm">
+            <div className="bg-background p-10 lg:p-12 rounded-[2.5rem] border border-stone-300 shadow-sm">
                 <div className="flex justify-between items-center mb-10">
                     <div>
-                        <h2 className="text-2xl font-serif text-stone-900 mb-1">Shipping Destination</h2>
+                        <h2 className="text-2xl font-serif text-foreground mb-1">Shipping Destination</h2>
                         <p className="text-[13px] uppercase tracking-[0.2em] text-stone-600 font-medium whitespace-nowrap">Choose your delivery address</p>
                     </div>
                     <button 
                       onClick={() => router.push('/account/addresses?redirect=/checkout')}
-                      className="p-3 bg-stone-50 rounded-full hover:bg-stone-100 transition-colors"
+                      className="p-3 bg-background-alt rounded-full hover:bg-stone-100 transition-colors"
                     >
-                      <Plus className="w-5 h-5 text-stone-900" />
+                      <Plus className="w-5 h-5 text-foreground" />
                     </button>
                 </div>
 
@@ -192,21 +192,21 @@ export default function CheckoutPage() {
                           onClick={() => setSelectedAddress(addr)}
                           className={`relative p-6 rounded-[2.5rem] border-2 transition-all cursor-pointer group hover:shadow-md ${
                             selectedAddress?._id === addr._id 
-                              ? 'border-stone-900 bg-stone-50' 
-                              : 'border-stone-100 hover:border-stone-200'
+                              ? 'border-stone-900 bg-background-alt' 
+                              : 'border-stone-200 hover:border-stone-300'
                           }`}
                         >
                             <div className="flex flex-col gap-4">
                                 <div className="flex justify-between items-start">
-                                    <p className="text-[14px] font-bold uppercase tracking-[0.1em] text-stone-900">{addr.fullName}</p>
+                                    <p className="text-[14px] font-bold uppercase tracking-[0.1em] text-foreground">{addr.fullName}</p>
                                     {selectedAddress?._id === addr._id && (
-                                        <CheckCircle2 className="w-5 h-5 text-stone-900 fill-white" strokeWidth={1.5} />
+                                        <CheckCircle2 className="w-5 h-5 text-foreground fill-white" strokeWidth={1.5} />
                                     )}
                                 </div>
                                 <div className="space-y-1 text-sm text-stone-600 font-normal leading-relaxed">
                                     <p>{addr.addressLine}</p>
                                     <p>{addr.city}, {addr.state} {addr.pincode}</p>
-                                    <p className="pt-2 font-medium text-stone-400">{addr.phone}</p>
+                                    <p className="pt-2 font-medium text-stone-500">{addr.phone}</p>
                                 </div>
                             </div>
                         </div>
@@ -216,7 +216,7 @@ export default function CheckoutPage() {
                 <button 
                     onClick={handlePayment}
                     disabled={isProcessing || !selectedAddress || cart.length === 0 || cartTotal < 1}
-                    className="w-full mt-12 bg-stone-900 text-white py-6 rounded-full text-[13px] font-bold uppercase tracking-[0.3em] hover:bg-stone-800 disabled:opacity-50 transition-all shadow-xl shadow-stone-900/10 active:scale-[0.98]"
+                    className="w-full mt-12 bg-primary text-white py-6 rounded-full text-[13px] font-bold uppercase tracking-[0.3em] hover:bg-stone-800 disabled:opacity-50 transition-all shadow-xl shadow-stone-900/10 active:scale-[0.98]"
                 >
                     {isProcessing ? 'Processing Securely...' : 
                      cartTotal < 1 ? 'Minimum Order ₹1.00 Required' :
@@ -224,7 +224,7 @@ export default function CheckoutPage() {
                 </button>
             </div>
             
-            <div className="px-10 flex gap-4 items-start text-stone-400">
+            <div className="px-10 flex gap-4 items-start text-stone-500">
                 <MapPin className="w-4 h-4 shrink-0 mt-1" />
                 <p className="text-[11px] leading-relaxed uppercase tracking-widest font-medium">
                     All orders are handled by our global logistics partners. Premium packaging and insurance included for all international shipments.
@@ -234,27 +234,27 @@ export default function CheckoutPage() {
           
           {/* Order Summary */}
           <div className="lg:col-span-5">
-            <div className="bg-stone-50 p-10 lg:p-12 rounded-[2.5rem] border border-stone-200 sticky top-32">
-                <h2 className="text-2xl font-serif text-stone-900 mb-10 text-center uppercase tracking-widest">Bag Summary</h2>
+            <div className="bg-background-alt p-10 lg:p-12 rounded-[2.5rem] border border-stone-300 sticky top-32">
+                <h2 className="text-2xl font-serif text-foreground mb-10 text-center uppercase tracking-widest">Bag Summary</h2>
                 <div className="space-y-8 mb-10 max-h-[400px] overflow-y-auto pr-4 scrollbar-hide">
                     {cart.map(item => (
                         <div key={item.id} className="flex gap-6 group">
-                            <div className="w-24 h-32 bg-white border border-stone-200 rounded-2xl overflow-hidden shrink-0 shadow-sm group-hover:shadow-md transition-shadow">
+                            <div className="w-24 h-32 bg-background border border-stone-300 rounded-2xl overflow-hidden shrink-0 shadow-sm group-hover:shadow-md transition-shadow">
                                 <img src={item.image || '/images/fallback.png'} alt={item.name} className="w-full h-full object-cover scale-110 group-hover:scale-100 transition-transform duration-700" />
                             </div>
                             <div className="flex flex-col justify-between py-2 flex-1">
                                 <div>
-                                    <h3 className="text-sm font-bold text-stone-900 uppercase tracking-widest leading-tight">{item.name}</h3>
-                                    <p className="text-[11px] text-stone-400 font-bold uppercase tracking-[0.2em] mt-2">Qty: {item.quantity}</p>
+                                    <h3 className="text-sm font-bold text-foreground uppercase tracking-widest leading-tight">{item.name}</h3>
+                                    <p className="text-[11px] text-stone-500 font-bold uppercase tracking-[0.2em] mt-2">Qty: {item.quantity}</p>
                                 </div>
                                 <div className="flex flex-col">
                                     {item.onSale && item.discountPrice ? (
                                         <>
                                             <span className="font-serif text-lg text-red-600">₹{(item.discountPrice * item.quantity).toFixed(2)}</span>
-                                            <span className="text-[10px] text-stone-400 line-through font-normal">₹{(item.price * item.quantity).toFixed(2)}</span>
+                                            <span className="text-[10px] text-stone-500 line-through font-normal">₹{(item.price * item.quantity).toFixed(2)}</span>
                                         </>
                                     ) : (
-                                        <span className="font-serif text-lg text-stone-900">₹{(item.price * item.quantity).toFixed(2)}</span>
+                                        <span className="font-serif text-lg text-foreground">₹{(item.price * item.quantity).toFixed(2)}</span>
                                     )}
                                 </div>
                             </div>
@@ -262,22 +262,22 @@ export default function CheckoutPage() {
                     ))}
                 </div>
                 
-                <div className="border-t border-stone-200 pt-10 space-y-6">
+                <div className="border-t border-stone-300 pt-10 space-y-6">
                     <div className="flex justify-between text-sm">
-                        <span className="text-stone-400 font-bold uppercase tracking-widest">Subtotal</span>
-                        <span className="font-serif text-stone-900">₹{cartTotal.toFixed(2)}</span>
+                        <span className="text-stone-500 font-bold uppercase tracking-widest">Subtotal</span>
+                        <span className="font-serif text-foreground">₹{cartTotal.toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                        <span className="text-stone-400 font-bold uppercase tracking-widest">Shipping</span>
-                        <span className="text-stone-900 font-bold uppercase tracking-widest text-[10px]">Complimentary</span>
+                        <span className="text-stone-500 font-bold uppercase tracking-widest">Shipping</span>
+                        <span className="text-foreground font-bold uppercase tracking-widest text-[10px]">Complimentary</span>
                     </div>
-                    <div className="flex justify-between items-end border-t border-stone-200 pt-8 mt-4">
-                        <span className="font-bold uppercase tracking-[0.4em] text-[11px] text-stone-900">Total</span>
-                        <span className="font-serif text-3xl text-stone-900 leading-none">₹{cartTotal.toFixed(2)}</span>
+                    <div className="flex justify-between items-end border-t border-stone-300 pt-8 mt-4">
+                        <span className="font-bold uppercase tracking-[0.4em] text-[11px] text-foreground">Total</span>
+                        <span className="font-serif text-3xl text-foreground leading-none">₹{cartTotal.toFixed(2)}</span>
                     </div>
                 </div>
                 
-                <p className="mt-12 text-[10px] text-center text-stone-400 font-bold uppercase tracking-[0.15em] leading-relaxed">
+                <p className="mt-12 text-[10px] text-center text-stone-500 font-bold uppercase tracking-[0.15em] leading-relaxed">
                     By purchasing, you agree to our terms. Your transaction is encrypted and secured by Razorpay.
                 </p>
             </div>

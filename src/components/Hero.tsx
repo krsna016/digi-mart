@@ -66,7 +66,7 @@ export default function Hero() {
 
 
   return (
-    <section className="relative w-full h-[85vh] min-h-[600px] flex items-center justify-center overflow-hidden rounded-[2.5rem] mt-2 lg:mt-4">
+    <section className="relative w-full h-[75vh] min-h-[500px] flex items-center justify-center overflow-hidden rounded-[2.5rem] shadow-premium border border-stone-200/40">
       {/* Background Image Setup */}
       <div className="absolute inset-0 z-0">
         <img 
@@ -115,7 +115,7 @@ export default function Hero() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.6, ease: [0.2, 0, 0, 1] }}
-              className="max-w-xl text-[13px] font-medium uppercase tracking-[0.2em] text-stone-300 leading-relaxed"
+              className="max-w-xl text-[13px] font-medium uppercase tracking-[0.2em] text-stone-400 leading-relaxed"
             >
               {HERO_CONTENT[textIndex].description}
             </motion.p>
@@ -125,10 +125,10 @@ export default function Hero() {
         <motion.div variants={itemVariants}>
           <Link 
             href={HERO_CONTENT[textIndex].path}
-            className="group relative inline-block overflow-hidden rounded-full bg-white text-stone-900 px-12 py-5 text-[11px] font-bold uppercase tracking-[0.3em] transition-transform duration-300 hover:scale-105"
+            className="group relative inline-block overflow-hidden rounded-full bg-primary text-primary-foreground px-12 py-5 text-[11px] font-bold uppercase tracking-[0.3em] transition-transform duration-300 hover:scale-105 shadow-xl shadow-primary/20"
           >
             <span className="relative z-10">{HERO_CONTENT[textIndex].cta}</span>
-            <div className="absolute inset-0 bg-stone-100 transform translate-y-full transition-transform duration-500 ease-in-out group-hover:translate-y-0"></div>
+            <div className="absolute inset-0 bg-foreground/10 transform translate-y-full transition-transform duration-500 ease-in-out group-hover:translate-y-0"></div>
           </Link>
         </motion.div>
       </motion.div>

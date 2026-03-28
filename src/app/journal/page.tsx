@@ -3,12 +3,12 @@ import Footer from "@/components/Footer";
 
 export default function JournalPage() {
   return (
-    <div className="flex flex-col min-h-screen bg-white">
+    <div className="flex flex-col min-h-screen bg-background">
       <Navbar />
       <main className="flex-1 pt-32 pb-24">
         <div className="mx-auto max-w-3xl px-6 lg:px-8">
           <span className="block text-[10px] font-medium uppercase tracking-[0.3em] text-stone-500 mb-4">The Journal</span>
-          <h1 className="text-4xl md:text-5xl font-serif text-stone-900 mb-8 tracking-tight">Stories on Living Well.</h1>
+          <h1 className="text-4xl md:text-5xl font-serif text-foreground mb-8 tracking-tight">Stories on Living Well.</h1>
           <div className="prose prose-stone max-w-none">
             <p className="text-lg text-stone-700 leading-relaxed mb-6 font-normal">
               Welcome to the Journal—a space where we share inspiration, artisan interviews, and reflections on the art of slow living.

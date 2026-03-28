@@ -51,20 +51,20 @@ function SearchContent() {
   }, [query, products]);
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#FCFBF8]">
+    <div className="flex flex-col min-h-screen bg-background">
       <Navbar />
 
       {/* Breadcrumbs */}
-      <div className="max-w-[1400px] mx-auto w-full px-6 lg:px-12 pt-10 pb-4 flex items-center gap-3 text-[9px] font-bold uppercase tracking-[0.25em] text-stone-400">
-        <Link href="/" className="hover:text-stone-900 transition-colors">Home</Link>
-        <span className="text-stone-300">/</span>
-        <span className="text-stone-900">Search</span>
+      <div className="max-w-[1400px] mx-auto w-full px-6 lg:px-12 pt-10 pb-4 flex items-center gap-3 text-[9px] font-bold uppercase tracking-[0.25em] text-stone-500">
+        <Link href="/" className="hover:text-foreground transition-colors">Home</Link>
+        <span className="text-stone-400">/</span>
+        <span className="text-foreground">Search</span>
       </div>
 
       {/* Hero */}
-      <div className="bg-white border-b border-stone-100 py-16 text-center shadow-[0_10px_40px_-20px_rgba(0,0,0,0.02)]">
-        <p className="text-[9px] font-bold uppercase tracking-[0.35em] text-stone-400 mb-4">Search Results</p>
-        <h1 className="text-4xl md:text-5xl font-serif text-stone-900 mb-4">
+      <div className="bg-background border-b border-stone-200 py-16 text-center shadow-[0_10px_40px_-20px_rgba(0,0,0,0.02)]">
+        <p className="text-[9px] font-bold uppercase tracking-[0.35em] text-stone-500 mb-4">Search Results</p>
+        <h1 className="text-4xl md:text-5xl font-serif text-foreground mb-4">
           {query ? `Results for "${query}"` : "All Collection"}
         </h1>
         <p className="text-sm text-stone-500">
@@ -76,7 +76,7 @@ function SearchContent() {
       <main className="flex-1 max-w-[1400px] mx-auto w-full px-6 lg:px-12 py-16">
         {loading ? (
           <div className="flex items-center justify-center py-32">
-            <div className="w-8 h-8 rounded-full border-2 border-stone-200 border-t-stone-900 animate-spin" />
+            <div className="w-8 h-8 rounded-full border-2 border-stone-300 border-t-stone-900 animate-spin" />
           </div>
         ) : error ? (
           <div className="text-center py-32">
@@ -85,8 +85,8 @@ function SearchContent() {
           </div>
         ) : filtered.length === 0 ? (
           <div className="text-center py-32 animate-fade-up">
-            <p className="text-stone-400 text-sm mb-8 font-light italic">No pieces found matching your criteria.</p>
-            <Link href="/collection" className="bg-stone-900 text-white px-10 py-4 text-[10px] font-bold uppercase tracking-[0.2em] rounded-sm hover:bg-stone-800 transition-all shadow-lg active:scale-[0.98]">
+            <p className="text-stone-500 text-sm mb-8 font-light italic">No pieces found matching your criteria.</p>
+            <Link href="/collection" className="bg-primary text-white px-10 py-4 text-[10px] font-bold uppercase tracking-[0.2em] rounded-sm hover:bg-stone-800 transition-all shadow-lg active:scale-[0.98]">
               Browse All Collection
             </Link>
           </div>
@@ -108,7 +108,7 @@ function SearchContent() {
 
 export default function SearchPage() {
   return (
-    <Suspense fallback={<div className="flex h-screen items-center justify-center text-stone-300">...</div>}>
+    <Suspense fallback={<div className="flex h-screen items-center justify-center text-stone-400">...</div>}>
       <SearchContent />
     </Suspense>
   );

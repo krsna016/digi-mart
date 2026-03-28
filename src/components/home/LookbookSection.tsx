@@ -4,11 +4,11 @@ import Link from "next/link";
 
 export default function LookbookSection() {
   return (
-    <section className="w-full bg-[#F2F0E9] py-8 rounded-[2.5rem]">
+    <section className="relative w-full py-16 md:py-24 flex items-center justify-center overflow-hidden rounded-[2.5rem] shadow-premium border border-stone-200/40">
       <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
         <div className="text-center mb-20">
           <span className="block text-[11px] font-bold uppercase tracking-[0.3em] text-stone-500 mb-4">Style Guide</span>
-          <h2 className="text-4xl md:text-5xl font-serif text-stone-900 tracking-tight leading-tight">The Lookbook</h2>
+          <h2 className="text-4xl md:text-5xl font-serif text-foreground tracking-tight leading-tight">The Lookbook</h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-8 items-center">
@@ -40,14 +40,14 @@ export default function LookbookSection() {
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
                 />
               </div>
-              <div className="flex flex-col justify-center items-start p-6 lg:p-10 rounded-[2.5rem] bg-white">
-                <h3 className="text-2xl font-serif text-stone-900 mb-4">Effortless Elegance</h3>
+              <div className="flex flex-col justify-center items-start p-6 lg:p-10 rounded-[2.5rem] bg-background">
+                <h3 className="text-2xl font-serif text-foreground mb-4">Effortless Elegance</h3>
                 <p className="text-stone-500 text-sm font-light leading-relaxed mb-8">
                   Discover how to style our latest pieces for a seamless transition from day to evening.
                 </p>
                 <Link 
                   href="/about"
-                  className="text-[10px] font-bold uppercase tracking-widest text-stone-900 border-b border-stone-900 pb-1 hover:text-stone-500 hover:border-stone-500 transition-colors"
+                  className="text-[10px] font-bold uppercase tracking-widest text-foreground border-b border-stone-900 pb-1 hover:text-stone-500 hover:border-stone-500 transition-colors"
                 >
                   View Full Gallery
                 </Link>

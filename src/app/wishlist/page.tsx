@@ -12,14 +12,14 @@ export default function WishlistPage() {
   const { wishlist, removeFromWishlist, wishlistCount } = useWishlist();
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#FCFBF8]">
+    <div className="flex flex-col min-h-screen bg-background">
       <Navbar />
 
       <main className="flex-1 max-w-[1400px] mx-auto w-full px-6 lg:px-12 py-12 lg:py-20">
         {/* Header */}
         <div className="text-center mb-16 lg:mb-24 animate-fade-in">
           <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-stone-600 mb-4">Your Library</p>
-          <h1 className="text-4xl lg:text-6xl font-serif text-stone-900 tracking-tight mb-6">Wishlist</h1>
+          <h1 className="text-4xl lg:text-6xl font-serif text-foreground tracking-tight mb-6">Wishlist</h1>
           <div className="h-px w-20 bg-stone-200 mx-auto mb-6" />
           <p className="text-sm font-normal text-stone-500 italic">
             {wishlistCount === 0 
@@ -35,13 +35,13 @@ export default function WishlistPage() {
               <div className="absolute inset-0 bg-stone-100 rounded-full scale-150 opacity-50 blur-2xl" />
               <Heart className="w-16 h-16 text-stone-200 relative z-10" strokeWidth={1} />
             </div>
-            <h2 className="text-2xl font-serif text-stone-900 mb-4">Your wishlist is empty</h2>
+            <h2 className="text-2xl font-serif text-foreground mb-4">Your wishlist is empty</h2>
             <p className="text-stone-500 font-normal mb-10 max-w-md mx-auto leading-relaxed">
               Explore our curated collections and save your favorite pieces here for later.
             </p>
             <Link 
               href="/" 
-              className="bg-stone-900 text-white px-10 py-4 text-[11px] font-bold uppercase tracking-[0.3em] rounded-sm hover:bg-stone-800 transition-all duration-300 shadow-sm hover:shadow-md"
+              className="bg-primary text-white px-10 py-4 text-[11px] font-bold uppercase tracking-[0.3em] rounded-sm hover:bg-stone-800 transition-all duration-300 shadow-sm hover:shadow-md"
             >
               Continue Shopping
             </Link>

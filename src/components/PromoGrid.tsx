@@ -48,14 +48,14 @@ export default function PromoGrid() {
               </>
             )}
             {!promo.image && (
-              <div className="absolute inset-0 bg-stone-50 border border-stone-100 group-hover:bg-stone-100 transition-colors duration-700" />
+              <div className="absolute inset-0 bg-background-alt border border-stone-200 group-hover:bg-stone-100 transition-colors duration-700" />
             )}
             
             <div className="absolute inset-0 p-10 lg:p-16 flex flex-col justify-end">
-              <span className={`text-[10px] font-bold uppercase tracking-[0.4em] mb-4 drop-shadow-sm ${promo.isSale ? 'text-red-400' : 'text-stone-300'}`}>
+              <span className={`text-[10px] font-bold uppercase tracking-[0.4em] mb-4 drop-shadow-sm ${promo.isSale ? 'text-red-400' : 'text-stone-400'}`}>
                 {promo.subtitle}
               </span>
-              <h3 className={`text-4xl lg:text-5xl font-serif mb-6 tracking-tight drop-shadow-md ${promo.image ? 'text-white' : 'text-stone-900'}`}>
+              <h3 className={`text-4xl lg:text-5xl font-serif mb-6 tracking-tight drop-shadow-md ${promo.image ? 'text-white' : 'text-foreground'}`}>
                 {promo.title}
               </h3>
               <p className={`text-sm max-w-xs mb-10 leading-relaxed drop-shadow-sm ${promo.image ? 'text-stone-200/90' : 'text-stone-500'}`}>
@@ -64,7 +64,7 @@ export default function PromoGrid() {
               
               <Link
                 href={promo.link}
-                className="w-full sm:w-max px-10 py-4 bg-white/95 backdrop-blur-sm text-stone-900 text-[10px] font-bold uppercase tracking-[0.25em] rounded-sm hover:bg-white transition-all shadow-xl active:scale-[0.98] flex items-center justify-center gap-3 group/btn"
+                className="w-full sm:w-max px-10 py-4 bg-background/95 backdrop-blur-sm text-foreground text-[10px] font-bold uppercase tracking-[0.25em] rounded-sm hover:bg-background transition-all shadow-xl active:scale-[0.98] flex items-center justify-center gap-3 group/btn"
               >
                 {promo.cta}
                 <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover/btn:translate-x-1" strokeWidth={2} />

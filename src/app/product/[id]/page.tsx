@@ -32,24 +32,24 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
     
     // For other errors (like connection refused on Vercel), show a helpful message
     return (
-      <div className="flex flex-col min-h-screen bg-[#FCFBF8]">
+      <div className="flex flex-col min-h-screen bg-background">
         <Navbar />
         <main className="flex-1 flex flex-col items-center justify-center p-8 text-center max-w-2xl mx-auto">
-          <div className="bg-white border border-stone-100 rounded-3xl p-10 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.05)] w-full">
-            <h1 className="text-3xl font-serif text-stone-900 mb-6">Connection Issue</h1>
+          <div className="bg-background border border-stone-200 rounded-3xl p-10 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.05)] w-full">
+            <h1 className="text-3xl font-serif text-foreground mb-6">Connection Issue</h1>
             <p className="text-stone-500 text-sm mb-8 leading-relaxed">
               Vercel was unable to reach your backend server from its cloud environment.
             </p>
             
             <div className="space-y-4 mb-10 text-left">
               <div className="space-y-2">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-stone-400 ml-1">Attempted URL:</span>
-                <code className="block bg-stone-50 px-4 py-3 rounded-xl border border-stone-100 text-stone-600 font-mono text-[12px] break-all">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-stone-500 ml-1">Attempted URL:</span>
+                <code className="block bg-background-alt px-4 py-3 rounded-xl border border-stone-200 text-stone-600 font-mono text-[12px] break-all">
                   {BASE_URL}/products/{id}
                 </code>
               </div>
               <div className="space-y-2">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-stone-400 ml-1">Error Detail:</span>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-stone-500 ml-1">Error Detail:</span>
                 <code className="block bg-red-50/30 px-4 py-3 rounded-xl border border-red-100/30 text-red-500 font-mono text-[12px] break-all">
                   {result?.message || result?.error || 'Unknown Fetch Failure'}
                 </code>
@@ -57,7 +57,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/" className="px-10 py-4 bg-stone-900 text-white text-[10px] font-bold uppercase tracking-widest rounded-full hover:bg-stone-800 transition-all shadow-lg active:scale-95">
+              <Link href="/" className="px-10 py-4 bg-primary text-white text-[10px] font-bold uppercase tracking-widest rounded-full hover:bg-stone-800 transition-all shadow-lg active:scale-95">
                 Back to Home
               </Link>
             </div>
@@ -71,7 +71,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
   const product = result;
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#FCFBF8]">
+    <div className="flex flex-col min-h-screen bg-background">
       <Navbar />
       <main className="flex-1 max-w-[1400px] w-full mx-auto px-6 lg:px-12 py-24 sm:py-32">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16 lg:gap-24 items-center">
@@ -86,10 +86,10 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
 
           {/* Product Details Column */}
           <div className="flex flex-col opacity-0 animate-fade-up" style={{ animationDelay: '0.2s' }}>
-            <span className="text-[12px] font-medium uppercase tracking-[0.2em] text-stone-900/50 mb-6">
+            <span className="text-[12px] font-medium uppercase tracking-[0.2em] text-foreground/50 mb-6">
               {product.category}
             </span>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif text-stone-900 tracking-tight leading-tight mb-6">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif text-foreground tracking-tight leading-tight mb-6">
               {product.name}
             </h1>
             <div className="flex items-center gap-4 mb-10">
@@ -98,12 +98,12 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
                   <p className="text-3xl text-red-600 font-bold">
                     ₹{product.discountPrice.toFixed(2)}
                   </p>
-                  <p className="text-xl text-stone-400 font-normal line-through italic">
+                  <p className="text-xl text-stone-500 font-normal line-through italic">
                     ₹{product.price.toFixed(2)}
                   </p>
                 </>
               ) : (
-                <p className="text-3xl text-stone-900 font-normal">
+                <p className="text-3xl text-foreground font-normal">
                   ₹{product.price.toFixed(2)}
                 </p>
               )}
@@ -125,12 +125,12 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
               discountPrice: product.discountPrice
             }} />
             
-            <div className="mt-16 space-y-4 text-[13px] font-medium uppercase tracking-widest text-stone-900/60">
-              <div className="flex justify-between border-b border-stone-200 pb-4">
+            <div className="mt-16 space-y-4 text-[13px] font-medium uppercase tracking-widest text-foreground/60">
+              <div className="flex justify-between border-b border-stone-300 pb-4">
                 <span>Free Standard Shipping</span>
                 <span>On Orders Over ₹150</span>
               </div>
-              <div className="flex justify-between border-b border-stone-200 pb-4">
+              <div className="flex justify-between border-b border-stone-300 pb-4">
                 <span>Returns</span>
                 <span>Within 30 Days</span>
               </div>

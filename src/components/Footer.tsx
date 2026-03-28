@@ -41,8 +41,8 @@ export default function Footer() {
   };
 
   return (
-    <div className="w-full px-4 lg:px-6 pb-4 lg:pb-6 bg-white">
-      <footer className="bg-stone-950 text-stone-100 py-16 md:py-24 rounded-[2.5rem]">
+    <div className="w-full px-6 md:px-12 lg:px-20 xl:px-32 pb-4 lg:pb-6 bg-background">
+      <footer className="bg-[#151414] text-stone-100 py-16 md:py-24 rounded-[2.5rem]">
         <div className="mx-auto max-w-[1400px] px-6 lg:px-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-16 mb-24">
           {/* Brand & Newsletter */}
@@ -65,7 +65,7 @@ export default function Footer() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="text-[11px] font-bold uppercase tracking-[0.2em] hover:text-white text-stone-500 transition-colors disabled:opacity-50 ml-2"
+                  className="text-[11px] font-bold uppercase tracking-[0.2em] hover:text-primary text-stone-500 transition-colors disabled:opacity-50 ml-2"
                 >
                   {loading ? '...' : 'Join'}
                 </button>

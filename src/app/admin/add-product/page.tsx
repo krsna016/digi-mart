@@ -172,7 +172,7 @@ export default function AddProductPage() {
     <div className="animate-fade-in relative min-h-[calc(100vh-140px)] pb-10 px-4 sm:px-8">
       {/* Toast Notification */}
       {toastMessage && (
-        <div className={`fixed bottom-8 right-8 z-[100] px-6 py-4 rounded-lg shadow-[0_8px_30px_rgb(0,0,0,0.12)] flex items-center gap-3 animate-fade-up ${toastMessage.type === 'success' ? 'bg-stone-900 text-white' : 'bg-red-50 border border-red-200 text-red-600'}`}>
+        <div className={`fixed bottom-8 right-8 z-[100] px-6 py-4 rounded-lg shadow-[0_8px_30px_rgb(0,0,0,0.12)] flex items-center gap-3 animate-fade-up ${toastMessage.type === 'success' ? 'bg-primary text-white' : 'bg-red-50 border border-red-200 text-red-600'}`}>
           {toastMessage.type === 'success' ? (
             <svg className="w-5 h-5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -189,12 +189,12 @@ export default function AddProductPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-10">
         <div>
-          <h1 className="text-3xl font-serif tracking-tight text-stone-900 mb-2">Add New Product</h1>
+          <h1 className="text-3xl font-serif tracking-tight text-foreground mb-2">Add New Product</h1>
           <p className="text-sm text-stone-500 font-normal">Create a new fashion listing in your catalog.</p>
         </div>
         <button 
           onClick={() => router.push('/admin/products')}
-          className="text-[11px] font-medium uppercase tracking-widest text-stone-500 hover:text-stone-900 transition-colors py-2"
+          className="text-[11px] font-medium uppercase tracking-widest text-stone-500 hover:text-foreground transition-colors py-2"
         >
           &larr; Back to Products
         </button>
@@ -202,8 +202,8 @@ export default function AddProductPage() {
 
       <form onSubmit={handleSubmit} className="flex flex-col lg:flex-row gap-8 items-start">
         {/* Left Column: Basic Details */}
-        <div className="w-full lg:w-2/3 bg-white rounded-xl border border-stone-200/60 shadow-[0_2px_8px_-4px_rgba(0,0,0,0.05)] p-8">
-          <h2 className="text-lg font-serif text-stone-900 mb-8 pb-4 border-b border-stone-100">Basic Details</h2>
+        <div className="w-full lg:w-2/3 bg-background rounded-xl border border-stone-300/60 shadow-[0_2px_8px_-4px_rgba(0,0,0,0.05)] p-8">
+          <h2 className="text-lg font-serif text-foreground mb-8 pb-4 border-b border-stone-200">Basic Details</h2>
           
           <div className="space-y-8">
             <div>
@@ -215,7 +215,7 @@ export default function AddProductPage() {
                 value={formData.name} 
                 onChange={handleChange}
                 placeholder="e.g. Oversized Hoodie"
-                className={`w-full px-4 py-3.5 bg-stone-50 border ${errors.name ? 'border-red-300 ring-1 ring-red-300' : 'border-stone-200/80'} rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-normal placeholder:text-stone-400`}
+                className={`w-full px-4 py-3.5 bg-background-alt border ${errors.name ? 'border-red-300 ring-1 ring-red-300' : 'border-stone-300/80'} rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-normal placeholder:text-stone-500`}
               />
               {errors.name && <p className="text-red-500 text-xs mt-2 font-medium">{errors.name}</p>}
             </div>
@@ -229,7 +229,7 @@ export default function AddProductPage() {
                 value={formData.description} 
                 onChange={handleChange}
                 placeholder="Detailed description of the product..."
-                className={`w-full px-4 py-3.5 bg-stone-50 border ${errors.description ? 'border-red-300 ring-1 ring-red-300' : 'border-stone-200/80'} rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-normal placeholder:text-stone-400 resize-none`}
+                className={`w-full px-4 py-3.5 bg-background-alt border ${errors.description ? 'border-red-300 ring-1 ring-red-300' : 'border-stone-300/80'} rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-normal placeholder:text-stone-500 resize-none`}
               />
               {errors.description && <p className="text-red-500 text-xs mt-2 font-medium">{errors.description}</p>}
             </div>
@@ -244,7 +244,7 @@ export default function AddProductPage() {
                     name="gender" 
                     value={formData.gender} 
                     onChange={handleChange}
-                    className={`appearance-none w-full px-4 py-3.5 bg-stone-50 border ${errors.gender ? 'border-red-300 ring-1 ring-red-300' : 'border-stone-200/80'} rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-normal ${formData.gender ? 'text-stone-900' : 'text-stone-400'}`}
+                    className={`appearance-none w-full px-4 py-3.5 bg-background-alt border ${errors.gender ? 'border-red-300 ring-1 ring-red-300' : 'border-stone-300/80'} rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-normal ${formData.gender ? 'text-foreground' : 'text-stone-500'}`}
                   >
                     <option value="" disabled>Select Gender</option>
                     <option value="men">Men</option>
@@ -268,13 +268,13 @@ export default function AddProductPage() {
                     value={formData.category} 
                     onChange={handleChange}
                     disabled={!formData.gender}
-                    className={`appearance-none w-full px-4 py-3.5 bg-stone-50 border ${errors.category ? 'border-red-300 ring-1 ring-red-300' : 'border-stone-200/80'} rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-normal ${!formData.gender ? 'opacity-50 cursor-not-allowed' : ''} ${formData.category ? 'text-stone-900' : 'text-stone-400'}`}
+                    className={`appearance-none w-full px-4 py-3.5 bg-background-alt border ${errors.category ? 'border-red-300 ring-1 ring-red-300' : 'border-stone-300/80'} rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-normal ${!formData.gender ? 'opacity-50 cursor-not-allowed' : ''} ${formData.category ? 'text-foreground' : 'text-stone-500'}`}
                   >
                     <option value="" disabled>{isCatLoading ? 'Loading...' : 'Select Category'}</option>
                     {formData.gender && categories[formData.gender] && Object.entries(categories[formData.gender]).map(([group, cats]: [string, any]) => (
-                      <optgroup key={group} label={group} className="font-bold text-stone-900 bg-stone-100">
+                      <optgroup key={group} label={group} className="font-bold text-foreground bg-stone-100">
                         {cats.map((cat: string) => (
-                          <option key={cat} value={cat.toLowerCase().replace(/\s+/g, '')} className="font-normal bg-white">{cat}</option>
+                          <option key={cat} value={cat.toLowerCase().replace(/\s+/g, '')} className="font-normal bg-background">{cat}</option>
                         ))}
                       </optgroup>
                     ))}
@@ -292,21 +292,21 @@ export default function AddProductPage() {
         {/* Right Column: Pricing & Inventory */}
         <div className="w-full lg:w-1/3 flex flex-col gap-8">
           
-          <div className="bg-white rounded-xl border border-stone-200/60 shadow-[0_2px_8px_-4px_rgba(0,0,0,0.05)] p-8">
-            <h2 className="text-lg font-serif text-stone-900 mb-8 pb-4 border-b border-stone-100">Media</h2>
-            <div className="mb-6 p-4 bg-stone-50 rounded-lg border border-stone-100">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-stone-900 mb-2 flex items-center gap-2">
+          <div className="bg-background rounded-xl border border-stone-300/60 shadow-[0_2px_8px_-4px_rgba(0,0,0,0.05)] p-8">
+            <h2 className="text-lg font-serif text-foreground mb-8 pb-4 border-b border-stone-200">Media</h2>
+            <div className="mb-6 p-4 bg-background-alt rounded-lg border border-stone-200">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-foreground mb-2 flex items-center gap-2">
                 <svg className="w-3.5 h-3.5 text-stone-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                 Image Guidelines
               </p>
               <p className="text-[11px] text-stone-500 leading-relaxed">
-                For a premium look, use portrait images with a <span className="text-stone-900 font-bold">3:4 aspect ratio</span> (e.g., 1200 x 1600 px). Other sizes will be automatically cropped to fit.
+                For a premium look, use portrait images with a <span className="text-foreground font-bold">3:4 aspect ratio</span> (e.g., 1200 x 1600 px). Other sizes will be automatically cropped to fit.
               </p>
             </div>
             <div>
               <label className="block text-[11px] font-medium uppercase tracking-[0.2em] text-stone-500 mb-3">Product Image</label>
               
-              <label className={`cursor-pointer flex justify-center items-center py-4 px-4 bg-stone-50 border border-dashed border-stone-300 rounded-lg text-xs font-medium uppercase tracking-widest text-stone-500 hover:bg-stone-100 hover:border-stone-400 hover:text-stone-900 transition-all ${isUploading ? 'opacity-50 cursor-not-allowed pointer-events-none' : ''}`}>
+              <label className={`cursor-pointer flex justify-center items-center py-4 px-4 bg-background-alt border border-dashed border-stone-300 rounded-lg text-xs font-medium uppercase tracking-widest text-stone-500 hover:bg-stone-100 hover:border-stone-400 hover:text-foreground transition-all ${isUploading ? 'opacity-50 cursor-not-allowed pointer-events-none' : ''}`}>
                 <input 
                   type="file" 
                   accept="image/*" 
@@ -322,7 +322,7 @@ export default function AddProductPage() {
               </label>
 
               {formData.image ? (
-                <div className="relative mt-6 aspect-square w-full rounded-xl overflow-hidden border border-stone-200/60 shadow-inner group bg-stone-100">
+                <div className="relative mt-6 aspect-square w-full rounded-xl overflow-hidden border border-stone-300/60 shadow-inner group bg-stone-100">
                   <img src={formData.image} alt="Preview" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     <button 
@@ -335,15 +335,15 @@ export default function AddProductPage() {
                   </div>
                 </div>
               ) : (
-                <div className="mt-6 aspect-square w-full rounded-xl border border-stone-200/60 border-dashed bg-stone-50 flex items-center justify-center">
-                  <span className="text-[10px] uppercase tracking-widest text-stone-400 font-medium">No Image Uploaded</span>
+                <div className="mt-6 aspect-square w-full rounded-xl border border-stone-300/60 border-dashed bg-background-alt flex items-center justify-center">
+                  <span className="text-[10px] uppercase tracking-widest text-stone-500 font-medium">No Image Uploaded</span>
                 </div>
               )}
             </div>
           </div>
 
-          <div className="bg-white rounded-xl border border-stone-200/60 shadow-[0_2px_8px_-4px_rgba(0,0,0,0.05)] p-8">
-            <h2 className="text-lg font-serif text-stone-900 mb-8 pb-4 border-b border-stone-100">Pricing & Stock</h2>
+          <div className="bg-background rounded-xl border border-stone-300/60 shadow-[0_2px_8px_-4px_rgba(0,0,0,0.05)] p-8">
+            <h2 className="text-lg font-serif text-foreground mb-8 pb-4 border-b border-stone-200">Pricing & Stock</h2>
             
             <div className="space-y-6">
               <div>
@@ -356,7 +356,7 @@ export default function AddProductPage() {
                   value={formData.price} 
                   onChange={handleChange}
                   placeholder="0.00"
-                  className={`w-full px-4 py-3.5 bg-stone-50 border ${errors.price ? 'border-red-300 ring-1 ring-red-300' : 'border-stone-200/80'} rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-normal placeholder:text-stone-400`}
+                  className={`w-full px-4 py-3.5 bg-background-alt border ${errors.price ? 'border-red-300 ring-1 ring-red-300' : 'border-stone-300/80'} rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-normal placeholder:text-stone-500`}
                 />
                 {errors.price && <p className="text-red-500 text-xs mt-2 font-medium">{errors.price}</p>}
               </div>
@@ -368,7 +368,7 @@ export default function AddProductPage() {
                   name="onSale" 
                   checked={formData.onSale}
                   onChange={handleChange}
-                  className="w-4 h-4 rounded border-stone-300 text-stone-900 focus:ring-stone-900"
+                  className="w-4 h-4 rounded border-stone-300 text-foreground focus:ring-stone-900"
                 />
                 <label htmlFor="onSale" className="text-[11px] font-medium uppercase tracking-[0.2em] text-stone-700 cursor-pointer">This product is on sale</label>
               </div>
@@ -384,7 +384,7 @@ export default function AddProductPage() {
                     value={formData.discountPrice} 
                     onChange={handleChange}
                     placeholder="0.00"
-                    className={`w-full px-4 py-3.5 bg-stone-50 border ${errors.discountPrice ? 'border-red-300 ring-1 ring-red-300' : 'border-stone-200/80'} rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-normal placeholder:text-stone-400`}
+                    className={`w-full px-4 py-3.5 bg-background-alt border ${errors.discountPrice ? 'border-red-300 ring-1 ring-red-300' : 'border-stone-300/80'} rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-normal placeholder:text-stone-500`}
                   />
                   {errors.discountPrice && <p className="text-red-500 text-xs mt-2 font-medium">{errors.discountPrice}</p>}
                 </div>
@@ -399,7 +399,7 @@ export default function AddProductPage() {
                   value={formData.stock} 
                   onChange={handleChange}
                   placeholder="e.g. 50"
-                  className={`w-full px-4 py-3.5 bg-stone-50 border ${errors.stock ? 'border-red-300 ring-1 ring-red-300' : 'border-stone-200/80'} rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-normal placeholder:text-stone-400`}
+                  className={`w-full px-4 py-3.5 bg-background-alt border ${errors.stock ? 'border-red-300 ring-1 ring-red-300' : 'border-stone-300/80'} rounded-lg text-sm outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 transition-all font-normal placeholder:text-stone-500`}
                 />
                 {errors.stock && <p className="text-red-500 text-xs mt-2 font-medium">{errors.stock}</p>}
               </div>
@@ -409,7 +409,7 @@ export default function AddProductPage() {
           <button 
             type="submit" 
             disabled={isSubmitting || isUploading}
-            className="w-full bg-stone-900 text-white px-6 py-4.5 text-[11px] font-bold uppercase tracking-[0.2em] rounded-xl hover:bg-stone-800 transition-all shadow-[0_4px_14px_0_rgba(0,0,0,0.39)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.23)] hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
+            className="w-full bg-primary text-white px-6 py-4.5 text-[11px] font-bold uppercase tracking-[0.2em] rounded-xl hover:bg-stone-800 transition-all shadow-[0_4px_14px_0_rgba(0,0,0,0.39)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.23)] hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
           >
             {isSubmitting ? 'Publishing...' : 'Publish Product'}
           </button>

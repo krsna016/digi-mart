@@ -35,9 +35,9 @@ export default async function Home() {
   const trendingProducts = [...products].reverse().slice(0, 8);
 
   return (
-    <div className="flex flex-col min-h-screen bg-white">
+    <div className="flex flex-col min-h-screen bg-background">
       <Navbar />
-      <main className="flex-1 w-full overflow-hidden px-4 lg:px-6 flex flex-col gap-10 md:gap-12 pb-12">
+      <main className="flex-1 w-full overflow-hidden px-6 md:px-12 lg:px-20 xl:px-32 flex flex-col gap-16 md:gap-24 pb-12 mt-6 lg:mt-10">
         <Hero />
         <CategorySection />
         <FeaturedCollection />

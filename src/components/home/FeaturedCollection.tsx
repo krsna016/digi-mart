@@ -4,13 +4,13 @@ import Link from "next/link";
 
 export default function FeaturedCollection() {
   return (
-    <section className="w-full bg-[#FCFBF8] py-8 rounded-[2.5rem]">
+    <section className="w-full bg-background py-24 rounded-[2.5rem] shadow-premium border border-stone-200/40">
       <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
           
           <div className="order-2 lg:order-1 flex flex-col justify-center">
             <span className="block text-[11px] font-bold uppercase tracking-[0.3em] text-stone-400 mb-6">Featured Editorial</span>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif text-stone-900 tracking-tight leading-[1.1] mb-8">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif text-foreground tracking-tight leading-[1.1] mb-8">
               The Art of <br /> Minimal Living
             </h2>
             <p className="text-stone-600 font-light leading-relaxed max-w-md mb-10 text-[15px]">
@@ -18,10 +18,10 @@ export default function FeaturedCollection() {
             </p>
             <Link 
               href="/about"
-              className="group relative inline-flex overflow-hidden rounded-full bg-stone-900 text-white px-10 py-4 text-[11px] font-bold uppercase tracking-[0.2em] transition-transform duration-300 hover:scale-105 self-start"
+              className="group relative inline-flex overflow-hidden rounded-full bg-primary text-primary-foreground px-10 py-4 text-[11px] font-bold uppercase tracking-[0.2em] transition-transform duration-300 hover:scale-105 self-start shadow-lg shadow-primary/10"
             >
               <span className="relative z-10">Read the Story</span>
-              <div className="absolute inset-0 bg-stone-800 transform translate-y-full transition-transform duration-500 ease-in-out group-hover:translate-y-0"></div>
+              <div className="absolute inset-0 bg-foreground/10 transform translate-y-full transition-transform duration-500 ease-in-out group-hover:translate-y-0"></div>
             </Link>
           </div>
 

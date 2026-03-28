@@ -139,9 +139,9 @@ function AddressesContent() {
 
   if (!mounted || isLoading || (loading && addresses.length === 0)) {
     return (
-      <div className="flex h-screen items-center justify-center bg-[#FCFBF8]">
+      <div className="flex h-screen items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-8 h-8 border-2 border-stone-200 border-t-stone-900 rounded-full animate-spin" />
+          <div className="w-8 h-8 border-2 border-stone-300 border-t-stone-900 rounded-full animate-spin" />
           <p className="text-[12px] uppercase tracking-[0.3em] text-stone-600 font-medium">Loading Addresses</p>
         </div>
       </div>
@@ -159,7 +159,7 @@ function AddressesContent() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#FCFBF8] flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col">
       <Navbar />
       
       <main className="flex-1 max-w-[1440px] mx-auto w-full px-8 lg:px-12 py-12 lg:py-20">
@@ -168,19 +168,19 @@ function AddressesContent() {
           {/* Sidebar */}
           <aside className="w-full lg:w-64 flex flex-col gap-10">
             <div className="flex flex-col gap-2">
-              <h1 className="text-3xl font-serif text-stone-900 tracking-tight mb-1">My Account</h1>
+              <h1 className="text-3xl font-serif text-foreground tracking-tight mb-1">My Account</h1>
               <p className="text-[13px] uppercase tracking-[0.2em] text-stone-600 font-medium">Welcome back, {user?.name?.split(' ')[0]}</p>
             </div>
 
-            <nav className="flex flex-col border-t border-stone-100 pt-8">
+            <nav className="flex flex-col border-t border-stone-200 pt-8">
               {sidebarLinks.map((link) => (
                 <Link
                   key={link.name}
                   href={link.href}
-                  className={`flex items-center justify-between py-4 group transition-all duration-300 ${link.active ? 'text-stone-900' : 'text-stone-600 hover:text-stone-900'}`}
+                  className={`flex items-center justify-between py-4 group transition-all duration-300 ${link.active ? 'text-foreground' : 'text-stone-600 hover:text-foreground'}`}
                 >
                   <div className="flex items-center gap-4">
-                    <link.icon className={`w-4 h-4 stroke-[1.5px] ${link.active ? 'text-stone-900' : 'text-stone-500 group-hover:text-stone-900'} transition-colors`} />
+                    <link.icon className={`w-4 h-4 stroke-[1.5px] ${link.active ? 'text-foreground' : 'text-stone-500 group-hover:text-foreground'} transition-colors`} />
                     <span className="text-[13px] font-bold uppercase tracking-[0.2em]">{link.name}</span>
                   </div>
                   <ChevronRight className={`w-3.5 h-3.5 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ${link.active ? 'opacity-100 translate-x-0' : ''}`} strokeWidth={1.5} />
@@ -201,12 +201,12 @@ function AddressesContent() {
           <div className="flex-1 w-full flex flex-col gap-12">
             <div className="flex justify-between items-center sm:flex-row flex-col gap-6">
               <div className="flex flex-col gap-1">
-                <h2 className="text-2xl font-serif text-stone-900 tracking-tight">Saved Addresses</h2>
+                <h2 className="text-2xl font-serif text-foreground tracking-tight">Saved Addresses</h2>
                 <p className="text-[13px] uppercase tracking-[0.2em] text-stone-600 font-medium">Manage your shipping and billing locations</p>
               </div>
               <button 
                 onClick={() => handleOpenModal()}
-                className="flex items-center gap-2 px-8 py-3.5 bg-stone-900 text-white text-[12px] font-bold uppercase tracking-[0.3em] rounded-full hover:bg-stone-800 transition-all active:scale-95 shadow-lg group"
+                className="flex items-center gap-2 px-8 py-3.5 bg-primary text-white text-[12px] font-bold uppercase tracking-[0.3em] rounded-full hover:bg-stone-800 transition-all active:scale-95 shadow-lg group"
               >
                 <Plus className="w-3.5 h-3.5 group-hover:rotate-90 transition-transform duration-300" />
                 Add New Address
@@ -214,24 +214,24 @@ function AddressesContent() {
             </div>
 
             {message && (
-              <div className="p-6 bg-stone-900 text-white rounded-[1.5rem] flex items-center gap-4 animate-in fade-in slide-in-from-top-4 duration-500 shadow-xl shadow-stone-900/10">
-                <AlertCircle className="w-5 h-5 text-stone-400 shrink-0" />
+              <div className="p-6 bg-primary text-white rounded-[1.5rem] flex items-center gap-4 animate-in fade-in slide-in-from-top-4 duration-500 shadow-xl shadow-stone-900/10">
+                <AlertCircle className="w-5 h-5 text-stone-500 shrink-0" />
                 <p className="text-[12px] font-bold uppercase tracking-[0.2em]">{message}</p>
               </div>
             )}
 
             {addresses.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-24 bg-white border border-stone-200/50 rounded-[2.5rem] shadow-[0_4px_30px_-10px_rgba(0,0,0,0.02)] gap-6">
-                <div className="w-16 h-16 bg-stone-50 rounded-full flex items-center justify-center">
+              <div className="flex flex-col items-center justify-center py-24 bg-background border border-stone-300/50 rounded-[2.5rem] shadow-[0_4px_30px_-10px_rgba(0,0,0,0.02)] gap-6">
+                <div className="w-16 h-16 bg-background-alt rounded-full flex items-center justify-center">
                   <MapPin className="w-8 h-8 text-stone-500" strokeWidth={1} />
                 </div>
                 <div className="flex flex-col gap-2 text-center">
-                  <h3 className="text-xl font-serif text-stone-900">No addresses saved yet</h3>
+                  <h3 className="text-xl font-serif text-foreground">No addresses saved yet</h3>
                   <p className="text-sm text-stone-600 font-normal max-w-xs mx-auto">Add a shipping address to speed up your next checkout.</p>
                 </div>
                 <button 
                   onClick={() => handleOpenModal()}
-                  className="mt-4 px-8 py-3.5 border border-stone-200 text-stone-900 text-[12px] font-bold uppercase tracking-[0.3em] rounded-full hover:bg-stone-50 transition-all active:scale-95"
+                  className="mt-4 px-8 py-3.5 border border-stone-300 text-foreground text-[12px] font-bold uppercase tracking-[0.3em] rounded-full hover:bg-background-alt transition-all active:scale-95"
                 >
                   Add Your First Address
                 </button>
@@ -239,19 +239,19 @@ function AddressesContent() {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {addresses.map((address) => (
-                  <div key={address._id} className={`bg-white border ${address.isDefault ? 'border-stone-900 shadow-xl' : 'border-stone-200/50 shadow-sm'} p-8 rounded-[2.5rem] transition-all duration-500 flex flex-col justify-between group`}>
+                  <div key={address._id} className={`bg-background border ${address.isDefault ? 'border-stone-900 shadow-xl' : 'border-stone-300/50 shadow-sm'} p-8 rounded-[2.5rem] transition-all duration-500 flex flex-col justify-between group`}>
                     <div className="flex flex-col gap-6">
                       <div className="flex justify-between items-start">
                         <div className="flex flex-col gap-1">
-                          <p className="text-[12px] font-serif text-stone-900 text-lg uppercase tracking-tight">{address.fullName}</p>
+                          <p className="text-[12px] font-serif text-foreground text-lg uppercase tracking-tight">{address.fullName}</p>
                           {address.isDefault && (
-                            <span className="w-fit px-3 py-1 bg-stone-900 text-white text-[10px] font-bold uppercase tracking-[0.2em] rounded-full">Default</span>
+                            <span className="w-fit px-3 py-1 bg-primary text-white text-[10px] font-bold uppercase tracking-[0.2em] rounded-full">Default</span>
                           )}
                         </div>
                         <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                           <button 
                             onClick={() => handleOpenModal(address)}
-                            className="p-2.5 rounded-full hover:bg-stone-50 text-stone-600 hover:text-stone-900 transition-all"
+                            className="p-2.5 rounded-full hover:bg-background-alt text-stone-600 hover:text-foreground transition-all"
                             title="Edit"
                           >
                             <Edit2 className="w-3.5 h-3.5" />
@@ -277,7 +277,7 @@ function AddressesContent() {
                         </div>
                         <div className="flex gap-3">
                           <div className="w-4 h-4 flex items-center justify-center shrink-0">
-                             <div className="w-3.5 h-3.5 rounded-full border border-stone-200" />
+                             <div className="w-3.5 h-3.5 rounded-full border border-stone-300" />
                           </div>
                           <p className="text-[14px] text-stone-500 font-normal tracking-wide">{address.phone}</p>
                         </div>
@@ -287,7 +287,7 @@ function AddressesContent() {
                     {!address.isDefault && (
                       <button 
                         onClick={() => handleSetDefault(address)}
-                        className="mt-8 text-[11px] font-bold uppercase tracking-widest text-stone-600 hover:text-stone-900 transition-colors flex items-center gap-2"
+                        className="mt-8 text-[11px] font-bold uppercase tracking-widest text-stone-600 hover:text-foreground transition-colors flex items-center gap-2"
                       >
                          <CheckCircle2 className="w-3 h-3" />
                          Set as Primary Address
@@ -304,11 +304,11 @@ function AddressesContent() {
       {/* Add/Edit Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center px-4">
-          <div className="absolute inset-0 bg-stone-900/40 backdrop-blur-md" onClick={() => setIsModalOpen(false)} />
-          <div className="relative bg-white w-full max-w-xl rounded-[2.5rem] shadow-2xl overflow-hidden animate-in fade-in slide-in-from-bottom-8 duration-500">
+          <div className="absolute inset-0 bg-primary/40 backdrop-blur-md" onClick={() => setIsModalOpen(false)} />
+          <div className="relative bg-background w-full max-w-xl rounded-[2.5rem] shadow-2xl overflow-hidden animate-in fade-in slide-in-from-bottom-8 duration-500">
             <div className="p-10 lg:p-14">
               <div className="mb-10">
-                <h3 className="text-2xl font-serif text-stone-900 mb-2">{editingAddress ? 'Edit Address' : 'Add New Address'}</h3>
+                <h3 className="text-2xl font-serif text-foreground mb-2">{editingAddress ? 'Edit Address' : 'Add New Address'}</h3>
                 <p className="text-[13px] uppercase tracking-[0.2em] text-stone-600 font-medium">Please provide your complete shipping details</p>
               </div>
 
@@ -320,14 +320,14 @@ function AddressesContent() {
 
               <form onSubmit={handleSubmit} className="space-y-8">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-                  <div className="flex flex-col gap-2 text-stone-900">
+                  <div className="flex flex-col gap-2 text-foreground">
                     <label className="text-[12px] font-bold uppercase tracking-[0.3em] text-stone-600">Full Name</label>
                     <input 
                       type="text" 
                       required
                       value={formData.fullName}
                       onChange={(e) => setFormData({...formData, fullName: e.target.value})}
-                      className="text-base font-medium border-b border-stone-100 pb-3 focus:outline-none focus:border-stone-900 transition-colors bg-white font-serif"
+                      className="text-base font-medium border-b border-stone-200 pb-3 focus:outline-none focus:border-stone-900 transition-colors bg-background font-serif"
                     />
                   </div>
                   <div className="flex flex-col gap-2">
@@ -337,7 +337,7 @@ function AddressesContent() {
                       required
                       value={formData.phone}
                       onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                      className="text-base font-medium border-b border-stone-100 pb-3 focus:outline-none focus:border-stone-900 transition-colors bg-white"
+                      className="text-base font-medium border-b border-stone-200 pb-3 focus:outline-none focus:border-stone-900 transition-colors bg-background"
                     />
                   </div>
                   <div className="flex flex-col gap-2 sm:col-span-2">
@@ -347,7 +347,7 @@ function AddressesContent() {
                       required
                       value={formData.addressLine}
                       onChange={(e) => setFormData({...formData, addressLine: e.target.value})}
-                      className="text-base font-medium border-b border-stone-100 pb-3 focus:outline-none focus:border-stone-900 transition-colors bg-white"
+                      className="text-base font-medium border-b border-stone-200 pb-3 focus:outline-none focus:border-stone-900 transition-colors bg-background"
                     />
                   </div>
                   <div className="flex flex-col gap-2">
@@ -357,7 +357,7 @@ function AddressesContent() {
                       required
                       value={formData.city}
                       onChange={(e) => setFormData({...formData, city: e.target.value})}
-                      className="text-base font-medium border-b border-stone-100 pb-3 focus:outline-none focus:border-stone-900 transition-colors bg-white"
+                      className="text-base font-medium border-b border-stone-200 pb-3 focus:outline-none focus:border-stone-900 transition-colors bg-background"
                     />
                   </div>
                   <div className="flex flex-col gap-2">
@@ -367,7 +367,7 @@ function AddressesContent() {
                       required
                       value={formData.state}
                       onChange={(e) => setFormData({...formData, state: e.target.value})}
-                      className="text-base font-medium border-b border-stone-100 pb-3 focus:outline-none focus:border-stone-900 transition-colors bg-white"
+                      className="text-base font-medium border-b border-stone-200 pb-3 focus:outline-none focus:border-stone-900 transition-colors bg-background"
                     />
                   </div>
                   <div className="flex flex-col gap-2">
@@ -377,7 +377,7 @@ function AddressesContent() {
                       required
                       value={formData.pincode}
                       onChange={(e) => setFormData({...formData, pincode: e.target.value})}
-                      className="text-base font-medium border-b border-stone-100 pb-3 focus:outline-none focus:border-stone-900 transition-colors bg-white font-serif"
+                      className="text-base font-medium border-b border-stone-200 pb-3 focus:outline-none focus:border-stone-900 transition-colors bg-background font-serif"
                     />
                   </div>
                   <div className="flex flex-col gap-2">
@@ -387,7 +387,7 @@ function AddressesContent() {
                       required
                       value={formData.country}
                       onChange={(e) => setFormData({...formData, country: e.target.value})}
-                      className="text-base font-medium border-b border-stone-100 pb-3 focus:outline-none focus:border-stone-900 transition-colors bg-white"
+                      className="text-base font-medium border-b border-stone-200 pb-3 focus:outline-none focus:border-stone-900 transition-colors bg-background"
                     />
                   </div>
                 </div>
@@ -398,7 +398,7 @@ function AddressesContent() {
                      id="isDefault"
                      checked={formData.isDefault}
                      onChange={(e) => setFormData({...formData, isDefault: e.target.checked})}
-                     className="w-4 h-4 rounded-md border-stone-300 text-stone-900 focus:ring-stone-900"
+                     className="w-4 h-4 rounded-md border-stone-300 text-foreground focus:ring-stone-900"
                    />
                    <label htmlFor="isDefault" className="text-[13px] font-bold uppercase tracking-[0.1em] text-stone-700 cursor-pointer">Set as default address</label>
                 </div>
@@ -407,14 +407,14 @@ function AddressesContent() {
                   <button 
                     type="submit" 
                     disabled={formLoading}
-                    className="w-full px-10 py-5 bg-stone-900 text-white text-[13px] font-bold uppercase tracking-[0.3em] rounded-full hover:bg-stone-800 transition-all active:scale-95 shadow-xl shadow-stone-900/20 disabled:opacity-50"
+                    className="w-full px-10 py-5 bg-primary text-white text-[13px] font-bold uppercase tracking-[0.3em] rounded-full hover:bg-stone-800 transition-all active:scale-95 shadow-xl shadow-stone-900/20 disabled:opacity-50"
                   >
                     {formLoading ? 'Processing...' : (editingAddress ? 'Save Changes' : 'Add Address')}
                   </button>
                   <button 
                     type="button" 
                     onClick={() => setIsModalOpen(false)}
-                    className="w-fit text-[13px] font-bold uppercase tracking-[0.2em] text-stone-600 hover:text-stone-900 transition-colors px-4 py-2"
+                    className="w-fit text-[13px] font-bold uppercase tracking-[0.2em] text-stone-600 hover:text-foreground transition-colors px-4 py-2"
                   >
                     Discard
                   </button>
@@ -433,9 +433,9 @@ function AddressesContent() {
 export default function AddressesPage() {
   return (
     <Suspense fallback={
-        <div className="flex h-screen items-center justify-center bg-[#FCFBF8]">
+        <div className="flex h-screen items-center justify-center bg-background">
           <div className="flex flex-col items-center gap-4">
-            <div className="w-8 h-8 border-2 border-stone-200 border-t-stone-900 rounded-full animate-spin" />
+            <div className="w-8 h-8 border-2 border-stone-300 border-t-stone-900 rounded-full animate-spin" />
             <p className="text-[12px] uppercase tracking-[0.3em] text-stone-600 font-medium">Loading...</p>
           </div>
         </div>

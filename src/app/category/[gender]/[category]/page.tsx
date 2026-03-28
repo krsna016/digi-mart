@@ -62,22 +62,22 @@ function CategoryContent() {
   });
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#FCFBF8]">
+    <div className="flex flex-col min-h-screen bg-background">
       <Navbar />
 
       {/* Breadcrumbs */}
-      <div className="max-w-[1400px] mx-auto w-full px-6 lg:px-12 pt-10 pb-4 flex items-center gap-3 text-[9px] font-bold uppercase tracking-[0.25em] text-stone-400">
-        <Link href="/" className="hover:text-stone-900 transition-colors">Home</Link>
-        <span className="text-stone-300">/</span>
-        <Link href={`/category/${gender}`} className="hover:text-stone-900 transition-colors">{gender}</Link>
-        <span className="text-stone-300">/</span>
-        <span className="text-stone-900">{category}</span>
+      <div className="max-w-[1400px] mx-auto w-full px-6 lg:px-12 pt-10 pb-4 flex items-center gap-3 text-[9px] font-bold uppercase tracking-[0.25em] text-stone-500">
+        <Link href="/" className="hover:text-foreground transition-colors">Home</Link>
+        <span className="text-stone-400">/</span>
+        <Link href={`/category/${gender}`} className="hover:text-foreground transition-colors">{gender}</Link>
+        <span className="text-stone-400">/</span>
+        <span className="text-foreground">{category}</span>
       </div>
 
       {/* Hero */}
-      <div className="bg-white border-b border-stone-100 py-16 text-center shadow-[0_10px_40px_-20px_rgba(0,0,0,0.02)]">
-        <p className="text-[9px] font-bold uppercase tracking-[0.35em] text-stone-400 mb-4">{gender} Collection</p>
-        <h1 className="text-4xl md:text-5xl font-serif text-stone-900 capitalize mb-4">{category}</h1>
+      <div className="bg-background border-b border-stone-200 py-16 text-center shadow-[0_10px_40px_-20px_rgba(0,0,0,0.02)]">
+        <p className="text-[9px] font-bold uppercase tracking-[0.35em] text-stone-500 mb-4">{gender} Collection</p>
+        <h1 className="text-4xl md:text-5xl font-serif text-foreground capitalize mb-4">{category}</h1>
         <p className="text-sm text-stone-500">{loading ? 'Loading...' : `${sortedAndFiltered.length} pieces`}</p>
       </div>
 
@@ -86,19 +86,19 @@ function CategoryContent() {
         <div className="relative isolate" onMouseLeave={() => setIsSortOpen(false)}>
           <button 
             onClick={() => setIsSortOpen(!isSortOpen)}
-            className="flex items-center gap-2.5 pb-2 border-b border-stone-200 hover:border-stone-900 text-[10px] font-bold uppercase tracking-widest text-stone-900 transition-all min-w-[160px] justify-between group"
+            className="flex items-center gap-2.5 pb-2 border-b border-stone-300 hover:border-stone-900 text-[10px] font-bold uppercase tracking-widest text-foreground transition-all min-w-[160px] justify-between group"
           >
             <span>{sortOption === 'featured' ? 'Featured' : sortOption === 'price-asc' ? 'Low to High' : 'High to Low'}</span>
             <svg className={`w-3 h-3 transition-transform ${isSortOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
           </button>
           
           {isSortOpen && (
-            <div className="absolute top-full right-0 mt-2 w-48 bg-white border border-stone-100 rounded-xl shadow-xl z-50 p-2 overflow-hidden">
+            <div className="absolute top-full right-0 mt-2 w-48 bg-background border border-stone-200 rounded-xl shadow-xl z-50 p-2 overflow-hidden">
               {['featured', 'price-asc', 'price-desc'].map(opt => (
                 <button 
                   key={opt}
                   onClick={() => { setSortOption(opt as SortOption); setIsSortOpen(false); }}
-                  className={`w-full text-left px-4 py-3 text-[10px] font-bold uppercase tracking-widest rounded-lg transition-colors ${sortOption === opt ? 'bg-stone-50 text-stone-900' : 'text-stone-400 hover:text-stone-900 hover:bg-stone-50/50'}`}
+                  className={`w-full text-left px-4 py-3 text-[10px] font-bold uppercase tracking-widest rounded-lg transition-colors ${sortOption === opt ? 'bg-background-alt text-foreground' : 'text-stone-500 hover:text-foreground hover:bg-background-alt/50'}`}
                 >
                   {opt === 'featured' ? 'Featured' : opt === 'price-asc' ? 'Low to High' : 'High to Low'}
                 </button>
@@ -111,11 +111,11 @@ function CategoryContent() {
       {/* Grid */}
       <main className="flex-1 max-w-[1400px] mx-auto w-full px-6 lg:px-12 py-10">
         {loading ? (
-          <div className="flex items-center justify-center py-32"><div className="w-8 h-8 rounded-full border-2 border-stone-200 border-t-stone-900 animate-spin" /></div>
+          <div className="flex items-center justify-center py-32"><div className="w-8 h-8 rounded-full border-2 border-stone-300 border-t-stone-900 animate-spin" /></div>
         ) : filtered.length === 0 ? (
           <div className="text-center py-32">
-            <p className="text-stone-400 text-sm mb-8">No pieces found in this category.</p>
-            <Link href={`/category/${gender}`} className="bg-stone-900 text-white px-8 py-3.5 text-[10px] font-bold uppercase tracking-widest rounded-lg">View All {gender}</Link>
+            <p className="text-stone-500 text-sm mb-8">No pieces found in this category.</p>
+            <Link href={`/category/${gender}`} className="bg-primary text-white px-8 py-3.5 text-[10px] font-bold uppercase tracking-widest rounded-lg">View All {gender}</Link>
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-12">
@@ -133,7 +133,7 @@ function CategoryContent() {
 
 export default function CategoryPage() {
   return (
-    <Suspense fallback={<div className="flex h-screen items-center justify-center text-stone-300">...</div>}>
+    <Suspense fallback={<div className="flex h-screen items-center justify-center text-stone-400">...</div>}>
       <CategoryContent />
     </Suspense>
   );

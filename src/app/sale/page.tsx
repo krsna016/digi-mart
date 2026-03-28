@@ -52,16 +52,16 @@ function SaleContent() {
   });
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#FCFBF8]">
+    <div className="flex flex-col min-h-screen bg-background">
       <Navbar />
 
       <div className="bg-red-50 py-16 md:py-24 text-center relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-red-100/50 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl animate-pulse" />
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/50 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-background/50 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl" />
         
         <div className="relative z-10 px-6">
           <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-red-600 mb-4 animate-fade-up">Seasonal Event</p>
-          <h1 className="text-5xl md:text-7xl font-serif text-stone-900 mb-6 animate-fade-up tracking-tight">The Sale Selection</h1>
+          <h1 className="text-5xl md:text-7xl font-serif text-foreground mb-6 animate-fade-up tracking-tight">The Sale Selection</h1>
           <p className="text-sm font-normal text-stone-500 max-w-xl mx-auto animate-fade-up leading-relaxed">
             Discover exceptional quality at extraordinary value. Limited time offers on seasonal favorites.
           </p>
@@ -69,26 +69,26 @@ function SaleContent() {
       </div>
 
       <div className="max-w-[1400px] mx-auto w-full px-6 lg:px-12 pt-12 pb-6 flex flex-col sm:flex-row justify-between items-center gap-6">
-        <p className="text-[10px] font-bold uppercase tracking-widest text-stone-400">
+        <p className="text-[10px] font-bold uppercase tracking-widest text-stone-500">
           {loading ? 'Discovering offers...' : `${displayProducts.length} pieces on sale`}
         </p>
         
         <div className="relative isolate" onMouseLeave={() => setIsSortOpen(false)}>
           <button 
             onClick={() => setIsSortOpen(!isSortOpen)}
-            className="flex items-center gap-2.5 pb-2 border-b border-stone-200 hover:border-stone-900 text-[10px] font-bold uppercase tracking-widest text-stone-900 transition-all min-w-[160px] justify-between group"
+            className="flex items-center gap-2.5 pb-2 border-b border-stone-300 hover:border-stone-900 text-[10px] font-bold uppercase tracking-widest text-foreground transition-all min-w-[160px] justify-between group"
           >
             <span>{sortOption === 'featured' ? 'Featured' : sortOption === 'price-asc' ? 'Price: Low to High' : 'Price: High to Low'}</span>
             <svg className={`w-3 h-3 transition-transform ${isSortOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
           </button>
           
           {isSortOpen && (
-            <div className="absolute top-full right-0 mt-2 w-48 bg-white border border-stone-100 rounded-xl shadow-xl z-50 p-2 overflow-hidden">
+            <div className="absolute top-full right-0 mt-2 w-48 bg-background border border-stone-200 rounded-xl shadow-xl z-50 p-2 overflow-hidden">
               {['featured', 'price-asc', 'price-desc'].map(opt => (
                 <button 
                   key={opt}
                   onClick={() => { setSortOption(opt as SortOption); setIsSortOpen(false); }}
-                  className={`w-full text-left px-4 py-3 text-[10px] font-bold uppercase tracking-widest rounded-lg transition-colors ${sortOption === opt ? 'bg-stone-50 text-stone-900' : 'text-stone-400 hover:text-stone-900 hover:bg-stone-50/50'}`}
+                  className={`w-full text-left px-4 py-3 text-[10px] font-bold uppercase tracking-widest rounded-lg transition-colors ${sortOption === opt ? 'bg-background-alt text-foreground' : 'text-stone-500 hover:text-foreground hover:bg-background-alt/50'}`}
                 >
                   {opt === 'featured' ? 'Featured' : opt === 'price-asc' ? 'Price: Low to High' : 'Price: High to Low'}
                 </button>
@@ -100,11 +100,11 @@ function SaleContent() {
 
       <main className="flex-1 max-w-[1400px] mx-auto w-full px-6 lg:px-12 py-10">
         {loading ? (
-          <div className="flex items-center justify-center py-32"><div className="w-8 h-8 rounded-full border-2 border-stone-200 border-t-stone-900 animate-spin" /></div>
+          <div className="flex items-center justify-center py-32"><div className="w-8 h-8 rounded-full border-2 border-stone-300 border-t-stone-900 animate-spin" /></div>
         ) : displayProducts.length === 0 ? (
           <div className="text-center py-32 animate-fade-up">
-            <p className="text-stone-400 text-sm mb-8">No sale items active right now.</p>
-            <Link href="/" className="bg-stone-900 text-white px-8 py-3.5 text-[10px] font-bold uppercase tracking-widest rounded-lg hover:shadow-lg transition-all">Continue Shopping</Link>
+            <p className="text-stone-500 text-sm mb-8">No sale items active right now.</p>
+            <Link href="/" className="bg-primary text-white px-8 py-3.5 text-[10px] font-bold uppercase tracking-widest rounded-lg hover:shadow-lg transition-all">Continue Shopping</Link>
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-12">
@@ -122,7 +122,7 @@ function SaleContent() {
 
 export default function SalePage() {
   return (
-    <Suspense fallback={<div className="flex h-screen items-center justify-center text-stone-300">...</div>}>
+    <Suspense fallback={<div className="flex h-screen items-center justify-center text-stone-400">...</div>}>
       <SaleContent />
     </Suspense>
   );

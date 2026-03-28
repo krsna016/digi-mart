@@ -37,14 +37,14 @@ function VerifyEmailContent() {
   }, [token]);
 
   return (
-    <div className="min-h-screen bg-[#FCFBF8] flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col">
       <Navbar />
       <main className="flex-1 flex items-center justify-center px-6 py-20">
-        <div className="max-w-md w-full bg-white rounded-[2.5rem] border border-stone-200 p-12 text-center shadow-sm">
+        <div className="max-w-md w-full bg-background rounded-[2.5rem] border border-stone-300 p-12 text-center shadow-sm">
           {status === 'loading' && (
             <div className="flex flex-col items-center gap-6">
-              <Loader2 className="w-12 h-12 text-stone-900 animate-spin" strokeWidth={1.5} />
-              <h1 className="text-2xl font-serif text-stone-900">Verifying your email...</h1>
+              <Loader2 className="w-12 h-12 text-foreground animate-spin" strokeWidth={1.5} />
+              <h1 className="text-2xl font-serif text-foreground">Verifying your email...</h1>
               <p className="text-sm text-stone-500 font-normal leading-relaxed">Please wait while we confirm your account.</p>
             </div>
           )}
@@ -55,12 +55,12 @@ function VerifyEmailContent() {
                 <CheckCircle2 className="w-10 h-10 text-green-600" strokeWidth={1.5} />
               </div>
               <div className="space-y-2">
-                <h1 className="text-2xl font-serif text-stone-900">Email Verified</h1>
+                <h1 className="text-2xl font-serif text-foreground">Email Verified</h1>
                 <p className="text-sm text-stone-500 font-normal leading-relaxed">{message}</p>
               </div>
               <Link 
                 href="/login" 
-                className="mt-4 w-full bg-stone-900 text-white py-4 rounded-full text-[11px] font-bold uppercase tracking-[0.3em] hover:bg-stone-800 transition-all flex items-center justify-center gap-2 group"
+                className="mt-4 w-full bg-primary text-white py-4 rounded-full text-[11px] font-bold uppercase tracking-[0.3em] hover:bg-stone-800 transition-all flex items-center justify-center gap-2 group"
               >
                 Sign In <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
@@ -73,12 +73,12 @@ function VerifyEmailContent() {
                 <AlertCircle className="w-10 h-10 text-red-600" strokeWidth={1.5} />
               </div>
               <div className="space-y-2">
-                <h1 className="text-2xl font-serif text-stone-900">Verification Failed</h1>
+                <h1 className="text-2xl font-serif text-foreground">Verification Failed</h1>
                 <p className="text-sm text-stone-500 font-normal leading-relaxed">{message}</p>
               </div>
               <Link 
                 href="/signup" 
-                className="mt-4 w-full border border-stone-200 text-stone-900 py-4 rounded-full text-[11px] font-bold uppercase tracking-[0.3em] hover:bg-stone-50 transition-all"
+                className="mt-4 w-full border border-stone-300 text-foreground py-4 rounded-full text-[11px] font-bold uppercase tracking-[0.3em] hover:bg-background-alt transition-all"
               >
                 Back to Sign Up
               </Link>
@@ -94,8 +94,8 @@ function VerifyEmailContent() {
 export default function VerifyEmailPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-[#FCFBF8] flex items-center justify-center">
-        <Loader2 className="w-8 h-8 text-stone-900 animate-spin" />
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="w-8 h-8 text-foreground animate-spin" />
       </div>
     }>
       <VerifyEmailContent />

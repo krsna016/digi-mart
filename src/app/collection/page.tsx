@@ -51,22 +51,22 @@ function CollectionContent() {
   return (
     <>
       {/* Premium Breadcrumbs */}
-      <div className="max-w-[1400px] mx-auto w-full px-6 lg:px-12 pt-10 pb-4 flex items-center gap-3 text-[9px] font-bold uppercase tracking-[0.25em] text-stone-400">
-        <Link href="/" className="hover:text-stone-900 transition-colors">Home</Link>
-        <span className="text-stone-300">/</span>
-        <Link href="/collection" className={`transition-colors ${!categoryFilter ? 'text-stone-900' : 'hover:text-stone-900'}`}>Collection</Link>
+      <div className="max-w-[1400px] mx-auto w-full px-6 lg:px-12 pt-10 pb-4 flex items-center gap-3 text-[9px] font-bold uppercase tracking-[0.25em] text-stone-500">
+        <Link href="/" className="hover:text-foreground transition-colors">Home</Link>
+        <span className="text-stone-400">/</span>
+        <Link href="/collection" className={`transition-colors ${!categoryFilter ? 'text-foreground' : 'hover:text-foreground'}`}>Collection</Link>
         {categoryFilter && (
           <>
-            <span className="text-stone-300">/</span>
-            <span className="text-stone-900">{categoryFilter}</span>
+            <span className="text-stone-400">/</span>
+            <span className="text-foreground">{categoryFilter}</span>
           </>
         )}
       </div>
 
       {/* Hero */}
-      <div className="bg-white border-b border-stone-100 py-16 lg:py-20 text-center animate-fade-in relative z-10 shadow-[0_10px_40px_-20px_rgba(0,0,0,0.03)]">
-        <p className="text-[9px] font-bold uppercase tracking-[0.35em] text-stone-400 mb-4">Digimart</p>
-        <h1 className="text-4xl md:text-5xl font-serif text-stone-900 mb-5">{title}</h1>
+      <div className="bg-background border-b border-stone-200 py-16 lg:py-20 text-center animate-fade-in relative z-10 shadow-[0_10px_40px_-20px_rgba(0,0,0,0.03)]">
+        <p className="text-[9px] font-bold uppercase tracking-[0.35em] text-stone-500 mb-4">Digimart</p>
+        <h1 className="text-4xl md:text-5xl font-serif text-foreground mb-5">{title}</h1>
         <p className="text-sm font-normal text-stone-500 transition-opacity duration-300">
           {loading ? 'Finding pieces...' : `${sortedAndFiltered.length} Results`}
         </p>
@@ -81,7 +81,7 @@ function CollectionContent() {
             <div className="flex flex-wrap gap-2.5">
               <Link
                 href="/collection"
-                className={`px-6 py-2.5 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all duration-300 shadow-sm border border-transparent hover:scale-[1.02] active:scale-[0.98] ${!categoryFilter ? 'bg-stone-900 text-white' : 'bg-white text-stone-500 hover:text-stone-900 hover:border-stone-200'}`}
+                className={`px-6 py-2.5 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all duration-300 shadow-sm border border-transparent hover:scale-[1.02] active:scale-[0.98] ${!categoryFilter ? 'bg-primary text-white' : 'bg-background text-stone-500 hover:text-foreground hover:border-stone-300'}`}
               >
                 All
               </Link>
@@ -89,7 +89,7 @@ function CollectionContent() {
                 <Link
                   key={cat}
                   href={`/collection?category=${encodeURIComponent(cat.toLowerCase())}`}
-                  className={`px-6 py-2.5 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all duration-300 shadow-sm border border-transparent hover:scale-[1.02] active:scale-[0.98] ${categoryFilter === cat.toLowerCase() ? 'bg-stone-900 text-white' : 'bg-white text-stone-500 hover:text-stone-900 hover:border-stone-200'}`}
+                  className={`px-6 py-2.5 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all duration-300 shadow-sm border border-transparent hover:scale-[1.02] active:scale-[0.98] ${categoryFilter === cat.toLowerCase() ? 'bg-primary text-white' : 'bg-background text-stone-500 hover:text-foreground hover:border-stone-300'}`}
                 >
                   {cat}
                 </Link>
@@ -103,10 +103,10 @@ function CollectionContent() {
           <div className="relative isolate" onMouseLeave={() => setIsSortOpen(false)}>
             <button 
               onClick={() => setIsSortOpen(!isSortOpen)}
-              className="flex items-center gap-2.5 pb-2 border-b border-stone-200 hover:border-stone-900 text-[10px] font-bold uppercase tracking-widest text-stone-900 transition-all duration-300 min-w-[200px] justify-between group"
+              className="flex items-center gap-2.5 pb-2 border-b border-stone-300 hover:border-stone-900 text-[10px] font-bold uppercase tracking-widest text-foreground transition-all duration-300 min-w-[200px] justify-between group"
             >
               <div>
-                <span className="text-stone-400 font-medium mr-2">Sort:</span>
+                <span className="text-stone-500 font-medium mr-2">Sort:</span>
                 <span className="group-hover:opacity-60 transition-opacity">
                   {sortOption === 'featured' ? 'Featured' : sortOption === 'price-asc' ? 'Low to High' : 'High to Low'}
                 </span>
@@ -118,7 +118,7 @@ function CollectionContent() {
             
             {/* Dropdown Box */}
             <div className={`absolute top-full right-0 pt-3 w-56 transition-all duration-300 transform origin-top-right ${isSortOpen ? 'opacity-100 scale-100 visible translate-y-0' : 'opacity-0 scale-95 invisible translate-y-2 pointer-events-none'}`}>
-              <div className="bg-white border border-stone-200/60 rounded-2xl shadow-[0_20px_40px_-5px_rgba(0,0,0,0.08)] overflow-hidden flex flex-col p-2 gap-0.5">
+              <div className="bg-background border border-stone-300/60 rounded-2xl shadow-[0_20px_40px_-5px_rgba(0,0,0,0.08)] overflow-hidden flex flex-col p-2 gap-0.5">
                 {[
                   { id: 'featured', label: 'Featured' },
                   { id: 'price-asc', label: 'Price: Low to High' },
@@ -127,11 +127,11 @@ function CollectionContent() {
                    <button 
                     key={opt.id}
                     onClick={() => { setSortOption(opt.id as SortOption); setIsSortOpen(false); }}
-                    className={`text-left px-5 py-3.5 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all duration-200 flex items-center justify-between ${sortOption === opt.id ? 'bg-stone-50 text-stone-900' : 'text-stone-500 hover:text-stone-900 hover:bg-stone-50/50'}`}
+                    className={`text-left px-5 py-3.5 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all duration-200 flex items-center justify-between ${sortOption === opt.id ? 'bg-background-alt text-foreground' : 'text-stone-500 hover:text-foreground hover:bg-background-alt/50'}`}
                   >
                     {opt.label}
                     {sortOption === opt.id && (
-                      <svg className="w-3.5 h-3.5 text-stone-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <svg className="w-3.5 h-3.5 text-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                     )}
@@ -146,18 +146,18 @@ function CollectionContent() {
       <main className="flex-1 max-w-[1400px] mx-auto w-full px-6 lg:px-12 py-10 z-10 transition-all duration-500 ease-in-out">
         {loading ? (
           <div className="flex items-center justify-center py-32">
-            <div className="w-8 h-8 rounded-full border-2 border-stone-200 border-t-stone-900 animate-spin" />
+            <div className="w-8 h-8 rounded-full border-2 border-stone-300 border-t-stone-900 animate-spin" />
           </div>
         ) : error ? (
           <div className="flex flex-col items-center justify-center py-32 text-center animate-fade-up">
             <p className="text-red-500 text-sm font-medium mb-2">{error}</p>
-            <p className="text-stone-400 text-xs font-normal">Please check your configuration or try again later.</p>
+            <p className="text-stone-500 text-xs font-normal">Please check your configuration or try again later.</p>
           </div>
         ) : sortedAndFiltered.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-32 text-center animate-fade-up">
             <svg className="w-12 h-12 text-stone-200 mb-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M20 12H4M8 16l-4-4 4-4" /></svg>
-            <p className="text-stone-400 text-sm font-normal mb-8">No pieces found matching your criteria.</p>
-            <Link href="/collection" className="bg-stone-900 text-white px-8 py-3.5 text-[10px] font-bold uppercase tracking-widest rounded-lg hover:bg-stone-800 transition-colors shadow-sm">
+            <p className="text-stone-500 text-sm font-normal mb-8">No pieces found matching your criteria.</p>
+            <Link href="/collection" className="bg-primary text-white px-8 py-3.5 text-[10px] font-bold uppercase tracking-widest rounded-lg hover:bg-stone-800 transition-colors shadow-sm">
               Clear Filters
             </Link>
           </div>
@@ -181,11 +181,11 @@ function CollectionContent() {
 
 export default function CollectionPage() {
   return (
-    <div className="flex flex-col min-h-screen bg-[#FCFBF8]">
+    <div className="flex flex-col min-h-screen bg-background">
       <Navbar />
       <Suspense fallback={
         <div className="flex items-center justify-center py-32 min-h-[60vh]">
-          <div className="w-8 h-8 rounded-full border-2 border-stone-200 border-t-stone-900 animate-spin" />
+          <div className="w-8 h-8 rounded-full border-2 border-stone-300 border-t-stone-900 animate-spin" />
         </div>
       }>
         <CollectionContent />

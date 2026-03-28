@@ -42,14 +42,14 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-white">
+    <div className="flex flex-col min-h-screen bg-background">
       <Navbar />
       <main className="flex-1 pt-32 pb-24">
         <div className="mx-auto max-w-2xl px-6 lg:px-8">
           <span className="block text-[10px] font-medium uppercase tracking-[0.3em] text-stone-500 mb-4 text-center">Inquiries</span>
-          <h1 className="text-4xl md:text-5xl font-serif text-stone-900 mb-12 tracking-tight text-center">Contact Us</h1>
+          <h1 className="text-4xl md:text-5xl font-serif text-foreground mb-12 tracking-tight text-center">Contact Us</h1>
           
-          <div className="bg-stone-50 p-8 md:p-12 rounded-lg border border-stone-100">
+          <div className="bg-background-alt p-8 md:p-12 rounded-lg border border-stone-200">
             <form onSubmit={handleSubmit} className="space-y-8">
               <div>
                 <label htmlFor="name" className="block text-[11px] font-bold uppercase tracking-widest text-stone-500 mb-3">Full Name</label>
@@ -60,7 +60,7 @@ export default function ContactPage() {
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="w-full bg-transparent border-b border-stone-300 py-3 text-stone-900 focus:border-stone-900 outline-none transition-colors font-normal"
+                  className="w-full bg-transparent border-b border-stone-300 py-3 text-foreground focus:border-stone-900 outline-none transition-colors font-normal"
                   placeholder="Your name"
                 />
               </div>
@@ -74,7 +74,7 @@ export default function ContactPage() {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="w-full bg-transparent border-b border-stone-300 py-3 text-stone-900 focus:border-stone-900 outline-none transition-colors font-normal"
+                  className="w-full bg-transparent border-b border-stone-300 py-3 text-foreground focus:border-stone-900 outline-none transition-colors font-normal"
                   placeholder="email@example.com"
                 />
               </div>
@@ -88,7 +88,7 @@ export default function ContactPage() {
                   value={formData.message}
                   onChange={handleChange}
                   required
-                  className="w-full bg-transparent border-b border-stone-300 py-3 text-stone-900 focus:border-stone-900 outline-none transition-colors font-normal resize-none"
+                  className="w-full bg-transparent border-b border-stone-300 py-3 text-foreground focus:border-stone-900 outline-none transition-colors font-normal resize-none"
                   placeholder="How can we help you?"
                 />
               </div>
@@ -96,7 +96,7 @@ export default function ContactPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-stone-900 text-white py-4 text-[11px] font-bold uppercase tracking-[0.3em] hover:bg-stone-800 transition-colors disabled:opacity-50"
+                className="w-full bg-primary text-white py-4 text-[11px] font-bold uppercase tracking-[0.3em] hover:bg-stone-800 transition-colors disabled:opacity-50"
               >
                 {loading ? 'Sending...' : 'Send Message'}
               </button>
@@ -111,12 +111,12 @@ export default function ContactPage() {
 
           <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-12 text-center md:text-left">
             <div>
-              <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] text-stone-400 mb-4">Email</h4>
-              <p className="text-sm text-stone-900 font-medium">concierge@digimart.com</p>
+              <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] text-stone-500 mb-4">Email</h4>
+              <p className="text-sm text-foreground font-medium">concierge@digimart.com</p>
             </div>
             <div>
-              <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] text-stone-400 mb-4">Office</h4>
-              <p className="text-sm text-stone-900 font-medium leading-relaxed">
+              <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] text-stone-500 mb-4">Office</h4>
+              <p className="text-sm text-foreground font-medium leading-relaxed">
                 123 Minimalist Way<br />
                 Design District, NY 10013
               </p>

@@ -57,7 +57,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         <div className="h-20 flex items-center px-8 border-b border-stone-200">
           <Link href="/" className="hover:opacity-70 transition-opacity">
             <span className="font-serif text-xl tracking-tight font-medium text-stone-900">
-              DIGIMART ADMIN
+              Go to site
             </span>
           </Link>
         </div>

@@ -113,9 +113,9 @@ export default function Navbar() {
   };
 
   return (
-    <>
-      <header className={`sticky top-0 z-50 w-full bg-[#FCFBF8] transition-all duration-300 ${scrolled ? 'shadow-[0_4px_25px_-12px_rgba(0,0,0,0.08)]' : ''}`}>
-        <div className="relative mx-auto max-w-[1440px] px-8 lg:px-12 border-b border-stone-200/50">
+    <div className="sticky top-0 z-50 w-full px-4 lg:px-6 pt-4 lg:pt-6 bg-white">
+      <header className={`w-full bg-[#FCFBF8] rounded-lg border border-stone-200/50 transition-all duration-300 ${scrolled ? 'shadow-[0_4px_25px_-12px_rgba(0,0,0,0.08)]' : ''}`}>
+        <div className="relative mx-auto max-w-[1440px] px-8 lg:px-12">
           <div className="absolute left-1/2 -translate-x-1/2 top-5 lg:top-7 z-50 text-center pointer-events-none">
             <Link 
               href="/" 
@@ -342,6 +342,6 @@ export default function Navbar() {
           </motion.div>
         )}
       </AnimatePresence>
-    </>
+    </div>
   );
 }

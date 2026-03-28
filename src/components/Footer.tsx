@@ -41,8 +41,9 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-stone-950 text-stone-100 py-24">
-      <div className="mx-auto max-w-[1400px] px-6 lg:px-12">
+    <div className="w-full px-4 lg:px-6 pb-4 lg:pb-6 bg-white">
+      <footer className="bg-stone-950 text-stone-100 py-16 md:py-24 rounded-lg">
+        <div className="mx-auto max-w-[1400px] px-6 lg:px-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-16 mb-24">
           {/* Brand & Newsletter */}
           <div className="lg:col-span-4 lg:pr-12">
@@ -117,10 +118,11 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="pt-8 border-t border-stone-900 flex flex-col md:flex-row items-center justify-between gap-6 text-[14px] uppercase tracking-widest text-stone-400 font-medium">
+        <div className="pt-8 border-t border-stone-800 flex flex-col md:flex-row items-center justify-between gap-6 text-[14px] uppercase tracking-widest text-stone-400 font-medium">
           <p>&copy; {new Date().getFullYear()} DigiMart. All rights reserved.</p>
         </div>
       </div>
-    </footer>
+      </footer>
+    </div>
   );
 }

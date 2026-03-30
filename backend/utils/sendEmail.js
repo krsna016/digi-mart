@@ -6,15 +6,15 @@ const sendEmail = async (options) => {
 
   const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
-    port: 465,
-    secure: true, // true for 465, false for other ports
+    port: 587,
+    secure: false, // true for 465, false for 587
     auth: {
       user: emailUser,
       pass: emailPass,
     },
-    connectionTimeout: 5000, // 5 seconds
-    greetingTimeout: 5000,
-    socketTimeout: 5000,
+    connectionTimeout: 10000, // 10 seconds
+    greetingTimeout: 10000,
+    socketTimeout: 10000,
   });
 
   const mailOptions = {

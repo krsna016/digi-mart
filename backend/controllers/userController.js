@@ -184,10 +184,36 @@ const verifyEmail = async (req, res) => {
   }
 };
 
+const sendTestEmail = async (req, res) => {
+  const { email } = req.body;
+  if (!email) {
+    return res.status(400).json({ message: 'Please provide an email address' });
+  }
+
+  try {
+    console.log(`[Diagnostic] Attempting to send test email to: ${email}`);
+    await sendEmail({
+      email,
+      subject: 'DigiMart - Mail Service Diagnostic',
+      message: 'This is a test email to verify your SMTP settings are working correctly on Render.',
+      html: '<h1>DigiMart Diagnostic</h1><p>Your SMTP settings are working correctly on Render!</p>'
+    });
+    res.json({ message: 'Test email sent successfully! Please check your inbox.' });
+  } catch (error) {
+    console.error(`[Diagnostic] Test Email Failed: ${error.message}`);
+    res.status(500).json({ 
+      message: 'Test email failed to send.', 
+      error: error.message,
+      tip: 'Verify EMAIL_USER and EMAIL_PASS are set correctly in Render.'
+    });
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
   getUserProfile,
   updateUserProfile,
-  verifyEmail
+  verifyEmail,
+  sendTestEmail
 };

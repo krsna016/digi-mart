@@ -1,6 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const { registerUser, loginUser, getUserProfile, updateUserProfile, verifyEmail } = require('../controllers/userController');
+const { 
+  registerUser, 
+  loginUser, 
+  getUserProfile, 
+  updateUserProfile, 
+  verifyEmail,
+  sendTestEmail 
+} = require('../controllers/userController');
 const { protect } = require('../middleware/authMiddleware');
 
 // @desc    Register a new user
@@ -22,5 +29,10 @@ router.get('/verify/:token', verifyEmail);
 // @route   GET/PUT /api/auth/profile
 // @access  Private
 router.route('/profile').get(protect, getUserProfile).put(protect, updateUserProfile);
+
+// @desc    Test email sender
+// @route   POST /api/auth/test-email
+// @access  Public
+router.post('/test-email', sendTestEmail);
 
 module.exports = router;

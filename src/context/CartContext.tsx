@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useAuth } from './AuthContext';
 
 export interface CartItem {
   id: string;
@@ -28,26 +29,34 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
+  const { user } = useAuth();
+  
+  const userId = user?._id || 'guest';
+  const cartKey = `digimart_cart_${userId}`;
 
-  // Load from localStorage on mount
+  // Load from localStorage whenever userId changes (login/logout)
   useEffect(() => {
-    const savedCart = localStorage.getItem('digimart_cart');
+    setIsLoaded(false); // Reset loaded state while switching
+    const savedCart = localStorage.getItem(cartKey);
     if (savedCart) {
       try {
         setCart(JSON.parse(savedCart));
       } catch (e) {
-        console.error('Failed to parse cart from local storage');
+        console.error(`Failed to parse cart for ${userId} from local storage`);
+        setCart([]);
       }
+    } else {
+      setCart([]);
     }
     setIsLoaded(true);
-  }, []);
+  }, [userId, cartKey]);
 
   // Save to localStorage whenever cart changes
   useEffect(() => {
     if (isLoaded) {
-      localStorage.setItem('digimart_cart', JSON.stringify(cart));
+      localStorage.setItem(cartKey, JSON.stringify(cart));
     }
-  }, [cart, isLoaded]);
+  }, [cart, isLoaded, cartKey]);
 
   const addToCart = (product: Omit<CartItem, 'quantity'> & { quantity?: number }) => {
     setCart(prev => {

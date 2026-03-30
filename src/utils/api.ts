@@ -26,9 +26,13 @@ export const apiRequest = async (endpoint: string, options: RequestOptions = {})
     console.warn(`[API] ${options.method || 'GET'} ${endpoint} - Sending WITHOUT token (User might be logged out)`);
   }
 
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
   const config: RequestInit = {
     ...options,
     headers,
+    signal: controller.signal
   };
 
   if (options.body) {
@@ -36,7 +40,21 @@ export const apiRequest = async (endpoint: string, options: RequestOptions = {})
   }
 
   const startTime = Date.now();
-  const response = await fetch(`${BASE_URL}${endpoint}`, config);
+  let response;
+  try {
+    response = await fetch(`${BASE_URL}${endpoint}`, config);
+  } catch (err: any) {
+    clearTimeout(timeoutId);
+    if (err.name === 'AbortError') {
+      console.error(`[API ERROR] Request to ${endpoint} timed out after 10s`);
+      throw new Error('Server request timed out. Please try again.');
+    }
+    console.error(`[API ERROR] Fetch failed for ${endpoint}:`, err.message);
+    throw new Error(`Network error: ${err.message}. Please check your connection.`);
+  } finally {
+    clearTimeout(timeoutId);
+  }
+
   const duration = Date.now() - startTime;
   
   if (duration > 1000) {

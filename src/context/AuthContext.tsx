@@ -98,7 +98,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         document.cookie = `admin_token=${data.token}; path=/; max-age=86400; SameSite=None; Secure`;
       }
     } catch (err: any) {
-      console.error('[Auth] Login failed:', err.message);
       setError(err.message);
       throw err;
     } finally {
@@ -136,7 +135,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Merge current token with fetched data
       setUser({ ...data, token: user.token });
     } catch (err: any) {
-      console.error('Profile fetch error:', err.message);
+      console.warn('[Auth] Profile fetch error:', err.message);
     } finally {
       setIsLoading(false);
     }

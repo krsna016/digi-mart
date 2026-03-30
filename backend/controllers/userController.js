@@ -25,18 +25,19 @@ const registerUser = async (req, res) => {
       return res.status(400).json({ message: 'User already exists' });
     }
 
+    // Generate verification token before creation
+    const verificationToken = crypto.randomBytes(32).toString('hex');
+    const verificationTokenExpires = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
+
     const user = await User.create({
       name,
       email,
-      password
+      password,
+      verificationToken,
+      verificationTokenExpires
     });
 
     if (user) {
-      // Generate verification token
-      const verificationToken = crypto.randomBytes(32).toString('hex');
-      user.verificationToken = verificationToken;
-      user.verificationTokenExpires = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
-      await user.save();
 
       // Send verification email
       const isProduction = process.env.NODE_ENV === 'production' || process.env.RENDER === 'true';

@@ -14,10 +14,9 @@ const registerUser = async (req, res) => {
   const { name, password } = req.body;
   // Normalize email to lowercase
   const email = req.body.email?.toLowerCase();
-
-  // Enforce Gmail only (case-insensitive check)
-  if (!email || !email.endsWith('@gmail.com')) {
-    return res.status(400).json({ message: 'Only Gmail accounts are allowed for registration' });
+  // Email provider restriction removed as per user request
+  if (!email || !email.includes('@')) {
+    return res.status(400).json({ message: 'Please provide a valid email address' });
   }
 
   try {
@@ -27,59 +26,21 @@ const registerUser = async (req, res) => {
       return res.status(400).json({ message: 'User already exists' });
     }
 
-    // Generate verification token before creation
-    const verificationToken = crypto.randomBytes(32).toString('hex');
-    const verificationTokenExpires = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
-
     const user = await User.create({
       name,
       email,
       password,
-      verificationToken,
-      verificationTokenExpires
+      isVerified: true // Auto-verify as per user request
     });
 
     if (user) {
-      // Send verification email
-      const isProduction = process.env.NODE_ENV === 'production' || process.env.RENDER === 'true';
-      let frontendUrl = process.env.FRONTEND_URL;
-      
-      // If production and FRONTEND_URL is localhost or missing, fallback to live URL
-      if (isProduction && (!frontendUrl || frontendUrl.includes('localhost'))) {
-        frontendUrl = 'https://digi-mart-uppt.vercel.app';
-      } else if (!frontendUrl) {
-        frontendUrl = 'http://localhost:3000';
-      }
-      
-      // Clean trailing slash
-      if (frontendUrl.endsWith('/')) {
-        frontendUrl = frontendUrl.slice(0, -1);
-      }
-      
-      const verifyUrl = `${frontendUrl}/verify-email?token=${verificationToken}`;
-      
-      const message = `
-        <h1>Verify your email</h1>
-        <p>Thank you for registering at DigiMart. Please verify your email by clicking the link below:</p>
-        <a href="${verifyUrl}" style="background: #1C1917; color: white; padding: 12px 24px; text-decoration: none; border-radius: 44px; display: inline-block; font-weight: bold; margin-top: 20px;">Verify Email</a>
-        <p>This link will expire in 24 hours.</p>
-      `;
-
-      // Non-blocking email send
-      console.log(`[Auth] Initiating verification email for: ${user.email}`);
-      sendEmail({
-        email: user.email,
-        subject: 'Email Verification - DigiMart',
-        html: message,
-      }).then(() => {
-        console.log('[Background] Verification email sent successfully');
-      }).catch((err) => {
-        console.error('[Background] Email Service Failed:', err.message);
-      });
-
       res.status(201).json({
-        message: 'Verification email initiated. Please check your inbox.',
-        email: user.email
+        message: 'User registered successfully! You can now login.',
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        token: generateToken(user._id)
       });
     } else {
       res.status(400).json({ message: 'Invalid user data' });
@@ -99,9 +60,7 @@ const loginUser = async (req, res) => {
     const user = await User.findOne({ email });
 
     if (user && (await user.matchPassword(password))) {
-      if (!user.isVerified) {
-        return res.status(401).json({ message: 'Please verify your email to login' });
-      }
+      // isVerified check removed as per user request
       res.json({
         _id: user._id,
         name: user.name,

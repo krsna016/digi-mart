@@ -15,7 +15,6 @@ export default function SignupPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [isEmailSent, setIsEmailSent] = useState(false);
   
   const { register } = useAuth();
   const router = useRouter();
@@ -32,12 +31,8 @@ export default function SignupPage() {
       return;
     }
 
-    // Gmail only validation
-    if (!email.toLowerCase().endsWith('@gmail.com')) {
-      setError('Only Gmail accounts are allowed for registration');
-      setIsLoading(false);
-      return;
-    }
+    // Gmail only validation removed as per user request
+
 
     if (password.length < 6) {
       setError('Password must be at least 6 characters');
@@ -48,8 +43,8 @@ export default function SignupPage() {
     try {
       const normalizedEmail = email.toLowerCase();
       await register(name, normalizedEmail, password);
-      setEmail(normalizedEmail); // Update state to show normalized email in success message
-      setIsEmailSent(true);
+      // Redirect to login with success message
+      router.push('/login?message=Account created successfully! You can now sign in.');
     } catch (err: any) {
       setError(err.message || 'Registration failed. Please try again.');
     } finally {
@@ -57,40 +52,7 @@ export default function SignupPage() {
     }
   };
 
-  if (isEmailSent) {
-    return (
-      <div className="flex flex-col min-h-screen bg-background">
-        <Navbar />
-        <main className="flex-1 flex items-center justify-center px-6 py-20">
-          <div className="w-full max-w-[420px] bg-background p-10 lg:p-12 rounded-[2.5rem] shadow-sm border border-stone-300 text-center animate-in fade-in zoom-in duration-500">
-            <div className="w-20 h-20 bg-background-alt rounded-full flex items-center justify-center mx-auto mb-8">
-              <Mail className="w-10 h-10 text-foreground" strokeWidth={1.5} />
-            </div>
-            <h1 className="text-2xl font-serif text-foreground mb-4">Verify your email</h1>
-            <p className="text-sm text-stone-500 font-normal leading-relaxed mb-10">
-              We've sent a verification link to <span className="text-foreground font-bold">{email}</span>. 
-              Please verify your account to continue.
-            </p>
-            <div className="space-y-4">
-              <button 
-                onClick={() => window.open('https://mail.google.com', '_blank')}
-                className="w-full bg-primary text-white py-4 rounded-full text-[11px] font-bold uppercase tracking-[0.3em] hover:bg-stone-800 transition-all flex items-center justify-center gap-2 group"
-              >
-                Open Gmail <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </button>
-              <Link 
-                href="/login" 
-                className="block text-[10px] text-stone-500 font-bold uppercase tracking-widest hover:text-foreground transition-colors"
-              >
-                Back to Sign In
-              </Link>
-            </div>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
+
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
@@ -136,7 +98,7 @@ export default function SignupPage() {
 
                 {/* Email Input */}
                 <div className="space-y-1.5">
-                  <label htmlFor="email" className="text-[9px] font-bold uppercase tracking-[0.2em] text-stone-500 ml-1">Gmail Address Only</label>
+                  <label htmlFor="email" className="text-[9px] font-bold uppercase tracking-[0.2em] text-stone-500 ml-1">Email Address</label>
                   <div className="relative group">
                     <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400 group-focus-within:text-foreground transition-colors" strokeWidth={1.5} />
                     <input
@@ -144,7 +106,7 @@ export default function SignupPage() {
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder="yourname@gmail.com"
+                      placeholder="yourname@example.com"
                       className="w-full bg-background-alt border border-stone-200 focus:bg-background focus:border-stone-900 rounded-xl px-11 py-3.5 text-sm text-foreground outline-none transition-all placeholder:text-stone-400"
                       required
                     />

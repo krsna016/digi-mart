@@ -66,6 +66,7 @@ const registerUser = async (req, res) => {
       `;
 
       // Non-blocking email send
+      console.log(`[Auth] Initiating verification email for: ${user.email}`);
       sendEmail({
         email: user.email,
         subject: 'Email Verification - DigiMart',

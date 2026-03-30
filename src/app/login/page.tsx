@@ -114,7 +114,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-primary text-white py-4 rounded-xl text-[11px] font-bold uppercase tracking-[0.3em] hover:bg-stone-800 transition-all shadow-sm hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed group"
+                className="w-full bg-primary text-white py-4 rounded-xl text-[11px] font-bold uppercase tracking-[0.3em] hover:bg-stone-800 transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed group"
               >
                 <span className="flex items-center justify-center gap-2">
                   {isLoading ? 'Signing In...' : 'Sign In'}

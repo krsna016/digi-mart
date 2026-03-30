@@ -11,10 +11,12 @@ const generateToken = (id) => {
 };
 
 const registerUser = async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, password } = req.body;
+  // Normalize email to lowercase
+  const email = req.body.email?.toLowerCase();
 
-  // Enforce Gmail only
-  if (!email.endsWith('@gmail.com')) {
+  // Enforce Gmail only (case-insensitive check)
+  if (!email || !email.endsWith('@gmail.com')) {
     return res.status(400).json({ message: 'Only Gmail accounts are allowed for registration' });
   }
 
@@ -38,7 +40,6 @@ const registerUser = async (req, res) => {
     });
 
     if (user) {
-
       // Send verification email
       const isProduction = process.env.NODE_ENV === 'production' || process.env.RENDER === 'true';
       let frontendUrl = process.env.FRONTEND_URL;
@@ -83,6 +84,9 @@ const registerUser = async (req, res) => {
       res.status(400).json({ message: 'Invalid user data' });
     }
   } catch (error) {
+    if (error.code === 11000) {
+      return res.status(400).json({ message: 'User already exists' });
+    }
     res.status(500).json({ message: error.message });
   }
 };

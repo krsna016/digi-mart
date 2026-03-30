@@ -76,7 +76,7 @@ export const apiRequest = async (endpoint: string, options: RequestOptions = {})
   }
 
   if (!response.ok) {
-    throw new Error(data.message || 'Something went wrong');
+    throw new Error(`${data.message || 'Something went wrong'} (Status: ${response.status})`);
   }
 
   return data;

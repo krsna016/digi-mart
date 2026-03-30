@@ -46,7 +46,9 @@ export default function SignupPage() {
     }
 
     try {
-      await register(name, email, password);
+      const normalizedEmail = email.toLowerCase();
+      await register(name, normalizedEmail, password);
+      setEmail(normalizedEmail); // Update state to show normalized email in success message
       setIsEmailSent(true);
     } catch (err: any) {
       setError(err.message || 'Registration failed. Please try again.');
